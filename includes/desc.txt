@@ -1,0 +1,11 @@
+This folder will have files like the following:
+
+includes\
+|   |   header.php
+│   │    └─ HTML <head> section + opening <body> + navbar
+│   ├── footer.php
+│   │    └─ Closing </body>, footer content
+│   ├── navbar.php
+│   │    └─ Optional separate navbar component
+│   └── functions.php
+│        └─ Shared PHP functions (e.g., authentication, data formatting)

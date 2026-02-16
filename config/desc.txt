@@ -1,0 +1,1 @@
+This folder has the PHP file containing database connection code for XAMPP/Docker MySQL

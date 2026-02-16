@@ -1,0 +1,1 @@
+This folder will have each page of the website like login.php, profile.php etc
