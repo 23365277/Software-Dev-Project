@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    image: php:8.2-apache          # PHP with Apache
+    container_name: roammance_web
+    ports:
+      - "8080:80"                  # Expose Apache on localhost:8080
+    volumes:
+      - ./src:/var/www/html        # Map your src/ folder to Apache
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0               # MySQL database
+    container_name: roammance_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword   # Root password
+      MYSQL_DATABASE: roammance          # Database created automatically
+      MYSQL_USER: user                   # App user
+      MYSQL_PASSWORD: userpassword       # App password
+    ports:
+      - "3306:3306"               # Expose MySQL port for local connections
+    volumes:
+      - db_data:/var/lib/mysql    # Persist database data
+    restart: unless-stopped
+
+volumes:
+  db_data:
+
