@@ -2,28 +2,30 @@ version: '3.8'
 
 services:
   web:
-    image: php:8.2-apache          # PHP with Apache
+    build:
+      context: ./src          # Build from Dockerfile in src/
     container_name: roammance_web
     ports:
-      - "8080:80"                  # Expose Apache on localhost:8080
+      - "8080:80"             # Apache exposed on localhost:8080
     volumes:
-      - ./src:/var/www/html        # Map your src/ folder to Apache
+      - ./src:/var/www/html   # Map src/ folder into container
     depends_on:
       - db
     restart: unless-stopped
 
   db:
-    image: mysql:8.0               # MySQL database
+    image: mysql:8.0
     container_name: roammance_db
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword   # Root password
-      MYSQL_DATABASE: roammance          # Database created automatically
-      MYSQL_USER: user                   # App user
-      MYSQL_PASSWORD: userpassword       # App password
+      MYSQL_DATABASE: roammance           # Database auto-created
+      MYSQL_USER: user                    # App user
+      MYSQL_PASSWORD: userpassword        # App password
     ports:
-      - "3306:3306"               # Expose MySQL port for local connections
+      - "3306:3306"                        # Expose MySQL for local connections
     volumes:
-      - db_data:/var/lib/mysql    # Persist database data
+      - db_data:/var/lib/mysql             # Persist data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
 
 volumes:
