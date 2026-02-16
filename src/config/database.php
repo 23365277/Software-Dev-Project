@@ -2,7 +2,7 @@
 // src/config/database.php
 
 $host = 'db';               // MySQL service name from docker-compose
-$db   = 'roammance';        // Database name
+$db   = 'roamance';         // Database name
 $user = 'user';             // MySQL user
 $pass = 'userpassword';     // MySQL password
 $charset = 'utf8mb4';
