@@ -16,6 +16,33 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `admin_actions`
+--
+
+DROP TABLE IF EXISTS `admin_actions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `admin_actions` (
+  `action_id` int NOT NULL AUTO_INCREMENT,
+  `admin_id` int NOT NULL,
+  `target_id` int NOT NULL,
+  `action_taken` enum('Banned','Suspended','Warning','N/A') NOT NULL,
+  `reason` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`action_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admin_actions`
+--
+
+LOCK TABLES `admin_actions` WRITE;
+/*!40000 ALTER TABLE `admin_actions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `admin_actions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `interests`
 --
 
@@ -135,4 +162,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-18 12:17:42
+-- Dump completed on 2026-02-18 14:21:20
