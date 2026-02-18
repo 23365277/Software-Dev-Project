@@ -36,7 +36,7 @@
             <h1>Get in Touch</h1>
             <p>Have questions about Roamance? We'd love to hear from you!</p>
             <p>Reach out to our team and we'll respond as soon as possible.</p>
-            <p style="margin-top: 30px;"><a href="src\pages\signup.php" style="color: #ffffff; text-decoration: underline;">← Back to Home</a></p>
+            <p style="margin-top: 30px;"><a href="signup.php" style="color: #ffffff; text-decoration: underline;">← Back to Home</a></p>
         </div>
 
         <div class="auth-box">
@@ -52,4 +52,7 @@
         </div>
     </div>
 </body>
+
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+
 </html>
