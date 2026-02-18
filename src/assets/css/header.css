@@ -2,7 +2,13 @@
 /* Header container: flex layout */
 header {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background: linear-gradient(to bottom, #458cc4, #ffffff);
+    background: linear-gradient(
+    	to bottom,
+    	rgba(69, 140, 196, 1) 0%,
+    	rgba(69, 140, 196, 0.9) 40%,
+    	rgba(69, 140, 196, 0.4) 70%,
+    	rgba(69, 140, 196, 0) 100%
+    );
     padding: 0.5rem 1rem;
     display: flex;                    /* horizontal layout */
     justify-content: space-between;   /* logo left, nav right */

@@ -1,6 +1,15 @@
-footer{
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background: linear-gradient(to top, #458cc4, #ffff);
-    padding: 0.2%;
-    height: 100%;
+footer {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 
+                 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+    background: linear-gradient(
+        to top,
+        rgba(69, 140, 196, 1) 0%,
+        rgba(69, 140, 196, 1) 65%,
+        rgba(69, 140, 196, 0.8) 85%,
+        rgba(69, 140, 196, 0) 100%
+    );
+
+    padding: 1rem;
 }
+
