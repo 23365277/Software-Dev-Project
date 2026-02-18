@@ -5,25 +5,29 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://img.allw.mn/content/t9/pw/rz9wqivl57659a0cebe96302371972_600x600.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     min-height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
 }
 
 .container {
     display: flex;
     gap: 30px;
-    max-width: 1100px;
+    max-width: 750px;
     width: 100%;
     padding: 20px;
-    align-items: center;
+    align-items: stretch;
+    margin-right: 50px;
+    flex: 1;
 }
 
 .info-box, .auth-box {
-    background: white;
+    background: rgba(255, 255, 255, 0);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -35,13 +39,13 @@ body {
 }
 
 .info-box h1 {
-    color: #667eea;
+    color: #ffffff;
     margin-bottom: 20px;
     font-size: 2.5em;
 }
 
 .info-box p {
-    color: #555;
+    color: #ffffff;
     line-height: 1.6;
     margin-bottom: 15px;
     font-size: 1.1em;
@@ -53,9 +57,13 @@ body {
 }
 
 .auth-box h2 {
-    color: #333;
+    color: #ffffff;
     margin-bottom: 25px;
     text-align: center;
+}
+
+.auth-box hr{
+    border: 2px solid #ffffff;
 }
 
 .auth-box form {
@@ -66,7 +74,7 @@ body {
 
 .auth-box input {
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #ffffff;
     border-radius: 5px;
     font-size: 1em;
 }
