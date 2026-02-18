@@ -9,7 +9,7 @@
 <body>
 
 <header>
-    <h1> <img class="image" src="assets/images/Roamance Logo.png" alt="MUFF">Roamance</h1>
+    <img class="image" src="assets/images/Roamance Logo v2.png" alt="MUFF">
     <nav>
         
     </nav>
