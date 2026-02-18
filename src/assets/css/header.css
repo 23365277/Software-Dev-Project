@@ -1,7 +1,6 @@
 header{
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    background-color: aqua;
-    margin: 0;
-    padding: 0;
+    background: linear-gradient(to bottom, #458cc4, #ffff);
+    padding: 2%;
     height: 100%;
 }
