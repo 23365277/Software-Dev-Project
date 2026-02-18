@@ -10,7 +10,7 @@
 <body>
 
 <header>
-    <img class="image" src="assets/images/Roamance Logo v2.png" alt="MUFF">
+    <img class="image" src="assets/images/Roamance v6.png" alt="MUFF">
     <nav>
         
     </nav>

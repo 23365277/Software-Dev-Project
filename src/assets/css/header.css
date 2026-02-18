@@ -1,11 +1,11 @@
 header{
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background: linear-gradient(to bottom, #458cc4, #ffff);
-    padding: 0.2%;
+    padding: 0;
     height: 100%;
 }
 
 .image{
-    height: 200px;
+    height: 150px;
     width: auto;
 }
