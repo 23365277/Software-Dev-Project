@@ -1,5 +1,5 @@
-<?php 
-	$pageTitle = "Roamance - Dating for Travel Lovers"; 
+<?php
+	$pageTitle = "Roamance - Dating for Travel Lovers";
 	$pageCSS = "/assets/css/signup.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
@@ -8,6 +8,8 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <body>
 
 <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
@@ -36,8 +38,6 @@
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
