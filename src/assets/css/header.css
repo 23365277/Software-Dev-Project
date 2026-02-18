@@ -1,6 +1,11 @@
 header{
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background: linear-gradient(to bottom, #458cc4, #ffff);
-    padding: 2%;
+    padding: 1.23%;
     height: 100%;
+}
+
+.image{
+    height: 140px;
+    width: auto;
 }
