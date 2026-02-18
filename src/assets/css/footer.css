@@ -5,8 +5,8 @@ footer {
     background: linear-gradient(
         to top,
         rgba(69, 140, 196, 1) 0%,
-        rgba(69, 140, 196, 1) 65%,
-        rgba(69, 140, 196, 0.8) 85%,
+        rgba(69, 140, 196, 1) 45%,
+        rgba(69, 140, 196, 0.8) 60%,
         rgba(69, 140, 196, 0) 100%
     );
 
