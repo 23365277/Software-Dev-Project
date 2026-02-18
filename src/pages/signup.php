@@ -1,12 +1,12 @@
 <?php 
 	$pageTitle = "Roamance - Dating for Travel Lovers"; 
-	$pageCSS = "assets/css/landing-page.css"
+	$pageCSS = "assets/css/signup.css";
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
-<?php include $_SERVER['DOCUMENT_ROOT'].'/includes/head.php'; ?>
 
 <body>
 
@@ -36,6 +36,7 @@
     </div>
 </div>
 
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
