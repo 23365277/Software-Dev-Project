@@ -1,17 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Roamance</title>
-    <link rel="stylesheet" href="assets/css/header.css">
-    <link rel="stylesheet" href="assets/css/footer.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-</head>
-<body>
+<!-- src/includes/header.php -->
+<header class="mb-4">
+        <a href="/index.php">
+            <img class="logo" src="/assets/images/Roamance v7.png" alt="Roamance Logo">
+        </a>
 
-<header>
-    <img class="image" src="assets/images/Roamance v7.png" alt="MUFF">
-    <nav>
-        
-    </nav>
+        <!-- Navbar -->
+        <nav>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/index.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pages/about.php">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/pages/contact.php">Contact</a>
+                </li>
+            </ul>
+        </nav>
 </header>
+
