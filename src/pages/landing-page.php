@@ -10,6 +10,12 @@
 
 <body>
 
+<div class="bg-slide" style="background-image: url('/assets/images/scrollimg1.jpg'); animation-delay: 0s;"></div>
+<div class="bg-slide" style="background-image: url('/assets/images/scrollimg2.jpg'); animation-delay: 6s;"></div>
+<div class="bg-slide" style="background-image: url('/assets/images/scrollimg3.jpg'); animation-delay: 12s;"></div>
+
+<div class="bg-overlay"></div>
+
 
 <div class="container mt-5">
     <div class="info-box">
