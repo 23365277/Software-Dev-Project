@@ -8,9 +8,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Roammance Users</title>
-</head>
+    <?php include 'includes/header.php'; ?>
 <body>
 <h1>Users</h1>
 <?php foreach ($users as $user): ?>
@@ -23,6 +21,5 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
     <hr>
 <?php endforeach; ?>
-</body>
-</html>
+<?php include 'includes/footer.php'; ?>
 
