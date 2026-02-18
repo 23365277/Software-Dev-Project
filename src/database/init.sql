@@ -26,7 +26,7 @@ CREATE TABLE `interests` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,6 +35,7 @@ CREATE TABLE `interests` (
 
 LOCK TABLES `interests` WRITE;
 /*!40000 ALTER TABLE `interests` DISABLE KEYS */;
+INSERT INTO `interests` VALUES (1,'Backpacking'),(2,'Solo Travel'),(3,'Luxury Travel'),(4,'Road Trips'),(5,'City Breaks'),(6,'Beach Holidays'),(7,'Mountain Hiking'),(8,'Camping'),(9,'Van Life'),(10,'Island Hopping'),(11,'Cultural Tours'),(12,'Food Tourism'),(13,'Photography'),(14,'Adventure Travel'),(15,'Skiing'),(16,'Snowboarding'),(17,'Surfing'),(18,'Scuba Diving'),(19,'Snorkeling'),(20,'Safari Trips'),(21,'Historical Sites'),(22,'Museums'),(23,'Architecture'),(24,'Street Food'),(25,'Fine Dining'),(26,'Wine Tasting'),(27,'Coffee Culture'),(28,'Local Markets'),(29,'Festival Travel'),(30,'Cruise Holidays'),(31,'Nature Walks'),(32,'National Parks'),(33,'Waterfalls'),(34,'Sunsets'),(35,'Sunrises'),(36,'Travel Blogging'),(37,'Budget Travel'),(38,'Digital Nomad Life'),(39,'Language Learning'),(40,'Exchange Programs'),(41,'Train Travel'),(42,'Motorbike Trips'),(43,'Glamping'),(44,'Eco Tourism'),(45,'Wildlife Watching'),(46,'Stargazing'),(47,'Sailing'),(48,'Fishing Trips'),(49,'Kayaking'),(50,'Rock Climbing'),(51,'Yoga Retreats'),(52,'Spa Retreats'),(53,'Volunteering Abroad'),(54,'Study Abroad'),(55,'Travel Photography'),(56,'Drone Photography'),(57,'Travel Vlogging'),(58,'Theme Parks'),(59,'Road Cycling'),(60,'Running'),(61,'Fitness'),(62,'Gym'),(63,'Gaming'),(64,'PC Gaming'),(65,'Console Gaming'),(66,'Board Games'),(67,'Reading'),(68,'Fiction Books'),(69,'Non-fiction Books'),(70,'Writing'),(71,'Blogging'),(72,'Movies'),(73,'TV Series'),(74,'Anime'),(75,'Music Festivals'),(76,'Concerts'),(77,'Cooking'),(78,'Baking'),(79,'Tech'),(80,'Coding'),(81,'Startups'),(82,'Entrepreneurship'),(83,'Investing'),(84,'Cryptocurrency'),(85,'Art'),(86,'Painting'),(87,'Drawing'),(88,'Fashion'),(89,'Photography Editing'),(90,'Podcasts'),(91,'Meditation'),(92,'Mindfulness'),(93,'Self Development'),(94,'Basketball'),(95,'Football'),(96,'Tennis'),(97,'Swimming'),(98,'Martial Arts'),(99,'Cars'),(100,'Motorbikes');
 /*!40000 ALTER TABLE `interests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,4 +134,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-18 11:54:14
+-- Dump completed on 2026-02-18 12:04:41
