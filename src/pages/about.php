@@ -13,15 +13,20 @@
 	</div>
 </div>
 </div>
+
+
+<body>
+
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
-<body>
     <div class=" row bg-overlay"></div>
+    
     <div class="col-6 offset-3">
     <div class="container">
         <div class="about-section">
+
             <h1>About Roamance</h1>
             
             <p>Welcome to <strong>Roamance</strong> — where wanderers meet. We are a dating platform designed for like-minded travelers who share a passion for exploring the world and building meaningful connections with fellow adventurers.</p>
