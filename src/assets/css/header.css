@@ -33,13 +33,13 @@ header .nav {
 /* Navbar links */
 header .nav a {
     text-decoration: none;
-    color: #000;             /* link color */
+    color: #ffffff;             /* link color */
     font-weight: bold;
 }
 
 .btn-custom {
-    background-color: white;
-    color: #458cc4;
+    background-color: #000;
+    color: #000;
     border: none;
     border-radius: 50px;
     padding: 0.4rem 1.2rem;
@@ -52,6 +52,6 @@ header .nav a {
 
 .btn-custom:hover {
     background-color: #f0f0f0;
-    color: #346799;
+    color: #000;
     transform: translateY(-1px);
 }
