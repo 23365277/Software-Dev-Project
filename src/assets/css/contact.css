@@ -1,0 +1,8 @@
+.container {
+    margin: 0 auto;
+    justify-content: center;
+}
+.info-box {
+    flex: 0 0 250px;
+    max-width: 250px;
+}
