@@ -1,0 +1,35 @@
++----+----------+--------------------------+---------------+
+| id | username | email                    | password      |
++----+----------+--------------------------+---------------+
+|  1 | Kai1234  | kai.howley@email.com     | Password!23   |
+|  2 | J4neDoe  | jane.doe@email.com       | SecurePass#45 |
+|  3 | Leo89    | leo.martin@email.com     | LeoRocks89!   |
+|  4 | SophieL  | sophie.lane@email.com    | Sophie123$    |
+|  5 | MaxPower | max.power@email.com      | Max!Power2023 |
+|  6 | EmmaG23  | emma.green@email.com     | EmmaG@321     |
+|  7 | ChrisT99 | chris.taylor@email.com   | ChrisT99#Pass |
+|  8 | LilyRose | lily.rose@email.com      | LilyR!2024    |
+|  9 | OliverB  | oliver.bennett@email.com | OllyB@789     |
+| 10 | MiaK     | mia.keller@email.com     | MiaK!321      |
+| 11 | NoahS    | noah.smith@email.com     | NoahS2023!    |
+| 12 | AvaL     | ava.larson@email.com     | AvaL@456      |
+| 13 | EthanH   | ethan.hughes@email.com   | EthanH!12     |
+| 14 | IslaM    | isla.morris@email.com    | IslaM#99      |
+| 15 | LucasF   | lucas.foster@email.com   | LucasF2024$   |
+| 16 | ZoeW     | zoe.walsh@email.com      | ZoeW!1234     |
+| 17 | JackC    | jack.cole@email.com      | JackC#2023    |
+| 18 | ChloeB   | chloe.barnes@email.com   | ChloeB!45     |
+| 19 | RyanD    | ryan.davis@email.com     | RyanD@321     |
+| 20 | SophiaJ  | sophia.jenkins@email.com | SophiaJ!78    |
+| 21 | MasonT   | mason.thomas@email.com   | MasonT@99     |
+| 22 | LilaP    | lila.parker@email.com    | LilaP!2024    |
+| 23 | LeoK     | leo.kane@email.com       | LeoK#123      |
+| 24 | EllaS    | ella.sanders@email.com   | EllaS!456     |
+| 25 | HenryB   | henry.bradley@email.com  | HenryB@2023   |
+| 26 | MayaH    | maya.henderson@email.com | MayaH#789     |
+| 27 | OwenR    | owen.richards@email.com  | OwenR!2024    |
+| 28 | ZaraL    | zara.lawson@email.com    | ZaraL@123     |
+| 29 | EliM     | eli.morris@email.com     | EliM!321      |
+| 30 | NinaF    | nina.foster@email.com    | NinaF!456     |
++----+----------+--------------------------+---------------+
+

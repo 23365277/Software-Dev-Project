@@ -1,11 +1,6 @@
 <?php
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
 
-	$pageTitle = "Roamance - Dating for Travel Lovers";
-	$pageCSS = "/assets/css/signup.css";
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
-
 	$error = '';
 
 	if (isset($_POST['signup'])) {
@@ -13,13 +8,19 @@
 		$password = $_POST['password'];
 
 		$user_id = verifyLogin($email, $password);
-		if(user_id){
-			header('Location: /page/home.php');
+		if($user_id){
+			header('Location: /pages/home.php');
 			exit();
 		} else {
 			$error = "Something went wrong, please try again.";
 		}
 	}
+
+
+	$pageTitle = "Roamance - Dating for Travel Lovers";
+	$pageCSS = "/assets/css/signup.css";
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
 ?>
 
 <!DOCTYPE html>
