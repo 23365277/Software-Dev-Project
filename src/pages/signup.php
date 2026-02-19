@@ -1,8 +1,25 @@
 <?php
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
+
 	$pageTitle = "Roamance - Dating for Travel Lovers";
 	$pageCSS = "/assets/css/signup.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/header.php';
+
+	$error = '';
+
+	if (isset($_POST['signup'])) {
+		$email = $_POST['email'];
+		$password = $_POST['password'];
+
+		$user_id = verifyLogin($email, $password);
+		if(user_id){
+			header('Location: /page/home.php');
+			exit();
+		} else {
+			$error = "Something went wrong, please try again.";
+		}
+	}
 ?>
 
 <!DOCTYPE html>
@@ -26,11 +43,11 @@
     <div class="auth-box mt-4">
         <h2>Join Roamance</h2>
         <hr>
-        <form>
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
-            <button type="submit" class="btn btn-primary btn-signup">Sign Up</button>
-            <button type="button" class="btn btn-secondary btn-login">Log In</button>
+        <form method="POST" action="">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit" name="signup" class="btn btn-primary btn-signup">Sign Up</button>
+            <button type="button" name="login" class="btn btn-secondary btn-login">Log In</button>
         </form>
     </div>
 </div>
