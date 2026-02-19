@@ -1,5 +1,5 @@
-<?php 
-	$pageTitle = "Roamance - Dating for Travel Lovers"; 
+<?php
+	$pageTitle = "Roamance - Dating for Travel Lovers";
 	$pageCSS = "/assets/css/signup.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
 ?>
@@ -16,7 +16,7 @@
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
-    
+
 </head>
 <body>
     <div class="bg-overlay"></div>

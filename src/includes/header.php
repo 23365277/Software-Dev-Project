@@ -8,7 +8,7 @@
         		<li class="nav-item"><a class="nav-link" href="/index.php">Home</a></li>
         		<li class="nav-item"><a class="nav-link" href="/pages/about.php">About</a></li>
 			<li class="nav-item"><a class="nav-link" href="/pages/contact.php">Contact</a></li>
-			<li class="nav-item"><a href="/pages/signup.php" class="btn btn-custom">Sign Up</a></li>
+			<li class="nav-item"><a href="/pages/create_account.php" class="btn btn-custom">Sign Up</a></li>
 		</ul>
 	</nav>
 </header>
