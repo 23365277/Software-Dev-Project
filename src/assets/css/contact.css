@@ -1,0 +1,40 @@
+.container {
+    margin: 0 auto;
+    justify-content: center;
+}
+.info-box {
+    flex: 0 0 250px;
+    max-width: 250px;
+}
+
+bg-slide {
+    position: fixed;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    z-index: -2;
+    animation: fadeSlides 18s infinite;
+}
+
+/* stagger animations: 0s, 6s, 12s for 3 images over 18s */
+.bg-slide-1 { animation-delay: 0s; }
+.bg-slide-2 { animation-delay: 6s; }
+.bg-slide-3 { animation-delay: 12s; }
+
+/* Smooth crossfade with overlap */
+@keyframes fadeSlides {
+    0%   { opacity: 0; }
+    10%  { opacity: 1; }    /* fade in */
+    40%  { opacity: 1; }    /* stay visible */
+    50%  { opacity: 0; }    /* fade out */
+    100% { opacity: 0; }
+}
+
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(231, 227, 227, 0); /* light overlay */
+    z-index: -1;
+}

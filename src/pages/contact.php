@@ -10,22 +10,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Roamance</title>
-    <link rel="stylesheet" href="../assets/css/signup.css">
+    <link rel="stylesheet" href="../assets/css/contact.css">
 
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
-    <style>
-        .container {
-            margin: 0 auto;
-            justify-content: center;
-        }
-        .info-box {
-            flex: 0 0 250px;
-            max-width: 250px;
-        }
-    </style>
+    
 </head>
 <body>
     <div class="bg-overlay"></div>
