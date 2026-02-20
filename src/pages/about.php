@@ -70,4 +70,6 @@
 </body>
 </html>
 
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/messaging.php'; ?>
+
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
