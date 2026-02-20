@@ -31,6 +31,6 @@
 | 28 | ZaraL    | zara.lawson@email.com    | ZaraL@123     |
 | 29 | EliM     | eli.morris@email.com     | EliM!321      |
 | 30 | NinaF    | nina.foster@email.com    | NinaF!456     |
-| 31 | one   | one   | one  |
+| 31 | testuser  | testuser  | testuser  |
 +----+----------+--------------------------+---------------+
 
