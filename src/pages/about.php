@@ -3,7 +3,7 @@
 	$pageCSS = "/assets/css/about.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
 ?>
-<div class="container-fluid">
+<!--<div class="container-fluid">
 <div class="row">
 	<div class="col-3 offset-3">
 		<div class="border bg-light" style="height: 300px;">Col1</div>
@@ -12,10 +12,7 @@
 		<div class="border bg-light" style="height: 300px;">Col2</div>
 	</div>
 </div>
-</div>
-
-
-<body>
+</div>-->
 
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>

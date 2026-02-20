@@ -1,0 +1,93 @@
+.info-box, .auth-box {
+    background: rgba(255, 255, 255, 0);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.info-box {
+    flex: 1;
+    min-width: 0;
+}
+
+.info-box h1 {
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+.info-box p {
+    color: #ffffff;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.auth-box {
+    flex: 0 0 380px;
+    width: 380px;
+}
+
+.auth-box h2 {
+    color: #ffffff;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.auth-box hr{
+    border: 2px solid #ffffff;
+}
+
+.auth-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.auth-box input {
+    padding: 12px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.auth-box button {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-signup {
+    background: #667eea;
+    color: white;
+}
+
+.btn-signup:hover {
+    background: #5568d3;
+}
+
+.btn-login {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.btn-login:hover {
+    background: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .auth-box {
+        flex: 1;
+    }
+}
+
+.bio-submit{
+    height: 3%;
+}
