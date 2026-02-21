@@ -1,3 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mainblock{
+    display: flex;
+    gap: 30px;
+    max-width: 750px;
+    width: 100%;
+    padding: 20px;
+    align-items: stretch;
+    margin-right: 50px;
+    flex: 1;
+}
+
+body {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
 .bg-slide {
     position: fixed;
     inset: 0;

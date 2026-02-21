@@ -5,6 +5,7 @@
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
 ?>
 
+<div class="mainblock">
 <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $username = $_POST['username'] ?? '';
@@ -40,6 +41,5 @@
         </div>
 
     </div>
-<?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php';
-?>
+</div>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
