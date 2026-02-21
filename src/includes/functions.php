@@ -9,13 +9,20 @@ function getUserByEmail($email) {
 	return $stmt->fetch();
 }
 
-function registerNewUser($email, $password){
+function registerNewUser($username, $email, $password, $first_name, $last_name, $date_of_birth, $bio, $profile_picture){
 	global $pdo;
 	$hashedpassword = password_hash($password, PASSWORD_DEFAULT);
-	$stmt = $pdo->prepare("INSERT INTO users (email, password) VALUES (:email, :password)");
+	$stmt = $pdo->prepare("INSERT INTO users (username, email, password, first_name, last_name, date_of_birth, bio, profile_picture)
+						   VALUES (:username, :email, :password, :first_name, :last_name, :date_of_birth, :bio, :profile_picture)");
 	$stmt->execute([
+		'username' => $username,
 		'email' => $email,
-		'password' => $hashedpassword
+		'password' => $hashedpassword,
+		'first_name' => $first_name,
+		'last_name' => $last_name,
+		'date_of_birth' => $date_of_birth,
+		'bio' => $bio,
+		'profile_picture' => $profile_picture
 	]);
 }
 
