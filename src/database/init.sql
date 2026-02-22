@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.45, for Linux (aarch64)
+-- MySQL dump 10.13  Distrib 8.0.45, for Linux (x86_64)
 --
 -- Host: localhost    Database: roamance
 -- ------------------------------------------------------
@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `activity_logs`
+--
+
+DROP TABLE IF EXISTS `activity_logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `activity_logs` (
+  `log_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `action` enum('LOGIN','LOGOUT','LIKE','MESSAGE','PROFILE_UPDATE','OTHER') DEFAULT NULL,
+  `reference_id` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`log_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `activity_logs`
+--
+
+LOCK TABLES `activity_logs` WRITE;
+/*!40000 ALTER TABLE `activity_logs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `activity_logs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `admin_actions`
 --
 
@@ -26,10 +54,14 @@ CREATE TABLE `admin_actions` (
   `action_id` int NOT NULL AUTO_INCREMENT,
   `admin_id` int NOT NULL,
   `target_id` int NOT NULL,
-  `action_taken` enum('Banned','Suspended','Warning','N/A') NOT NULL,
+  `action_taken` enum('BANNED','SUSPENDED','WARNING') DEFAULT NULL,
   `reason` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`action_id`)
+  PRIMARY KEY (`action_id`),
+  KEY `fk_admin` (`admin_id`),
+  KEY `fk_target` (`target_id`),
+  CONSTRAINT `fk_admin` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_target` FOREIGN KEY (`target_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -40,6 +72,33 @@ CREATE TABLE `admin_actions` (
 LOCK TABLES `admin_actions` WRITE;
 /*!40000 ALTER TABLE `admin_actions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `admin_actions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `blocks`
+--
+
+DROP TABLE IF EXISTS `blocks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `blocks` (
+  `blocker_id` int NOT NULL,
+  `blocked_id` int NOT NULL,
+  `blocked_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`blocker_id`,`blocked_id`),
+  KEY `blocked_id` (`blocked_id`),
+  CONSTRAINT `blocks_ibfk_1` FOREIGN KEY (`blocker_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `blocks_ibfk_2` FOREIGN KEY (`blocked_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `blocks`
+--
+
+LOCK TABLES `blocks` WRITE;
+/*!40000 ALTER TABLE `blocks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `blocks` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -78,8 +137,12 @@ CREATE TABLE `likes` (
   `sender_id` int NOT NULL,
   `receiver_id` int NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`)
+  PRIMARY KEY (`sender_id`,`receiver_id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `unique_like` (`sender_id`,`receiver_id`),
+  KEY `fk_likes_receiver` (`receiver_id`),
+  CONSTRAINT `fk_likes_receiver` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_likes_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -90,6 +153,35 @@ CREATE TABLE `likes` (
 LOCK TABLES `likes` WRITE;
 /*!40000 ALTER TABLE `likes` DISABLE KEYS */;
 /*!40000 ALTER TABLE `likes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `matches`
+--
+
+DROP TABLE IF EXISTS `matches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `matches` (
+  `match_id` int NOT NULL AUTO_INCREMENT,
+  `user1_id` int NOT NULL,
+  `user2_id` int NOT NULL,
+  `matched_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`match_id`),
+  UNIQUE KEY `user1_id` (`user1_id`,`user2_id`),
+  KEY `user2_id` (`user2_id`),
+  CONSTRAINT `matches_ibfk_1` FOREIGN KEY (`user1_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `matches_ibfk_2` FOREIGN KEY (`user2_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `matches`
+--
+
+LOCK TABLES `matches` WRITE;
+/*!40000 ALTER TABLE `matches` DISABLE KEYS */;
+/*!40000 ALTER TABLE `matches` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -105,9 +197,14 @@ CREATE TABLE `messages` (
   `receiver_id` int NOT NULL,
   `message` text NOT NULL,
   `sent_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `match_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sender_id` (`sender_id`),
   KEY `receiver_id` (`receiver_id`),
+  KEY `fk_messages_match` (`match_id`),
+  CONSTRAINT `fk_messages_match` FOREIGN KEY (`match_id`) REFERENCES `matches` (`match_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_messages_receiver` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_messages_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`),
   CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -123,6 +220,129 @@ LOCK TABLES `messages` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifications` (
+  `notification_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `type` enum('LIKE','MATCH','MESSAGE','ADMIN_ACTION','OTHER') NOT NULL,
+  `reference_id` int DEFAULT NULL,
+  `content` text,
+  `is_read` tinyint(1) DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`notification_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notifications`
+--
+
+LOCK TABLES `notifications` WRITE;
+/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `photos`
+--
+
+DROP TABLE IF EXISTS `photos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `photos` (
+  `photo_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `image_url` varchar(255) NOT NULL,
+  `is_primary` tinyint(1) DEFAULT '0',
+  `uploaded_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`photo_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `photos_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `photos`
+--
+
+LOCK TABLES `photos` WRITE;
+/*!40000 ALTER TABLE `photos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `photos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `profiles`
+--
+
+DROP TABLE IF EXISTS `profiles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `profiles` (
+  `user_id` int NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `gender` enum('MALE','FEMALE','OTHER') DEFAULT NULL,
+  `bio` text,
+  `height_cm` int DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `looking_for` enum('FRIENDSHIP','CASUAL','RELATIONSHIP') DEFAULT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `profiles`
+--
+
+LOCK TABLES `profiles` WRITE;
+/*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
+INSERT INTO `profiles` VALUES (83,'Elizabeth','Martin','1973-12-20','OTHER','Enjoys reading, hiking, and good music.',162,'San Jose','Netherlands','RELATIONSHIP','https://i.pravatar.cc/150?img=24','2025-10-06 15:16:22'),(84,'Jennifer','Martin','1972-09-04','FEMALE','Always curious and learning new things.',173,'Dallas','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=14','2025-08-08 15:16:22'),(85,'Michael','Anderson','1999-07-13','MALE','Love adventures and meeting new people.',171,'Los Angeles','Sweden','CASUAL','https://i.pravatar.cc/150?img=32','2026-02-13 15:16:23'),(86,'Thomas','White','1996-03-01','MALE','Love adventures and meeting new people.',198,'Los Angeles','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=19','2025-11-04 15:16:23'),(87,'Richard','Thomas','2007-12-25','MALE','Looking for meaningful connections.',154,'Dallas','UK','RELATIONSHIP','https://i.pravatar.cc/150?img=32','2026-01-31 15:16:23'),(88,'James','White','1991-04-21','MALE','Tech enthusiast and coffee lover.',192,'Dallas','France','RELATIONSHIP','https://i.pravatar.cc/150?img=43','2025-08-19 15:16:23'),(89,'Charles','Harris','1996-04-26','OTHER','Love adventures and meeting new people.',172,'San Antonio','Italy','CASUAL','https://i.pravatar.cc/150?img=23','2026-01-24 15:16:23'),(90,'Barbara','Thomas','1990-04-08','OTHER','Enjoys reading, hiking, and good music.',189,'Phoenix','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=23','2025-03-29 15:16:23'),(91,'Sarah','Harris','1970-05-26','OTHER','Always curious and learning new things.',187,'Phoenix','Germany','FRIENDSHIP','https://i.pravatar.cc/150?img=5','2025-08-08 15:16:23'),(92,'Elizabeth','Jackson','2008-06-16','OTHER','Looking for meaningful connections.',175,'Dallas','Germany','CASUAL','https://i.pravatar.cc/150?img=6','2025-03-29 15:16:23'),(93,'Robert','Harris','1968-08-02','MALE','Love adventures and meeting new people.',156,'San Diego','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=70','2025-03-17 15:16:23'),(94,'David','Anderson','1985-10-04','OTHER','Always curious and learning new things.',157,'Houston','Australia','CASUAL','https://i.pravatar.cc/150?img=50','2026-02-03 15:16:23'),(95,'Karen','White','2003-10-13','OTHER','Always curious and learning new things.',188,'Philadelphia','Germany','CASUAL','https://i.pravatar.cc/150?img=31','2025-07-23 15:16:23'),(96,'Joseph','Martin','1969-01-09','MALE','Enjoys reading, hiking, and good music.',176,'Philadelphia','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=32','2025-07-26 15:16:23'),(97,'Mary','Johnson','1994-10-05','OTHER','Enjoys reading, hiking, and good music.',151,'Philadelphia','USA','CASUAL','https://i.pravatar.cc/150?img=65','2025-03-14 15:16:23'),(98,'Thomas','Jackson','1991-07-09','MALE','Love adventures and meeting new people.',194,'Houston','Australia','CASUAL','https://i.pravatar.cc/150?img=17','2025-12-15 15:16:23'),(99,'Richard','Thomas','1976-07-21','MALE','Enjoys reading, hiking, and good music.',155,'San Jose','Canada','RELATIONSHIP','https://i.pravatar.cc/150?img=7','2025-10-18 15:16:23'),(100,'James','Johnson','1993-04-14','MALE','Enjoys reading, hiking, and good music.',194,'New York','Canada','FRIENDSHIP','https://i.pravatar.cc/150?img=39','2025-04-05 15:16:23'),(101,'Jessica','Johnson','1973-03-23','FEMALE','Love adventures and meeting new people.',188,'Los Angeles','USA','CASUAL','https://i.pravatar.cc/150?img=11','2025-11-01 15:16:23'),(102,'James','Anderson','1984-01-19','MALE','Fun, outgoing, and spontaneous.',190,'Los Angeles','UK','CASUAL','https://i.pravatar.cc/150?img=5','2025-09-15 15:16:23'),(103,'Patricia','Thomas','1968-09-13','OTHER','Enjoys reading, hiking, and good music.',170,'San Jose','Sweden','FRIENDSHIP','https://i.pravatar.cc/150?img=9','2025-07-30 15:16:23'),(104,'Sarah','Taylor','1983-03-17','OTHER','Enjoys reading, hiking, and good music.',176,'Dallas','France','FRIENDSHIP','https://i.pravatar.cc/150?img=32','2025-04-07 15:16:23'),(105,'Susan','Harris','1972-06-15','OTHER','Fun, outgoing, and spontaneous.',174,'Los Angeles','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=68','2025-05-10 15:16:24'),(106,'Mary','Anderson','1982-04-18','FEMALE','Enjoys reading, hiking, and good music.',183,'Philadelphia','UK','RELATIONSHIP','https://i.pravatar.cc/150?img=44','2025-04-02 15:16:24'),(107,'Elizabeth','Martin','1981-09-01','OTHER','Love adventures and meeting new people.',187,'Los Angeles','UK','FRIENDSHIP','https://i.pravatar.cc/150?img=22','2026-02-08 15:16:24'),(108,'Thomas','White','2005-02-24','OTHER','Always curious and learning new things.',200,'Chicago','Australia','CASUAL','https://i.pravatar.cc/150?img=43','2025-12-13 15:16:24'),(109,'Elizabeth','Smith','1987-11-24','FEMALE','Fun, outgoing, and spontaneous.',151,'Chicago','Netherlands','FRIENDSHIP','https://i.pravatar.cc/150?img=11','2025-02-25 15:16:24'),(110,'John','Johnson','1976-11-07','OTHER','Looking for meaningful connections.',186,'Phoenix','Germany','FRIENDSHIP','https://i.pravatar.cc/150?img=55','2025-08-11 15:16:24'),(111,'James','Johnson','1998-03-14','OTHER','Love adventures and meeting new people.',174,'San Antonio','Netherlands','RELATIONSHIP','https://i.pravatar.cc/150?img=11','2025-03-24 15:16:24'),(112,'Sarah','Harris','1968-01-04','FEMALE','Fun, outgoing, and spontaneous.',198,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=26','2025-06-26 15:16:24'),(113,'Barbara','Johnson','1982-08-04','FEMALE','Love adventures and meeting new people.',188,'Los Angeles','Netherlands','FRIENDSHIP','https://i.pravatar.cc/150?img=65','2025-04-27 15:16:24'),(114,'David','Thomas','2001-11-06','MALE','Enjoys reading, hiking, and good music.',150,'Houston','Canada','CASUAL','https://i.pravatar.cc/150?img=57','2025-12-25 15:16:24'),(115,'Jessica','Thomas','1978-04-25','FEMALE','Looking for meaningful connections.',165,'San Jose','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=35','2025-10-22 15:16:24'),(116,'Jennifer','Brown','1996-05-15','FEMALE','Fun, outgoing, and spontaneous.',174,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=69','2025-06-26 15:16:24'),(117,'David','Martin','2000-07-25','MALE','Tech enthusiast and coffee lover.',173,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=66','2025-06-08 15:16:24'),(118,'Sarah','Taylor','1998-11-14','OTHER','Looking for meaningful connections.',161,'Houston','Spain','CASUAL','https://i.pravatar.cc/150?img=46','2025-12-08 15:16:24'),(119,'Jessica','White','1999-12-14','OTHER','Fun, outgoing, and spontaneous.',186,'Chicago','Australia','RELATIONSHIP','https://i.pravatar.cc/150?img=4','2025-12-09 15:16:24'),(120,'Linda','Taylor','2007-06-05','FEMALE','Always curious and learning new things.',175,'Los Angeles','Sweden','FRIENDSHIP','https://i.pravatar.cc/150?img=1','2025-10-02 15:16:24'),(121,'Charles','Anderson','1980-07-01','OTHER','Enjoys reading, hiking, and good music.',162,'Philadelphia','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=39','2025-07-04 15:16:24'),(122,'David','Thomas','1983-10-01','OTHER','Fun, outgoing, and spontaneous.',187,'Houston','UK','CASUAL','https://i.pravatar.cc/150?img=17','2025-10-07 15:16:24'),(123,'John','Johnson','1977-08-18','OTHER','Love adventures and meeting new people.',158,'Los Angeles','Canada','RELATIONSHIP','https://i.pravatar.cc/150?img=5','2025-07-23 15:16:24'),(124,'Elizabeth','Brown','1993-04-23','FEMALE','Enjoys reading, hiking, and good music.',174,'Los Angeles','Italy','CASUAL','https://i.pravatar.cc/150?img=20','2025-06-29 15:16:24'),(125,'Jennifer','Johnson','1986-04-18','OTHER','Looking for meaningful connections.',188,'Dallas','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=70','2026-01-21 15:16:24'),(126,'David','White','2003-08-24','OTHER','Looking for meaningful connections.',157,'Los Angeles','France','FRIENDSHIP','https://i.pravatar.cc/150?img=32','2025-10-04 15:16:25'),(127,'Karen','Taylor','1976-07-09','OTHER','Love adventures and meeting new people.',165,'Los Angeles','UK','FRIENDSHIP','https://i.pravatar.cc/150?img=61','2025-10-08 15:16:25'),(128,'Jessica','Brown','1998-11-08','FEMALE','Love adventures and meeting new people.',196,'Philadelphia','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=44','2025-06-28 15:16:25'),(129,'William','Jackson','1983-05-25','MALE','Tech enthusiast and coffee lover.',171,'Houston','Spain','FRIENDSHIP','https://i.pravatar.cc/150?img=63','2025-10-15 15:16:25'),(130,'Jennifer','Smith','1992-09-07','OTHER','Tech enthusiast and coffee lover.',195,'San Antonio','Canada','FRIENDSHIP','https://i.pravatar.cc/150?img=58','2025-09-02 15:16:25'),(131,'Michael','Jackson','1973-12-14','MALE','Always curious and learning new things.',181,'San Antonio','France','CASUAL','https://i.pravatar.cc/150?img=31','2025-12-13 15:16:25'),(132,'James','Thomas','1989-03-05','MALE','Love adventures and meeting new people.',156,'San Diego','Spain','FRIENDSHIP','https://i.pravatar.cc/150?img=52','2026-01-10 15:16:25');
+/*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reports`
+--
+
+DROP TABLE IF EXISTS `reports`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reports` (
+  `report_id` int NOT NULL AUTO_INCREMENT,
+  `reporter_id` int NOT NULL,
+  `reported_id` int NOT NULL,
+  `reason` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`report_id`),
+  KEY `reporter_id` (`reporter_id`),
+  KEY `reported_id` (`reported_id`),
+  CONSTRAINT `reports_ibfk_1` FOREIGN KEY (`reporter_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `reports_ibfk_2` FOREIGN KEY (`reported_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reports`
+--
+
+LOCK TABLES `reports` WRITE;
+/*!40000 ALTER TABLE `reports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reports` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user_interests`
 --
 
@@ -134,6 +354,8 @@ CREATE TABLE `user_interests` (
   `interest_id` int NOT NULL,
   PRIMARY KEY (`user_id`,`interest_id`),
   KEY `interest_id` (`interest_id`),
+  CONSTRAINT `fk_ui_interest` FOREIGN KEY (`interest_id`) REFERENCES `interests` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ui_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `user_interests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `user_interests_ibfk_2` FOREIGN KEY (`interest_id`) REFERENCES `interests` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -145,7 +367,6 @@ CREATE TABLE `user_interests` (
 
 LOCK TABLES `user_interests` WRITE;
 /*!40000 ALTER TABLE `user_interests` DISABLE KEYS */;
-INSERT INTO `user_interests` VALUES (3,1),(2,2),(27,2),(16,3),(5,4),(2,5),(14,5),(20,8),(25,8),(15,9),(28,9),(6,12),(9,12),(13,12),(22,12),(1,15),(25,15),(2,17),(13,17),(24,17),(8,18),(21,18),(22,18),(5,19),(18,23),(4,24),(11,24),(15,24),(3,25),(4,26),(14,26),(2,27),(23,29),(14,30),(23,30),(12,33),(13,33),(21,33),(15,34),(7,35),(3,37),(16,38),(8,42),(10,42),(11,43),(30,43),(1,44),(10,44),(9,45),(12,46),(11,48),(1,49),(14,49),(25,49),(7,50),(15,50),(30,50),(7,51),(7,52),(20,52),(5,53),(15,53),(19,56),(28,56),(4,57),(13,57),(16,59),(4,60),(29,61),(2,63),(21,63),(4,64),(28,64),(18,65),(12,66),(24,66),(20,67),(25,67),(26,67),(8,69),(17,69),(19,69),(9,72),(24,74),(26,74),(24,75),(22,76),(24,76),(12,77),(29,78),(21,80),(13,81),(27,82),(9,84),(12,85),(25,86),(6,89),(17,89),(20,89),(5,91),(17,91),(11,94),(21,95),(22,95),(7,96),(11,98),(18,99);
 /*!40000 ALTER TABLE `user_interests` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,17 +381,15 @@ CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `first_name` varchar(50) DEFAULT NULL,
-  `last_name` varchar(50) DEFAULT NULL,
-  `date_of_birth` date DEFAULT NULL,
-  `bio` text,
-  `profile_picture` varchar(255) DEFAULT NULL,
+  `password_hash` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `account_status` enum('ACTIVE','BANNED','SUSPENDED') DEFAULT 'ACTIVE',
+  `last_login` timestamp NULL DEFAULT NULL,
+  `role` enum('USER','ADMIN') DEFAULT 'USER',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +398,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Kai1234','kai.howley@email.com','$2y$10$uksKaq/cGobevxnwLi9qFOvghL1/5oEqsNDqXfVFkDAiWIp/CEWb.','Kai','Howley','2004-10-04','I love gaming, coding, and late-night coffee.',NULL,'2026-02-17 15:51:16'),(2,'J4neDoe','jane.doe@email.com','$2y$10$V9O.2wAfM2qoJFHFXVq6Pe8A6Z/6x.MIrP90m6127coYyDdK1IQJC','Jane','Doe','2003-05-21','Avid reader and music enthusiast.',NULL,'2026-02-17 15:51:16'),(3,'Leo89','leo.martin@email.com','$2y$10$lWfI9ffuSNSuE.bDBOtD4O.Qbv1lZ.XBXkCWDnruWcuXn/gKdWMbi','Leo','Martin','1999-08-12','Passionate about photography and travel.',NULL,'2026-02-17 15:51:16'),(4,'SophieL','sophie.lane@email.com','$2y$10$ZlOhfqy6YTTudQriW8etAeR5bBPZ2sfQFGZoYfveImJXqX0mM0LRG','Sophie','Lane','2002-11-03','Baker, dog lover, and tech fan.',NULL,'2026-02-17 15:51:16'),(5,'MaxPower','max.power@email.com','$2y$10$MnI9TlxcdAkEevzdh548C.TCNM7qRoeemqCwN4MFwduwwX2bLxq1C','Max','Power','2001-07-19','Fitness junkie and movie buff.',NULL,'2026-02-17 15:51:16'),(6,'EmmaG23','emma.green@email.com','$2y$10$zV7vd2xlGb90Otwb1pFnse80r19yi7WwMH7Qd8Y13xhGR8dK6gbNq','Emma','Green','2004-03-15','Love painting and exploring new cafes.',NULL,'2026-02-17 15:51:16'),(7,'ChrisT99','chris.taylor@email.com','$2y$10$fOKLUqI.nJg9GSniM2qYTeMuZoho2a3eRS/6qPAkodD/FfKRMU/d.','Chris','Taylor','2000-12-01','Gamer and sports fanatic.',NULL,'2026-02-17 15:51:16'),(8,'LilyRose','lily.rose@email.com','$2y$10$DfE9zCm.EU2bAQrxFmeW0.0W81qZvenNLP6u7IHXmiWSzOPC2nhBe','Lily','Rose','2003-09-09','Yoga enthusiast and blogger.',NULL,'2026-02-17 15:51:16'),(9,'OliverB','oliver.bennett@email.com','$2y$10$CRoJ5enLlGk58fRhcGpSZu2amlWGvLOIEfABU0d0zkO1ysDM.lCuK','Oliver','Bennett','2002-06-23','Tech geek and aspiring chef.',NULL,'2026-02-17 15:51:16'),(10,'MiaK','mia.keller@email.com','$2y$10$RckGbkyFTAjqg4.8dxhlVu/Nk1p8fOHuVQj1a0QsU2hnXX/8kGOvq','Mia','Keller','2004-01-30','Love hiking, photography, and music.',NULL,'2026-02-17 15:51:16'),(11,'NoahS','noah.smith@email.com','$2y$10$/QA4qXQmKPVYAMbGiF4pwuNKv3o9kOxTl67kWZ.P.KV740R8o9HN.','Noah','Smith','2001-10-14','Soccer player and coffee lover.',NULL,'2026-02-17 15:51:16'),(12,'AvaL','ava.larson@email.com','$2y$10$qpCdJrJkGxUKuDj.g8Bi6OioISHTkeKBuQ9OakhCe5LeuMuuDAzHe','Ava','Larson','2003-04-07','Artist and bookworm.',NULL,'2026-02-17 15:51:16'),(13,'EthanH','ethan.hughes@email.com','$2y$10$09DtjVCXDYzllYnfZv1H6ev7AA3j07Ttv0CMOQe/.AUmum2.AQu8q','Ethan','Hughes','2000-08-20','Loves coding and sci-fi movies.',NULL,'2026-02-17 15:51:16'),(14,'IslaM','isla.morris@email.com','$2y$10$aLkITSIE7OrfcJx9H7ZhbeaQvwPxuuPLUG.1nFT5sWf3DcgspgCn6','Isla','Morris','2002-02-11','Foodie and travel addict.',NULL,'2026-02-17 15:51:16'),(15,'LucasF','lucas.foster@email.com','$2y$10$qUfwGrxdJuiiurUsZCwY3OM.HD12nDGQ4IQL3upTTSDBqDP5aBore','Lucas','Foster','2001-05-27','Guitarist and podcast fan.',NULL,'2026-02-17 15:51:16'),(16,'ZoeW','zoe.walsh@email.com','$2y$10$vUVfpcbEHmcA6v3viEc12.E.NaQkh8WCgjvI9AQqWehxAG8jWOXWG','Zoe','Walsh','2003-07-18','Animal lover and blogger.',NULL,'2026-02-17 15:51:16'),(17,'JackC','jack.cole@email.com','$2y$10$wo46ZCIPKOUH3cfsiJ8D.eYTYcWVXXqgyRpw30.H6ECfxjSRkuoju','Jack','Cole','2000-09-05','Cyclist and coffee enthusiast.',NULL,'2026-02-17 15:51:16'),(18,'ChloeB','chloe.barnes@email.com','$2y$10$7d8w4JamMpbpLzADV2lmC.EsjcWo46O89eICO5BcxySfkZG3kbUxC','Chloe','Barnes','2004-12-22','Dancer and music fan.',NULL,'2026-02-17 15:51:16'),(19,'RyanD','ryan.davis@email.com','$2y$10$.7wmL2Wv/WDa/xGo6CxoHOHyH9hrrpFwq7l6JRRAqKOBCeKgcIdvO','Ryan','Davis','2002-03-30','Tech lover and gamer.',NULL,'2026-02-17 15:51:16'),(20,'SophiaJ','sophia.jenkins@email.com','$2y$10$pxKf3N7HZlMyPmcGt7ZHtOQm0V/nOnKOJ6AfeHXehxrIrZTsIb24K','Sophia','Jenkins','2003-11-13','Enjoys painting and reading.',NULL,'2026-02-17 15:51:16'),(21,'MasonT','mason.thomas@email.com','$2y$10$F0L8Bj0565QaqaJh5fkaFu3TizqG7uB26YwfIH0yJKIZaUHu1ucsC','Mason','Thomas','2001-01-19','Basketball player and movie fan.',NULL,'2026-02-17 15:51:16'),(22,'LilaP','lila.parker@email.com','$2y$10$vEAtZ6FkFL0a3EoxL57nr.1KxX2OagehdBjcvIiCFUDmH2OhoAzga','Lila','Parker','2004-06-06','Coffee addict and blogger.',NULL,'2026-02-17 15:51:16'),(23,'LeoK','leo.kane@email.com','$2y$10$in76NVA.R6WXPZAKzhEo3uTOxY2CR5P7QIqJC/nhWybUQ8JBFDYQa','Leo','Kane','2002-09-29','Love tech gadgets and gaming.',NULL,'2026-02-17 15:51:16'),(24,'EllaS','ella.sanders@email.com','$2y$10$yCLLuR8vLCIWkIGjsvc/nOVPVGcGPq1OkXp8JaWYjqHCeJqbSp/hq','Ella','Sanders','2003-05-03','Writer and music lover.',NULL,'2026-02-17 15:51:16'),(25,'HenryB','henry.bradley@email.com','$2y$10$PhpuBz2CKnPGZJ4jlCu.h.Ms8U.pIBzLVtbZkRyk9PJqsQMBtO3FG','Henry','Bradley','2001-12-10','Runner and coffee enthusiast.',NULL,'2026-02-17 15:51:16'),(26,'MayaH','maya.henderson@email.com','$2y$10$ZFYCjLqxBFhpp4pktRzPj.HuKpGB.Mb1RN3lBAmNqQxcdIP1F.EaK','Maya','Henderson','2004-08-15','Foodie and traveler.',NULL,'2026-02-17 15:51:16'),(27,'OwenR','owen.richards@email.com','$2y$10$KtWXgbxrcfFZHkO8DhuTd.mu8a2fcTn6ITHXn/6wwrPxN7njYV4Mu','Owen','Richards','2000-04-04','Loves coding and basketball.',NULL,'2026-02-17 15:51:16'),(28,'ZaraL','zara.lawson@email.com','$2y$10$emKhZ0O.7RhGBcJT9rLlfe5ntE873ym42Tj05a6HpO1EkTpVpaZLm','Zara','Lawson','2002-11-25','Photographer and writer.',NULL,'2026-02-17 15:51:16'),(29,'EliM','eli.morris@email.com','$2y$10$cIs8CiJ.CKKc2E0QUYWMiuHxGpWhriEMxIVWuKOpWaiUM18IPEAai','Eli','Morris','2003-02-17','Gamer and podcast fan.',NULL,'2026-02-17 15:51:16'),(30,'NinaF','nina.foster@email.com','$2y$10$oGZdCFpFjuuE6aKrZ2NN2uDKhRvVS5NlM5JPzyb2reO4HgcgcocH6','Nina','Foster','2001-07-07','Loves reading and traveling.',NULL,'2026-02-17 15:51:16'),(31,'jackryan','jack.ryan@email.com','$2y$10$/QGqadJgVGvwcMzycVRRRe/FXchnS8fcfRLb6d/wUtj582rMEQsKS','Jack','Ryan','2004-11-10','yummers','picture','2026-02-21 13:16:07'),(32,'AssCrack','asscrack@crack.com','$2y$10$dIK2kTxp/bCd31NAnJdXeukqIKXLcXU6v4c/eNrXDDGb.VMHWKBGC','Scutter','Legs','1990-12-12','Strangely not welcome due to odour','Pic','2026-02-21 13:20:11');
+INSERT INTO `users` VALUES (83,'Elizabeth.M699','elizabeth.m699@gmail.com','$2y$10$kV1mFwH/ZN7EH6JdhSBHqe0JysdQcJhC1PLvsP31Ebw7/zYIQhWza','2025-10-06 15:16:22','ACTIVE',NULL,'USER'),(84,'Jennifer.M324','jennifer.m324@gmail.com','$2y$10$142Q5qN7AAbQZdDyTccV7ugNKHNfJ9KM5GeFvhXI2hn9FdhjM0rUy','2025-08-08 15:16:22','ACTIVE',NULL,'USER'),(85,'Michael.A877','michael.a877@gmail.com','$2y$10$6hWxpLQdXldGCoO070JoaO8t8KhRNDgqq4TTd8v1V9aqg6QvJ5yNC','2026-02-13 15:16:23','ACTIVE',NULL,'USER'),(86,'Thomas.W371','thomas.w371@yahoo.com','$2y$10$YopQ452tWN6tgwiVKFw0lOIKJtjp53PlTRqVVe9QOXfI3wP5wd..O','2025-11-04 15:16:23','ACTIVE',NULL,'USER'),(87,'Richard.T213','richard.t213@hotmail.com','$2y$10$r1XZohAtjolYAb/7nBrl5eev9CO1Dyr.Uneng8CYAV4jK/tWXdY/O','2026-01-31 15:16:23','ACTIVE',NULL,'USER'),(88,'James.W635','james.w635@gmail.com','$2y$10$.qN3t4uBfqngHiS1w/DVm.uEpS.ig.Y3Y38Ql64TiTR9FC/0sjbd.','2025-08-19 15:16:23','ACTIVE',NULL,'USER'),(89,'Charles.H294','charles.h294@gmail.com','$2y$10$9tj/fDvaq4Yh/iR/wKsi6ePE8LsC49uY6fRCGnfV6jE6nXHJGtMMK','2026-01-24 15:16:23','ACTIVE',NULL,'USER'),(90,'Barbara.T167','barbara.t167@yahoo.com','$2y$10$2xqoSBhSmshldxtIeQzU5uUKznCDFWU3Thwi9.R9pDsPIcqcG6P.W','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(91,'Sarah.H524','sarah.h524@outlook.com','$2y$10$mWEmmy2qpba9cm59LWH3/uRuMGYeCzKG2hqYIMmvFOUpUEldCHfaS','2025-08-08 15:16:23','ACTIVE',NULL,'USER'),(92,'Elizabeth.J136','elizabeth.j136@yahoo.com','$2y$10$pT78S.D5UlIBU74npQPK3uMhTvnK1oMxhi/DeYdGVQ8ed8juUptGu','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(93,'Robert.H138','robert.h138@yahoo.com','$2y$10$UWa7UH8d5v7BSt/yrdyBf.hb3skJ5xyXA0U77Kd/wAUoUz104bYAe','2025-03-17 15:16:23','ACTIVE',NULL,'USER'),(94,'David.A545','david.a545@yahoo.com','$2y$10$ACSqXmFcYQirY60ySKxnwe9FWfoqvaMVKzx8Bgm3tli7pu.VcEaT.','2026-02-03 15:16:23','ACTIVE',NULL,'USER'),(95,'Karen.W286','karen.w286@outlook.com','$2y$10$m9h/C9/pYEU0ExRSWuaut.8M.XaBKtOl2lZrCY/uDDGpksSSBTLyO','2025-07-23 15:16:23','ACTIVE',NULL,'USER'),(96,'Joseph.M964','joseph.m964@hotmail.com','$2y$10$A8sE6gzIL65g52wA3vFwPuEOtn8oZCdiS6SN5jvN8a4pOxQK02E5m','2025-07-26 15:16:23','ACTIVE',NULL,'USER'),(97,'Mary.J608','mary.j608@yahoo.com','$2y$10$DXWsqtynzurZ5tjNfYU4xuAobax/UIcTxUH2LD4TI5zCizQJsdgqq','2025-03-14 15:16:23','ACTIVE',NULL,'USER'),(98,'Thomas.J508','thomas.j508@gmail.com','$2y$10$30Vp3/TdAyfdlhakw7riJuHC.PcUHmuhni5SXE/URjT5rFTjKue3S','2025-12-15 15:16:23','ACTIVE',NULL,'USER'),(99,'Richard.T797','richard.t797@yahoo.com','$2y$10$CalgS5/XNZANb3EB2RlNy.AroeQQ/9MPuelLEVipBQXE/xDlV97Le','2025-10-18 15:16:23','ACTIVE',NULL,'USER'),(100,'James.J805','james.j805@gmail.com','$2y$10$6zPMiD5WFAs1lCVhuJ807.doNCNEOgf.ezzOHdlVVF4Gw5b2ErJ0a','2025-04-05 15:16:23','ACTIVE',NULL,'USER'),(101,'Jessica.J866','jessica.j866@hotmail.com','$2y$10$14x9jbr63yy6hlOhDR5HWOEFTzgTOXHzrqYMH5AAG02GZX9LWaBaq','2025-11-01 15:16:23','ACTIVE',NULL,'USER'),(102,'James.A511','james.a511@outlook.com','$2y$10$AHEpMxVBx.o251jtYKZUUuaRvSreQnz6IvE.5/o8pf4.rJ0QZQTcy','2025-09-15 15:16:23','ACTIVE',NULL,'USER'),(103,'Patricia.T760','patricia.t760@outlook.com','$2y$10$dAkbWqDodDloxIooyDVOuegls5XthL2.eiNIOUaVzFlddBeYCCDpW','2025-07-30 15:16:23','ACTIVE',NULL,'USER'),(104,'Sarah.T169','sarah.t169@yahoo.com','$2y$10$j8BaHo/30AGq4YZRJ0ea1.z3Rw7cM1P6XN4LYFHFb2XAfeebzRY5.','2025-04-07 15:16:23','ACTIVE',NULL,'USER'),(105,'Susan.H61','susan.h61@hotmail.com','$2y$10$5BJNYPYO9eAVXUImJhgQp.k6JVv7/dmTDlzjZyWOx2Cae3t5gm/Ja','2025-05-10 15:16:24','ACTIVE',NULL,'USER'),(106,'Mary.A59','mary.a59@yahoo.com','$2y$10$KfueYczAjIFho.nmoKwVBuuJQ/pBpi4iD098f9NWD6DfU6A1K.Auu','2025-04-02 15:16:24','ACTIVE',NULL,'USER'),(107,'Elizabeth.M301','elizabeth.m301@gmail.com','$2y$10$Zil4o5wFSQMY9yHAXOVcu.BPe.8DwvSMDpx8Ii2lxoDRiPKi6I7l6','2026-02-08 15:16:24','ACTIVE',NULL,'USER'),(108,'Thomas.W996','thomas.w996@outlook.com','$2y$10$l3m9RdJqZW8XOu67H1IQveuWpvZLCNSzLpy5sHOl.W0IDjuPbToEC','2025-12-13 15:16:24','ACTIVE',NULL,'USER'),(109,'Elizabeth.S40','elizabeth.s40@outlook.com','$2y$10$TdcaW554CO1rDbPC6ko9QuIJ/x9QEplh7S/EFgEiho/CSeotK1Evq','2025-02-25 15:16:24','ACTIVE',NULL,'USER'),(110,'John.J935','john.j935@hotmail.com','$2y$10$r8Jok1seNZLjyFPPBs0vDeJ/PwpzUH1FrzWH5MSVNYwLZJG/EStc2','2025-08-11 15:16:24','ACTIVE',NULL,'USER'),(111,'James.J336','james.j336@gmail.com','$2y$10$sbC8VjjRHV0.IluyhSkMWuo.LbATOek3.a7o10sRX5HkfV2vCRG.i','2025-03-24 15:16:24','ACTIVE',NULL,'USER'),(112,'Sarah.H885','sarah.h885@yahoo.com','$2y$10$ozFCiAB6mwUy1qoDfQyBfOfWwDngNqkUvmCDuGtNSWRQL6TgigolC','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(113,'Barbara.J37','barbara.j37@gmail.com','$2y$10$uYafVePupl8SR6xRM7HsdO3tu8GcnAtWXi38vPN/FKDxAaOOJ79KK','2025-04-27 15:16:24','ACTIVE',NULL,'USER'),(114,'David.T42','david.t42@yahoo.com','$2y$10$XzxC/roplqshnA.1XnU1SeZZ/BE2AVZ5HGIeE6VcWJHRZhIBUhYSi','2025-12-25 15:16:24','ACTIVE',NULL,'USER'),(115,'Jessica.T200','jessica.t200@yahoo.com','$2y$10$hs0J.yM2dnLwzYlAAchHbedwVkxrpPQQg3DidDxHp1q/xFgByK8SS','2025-10-22 15:16:24','ACTIVE',NULL,'USER'),(116,'Jennifer.B48','jennifer.b48@hotmail.com','$2y$10$DLWQVHXcOjQvrdJx0KRUbOxafMzIP/NfPrwJaFAuwkMo/NO/4o6HW','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(117,'David.M510','david.m510@outlook.com','$2y$10$YA4spBZSkA3NLvCAE7ckVO87tgdiE299sAxKyI1LW3WkEU3ohnNI.','2025-06-08 15:16:24','ACTIVE',NULL,'USER'),(118,'Sarah.T676','sarah.t676@hotmail.com','$2y$10$xgIr3oU7wFpSlIcCuY9yZuOE0U7sqWHuCqS/CDvBM0y8yIWR5jcqq','2025-12-08 15:16:24','ACTIVE',NULL,'USER'),(119,'Jessica.W370','jessica.w370@hotmail.com','$2y$10$81EzoY6F6nmuAjgkxdSFP.RzItzkW2HQQLYT1vrqJlyd1yHl5ou2C','2025-12-09 15:16:24','ACTIVE',NULL,'USER'),(120,'Linda.T969','linda.t969@outlook.com','$2y$10$.PIn3t0yrOwwf7HQo7lmq.swSoT0.kQDsCLGs1BFzsB.9cogLtPl.','2025-10-02 15:16:24','ACTIVE',NULL,'USER'),(121,'Charles.A888','charles.a888@outlook.com','$2y$10$HfbRx16BQGKuHNbdZP7.eOOB07U6l58e9oC9yqAknzU8EqdAG1BmK','2025-07-04 15:16:24','ACTIVE',NULL,'USER'),(122,'David.T705','david.t705@hotmail.com','$2y$10$sw5oTGAKNFqyZNgxyEjDxOkm.ioKJ7Cg1vupNEqudl1O2b6Jb5okq','2025-10-07 15:16:24','ACTIVE',NULL,'USER'),(123,'John.J819','john.j819@gmail.com','$2y$10$HD.OMNav2yyC/9rzhB.oiezmJe1CbHgVvrrT130HaVIZrScQCZ.l.','2025-07-23 15:16:24','ACTIVE',NULL,'USER'),(124,'Elizabeth.B721','elizabeth.b721@outlook.com','$2y$10$aWJVyjd34TXTePrvtDEk5OmHi7/BcECycrjTJo1jOiupFUCx0m3y6','2025-06-29 15:16:24','ACTIVE',NULL,'USER'),(125,'Jennifer.J606','jennifer.j606@yahoo.com','$2y$10$1v4HTxbOiy2OsBr8oO5SZOrjemrPUj5ofpKjsITtWMuW62QxZIIzK','2026-01-21 15:16:24','ACTIVE',NULL,'USER'),(126,'David.W156','david.w156@hotmail.com','$2y$10$bKR85kTsJXi4HxCLCFpuUeR0Z7BsRSpDdk9EoByKkhjejJTwX.7F6','2025-10-04 15:16:25','ACTIVE',NULL,'USER'),(127,'Karen.T387','karen.t387@gmail.com','$2y$10$4gw5JKCzsBsQZTfF86.qqOYzd5lMGN7dNyeIGklNQ3TDoo7XLaF1C','2025-10-08 15:16:25','ACTIVE',NULL,'USER'),(128,'Jessica.B590','jessica.b590@hotmail.com','$2y$10$3dvR9FKa2mZ9m9G9afzUK.fAMdTymSVtU9Z1S7/Ghv8arjYADaQ1G','2025-06-28 15:16:25','ACTIVE',NULL,'USER'),(129,'William.J912','william.j912@outlook.com','$2y$10$yzZLpjMUTW.u7KYF.nTT0ujVFbiTNyIeRYnef2ei5/q4Pq2wtxUI6','2025-10-15 15:16:25','ACTIVE',NULL,'USER'),(130,'Jennifer.S348','jennifer.s348@gmail.com','$2y$10$U3tEx3qy.RPsQbwC7kkOa.90w5.91Sgxq7yxC.7EI7ZlCorght/5i','2025-09-02 15:16:25','ACTIVE',NULL,'USER'),(131,'Michael.J713','michael.j713@gmail.com','$2y$10$sUUx9PEIFunUev9UAce85.MMtMTNOCeevn008L.qPHuOTbcRRD2rO','2025-12-13 15:16:25','ACTIVE',NULL,'USER'),(132,'James.T595','james.t595@gmail.com','$2y$10$0ZJMUoRZzevRSnZ939QLCezLFaehhjrdV.FdNJ3Kdi.hkZYSfsLj.','2026-01-10 15:16:25','ACTIVE',NULL,'USER');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -192,4 +411,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-21 13:22:15
+-- Dump completed on 2026-02-22 15:18:18
