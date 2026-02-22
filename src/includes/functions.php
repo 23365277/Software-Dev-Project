@@ -3,10 +3,10 @@
 require_once __DIR__ . "/../config/database.php";
 
 function getUserByEmail($email) {
-	global $pdo;
-	$stmt = $pdo->prepare("SELECT id, password FROM users WHERE email = :email");
-	$stmt->execute(['email' => $email]);
-	return $stmt->fetch();
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id, password_hash FROM users WHERE email = :email");
+    $stmt->execute(['email' => $email]);
+    return $stmt->fetch();
 }
 
 function registerNewUser($username, $email, $password, $first_name, $last_name, $date_of_birth, $bio, $profile_picture){
@@ -26,11 +26,11 @@ function registerNewUser($username, $email, $password, $first_name, $last_name, 
 	]);
 }
 
+// --- Verify login credentials ---
 function verifyLogin($email, $password) {
-	global $pdo;
-	$user = getUserByEmail($email);
-	if ($user && password_verify($password, $user['password'])){
-		return $user['id'];
-	}
-	return false;
+    $user = getUserByEmail($email);
+    if ($user && password_verify($password, $user['password_hash'])){
+        return $user['id'];
+    }
+    return false;
 }
