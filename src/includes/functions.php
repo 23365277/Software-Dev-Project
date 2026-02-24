@@ -9,17 +9,16 @@ function getUserByEmail($email) {
     return $stmt->fetch();
 }
 
-function registerNewUser($username, $email, $password, $first_name, $last_name, $date_of_birth, $bio, $profile_picture) {
+function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth) {
     global $pdo;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt1 = $pdo->prepare("
-        INSERT INTO users (username, email, password_hash, account_status, role, created_at)
-        VALUES (:username, :email, :password_hash, 'ACTIVE', 'USER', NOW())
+        INSERT INTO users (email, password_hash, account_status, role, created_at)
+        VALUES (:email, :password_hash, 'ACTIVE', 'USER', NOW())
     ");
     $stmt1->execute([
-        ':username' => $username,
         ':email' => $email,
         ':password_hash' => $hashedPassword
     ]);
@@ -27,18 +26,16 @@ function registerNewUser($username, $email, $password, $first_name, $last_name, 
     $userId = $pdo->lastInsertId();
 
     $stmt2 = $pdo->prepare("
-	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, bio, profile_picture, created_at) 
+	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, created_at) 
 	VALUES
-	(:user_id, :first_name, :last_name, :date_of_birth, :bio, :profile_picture,NOW())"
+	(:user_id, :first_name, :last_name, :date_of_birth, NOW())"
     );
     
     $stmt2->execute([
         ':user_id' => $userId,
         ':first_name' => $first_name,
         ':last_name' => $last_name,
-        ':date_of_birth' => $date_of_birth,
-        ':bio' => $bio,
-        ':profile_picture' => $profile_picture
+        ':date_of_birth' => $date_of_birth
     ]);
 
     return $userId;
