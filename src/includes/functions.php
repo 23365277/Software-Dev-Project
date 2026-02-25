@@ -4,7 +4,7 @@ require_once __DIR__ . "/../config/database.php";
 
 function getUserByEmail($email) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id, password_hash FROM users WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT email, password_hash FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
     return $stmt->fetch();
 }
@@ -43,7 +43,7 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
-        return $user['id'];
+        return $user['email'];
     }
     return false;
 }
