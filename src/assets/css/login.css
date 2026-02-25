@@ -28,6 +28,7 @@ body {
 .bg-slide-1 { animation-delay: 0s; }
 .bg-slide-2 { animation-delay: 6s; }
 .bg-slide-3 { animation-delay: 12s; }
+.bg-slide-4 { animation-delay: 18s; }
 
 /* Smooth crossfade with overlap */
 @keyframes fadeSlides {
