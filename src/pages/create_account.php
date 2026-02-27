@@ -1,8 +1,8 @@
 <?php
 	$pageTitle = "Roamance - Create Account";
 	$pageCSS = "/assets/css/create_account.css";
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
-    include $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 ?>
 
 <div class="mainblock">
@@ -36,4 +36,4 @@
 
     </div>
 </div>
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

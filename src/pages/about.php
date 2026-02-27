@@ -1,7 +1,7 @@
 <?php
 	$pageTitle = "Roamance - Dating for Travel Lovers";
 	$pageCSS = "/assets/css/about.css";
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 <!--<div class="container-fluid">
 <div class="row">
@@ -68,6 +68,6 @@
 </body>
 </html>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/messaging.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/messaging.php'; ?>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

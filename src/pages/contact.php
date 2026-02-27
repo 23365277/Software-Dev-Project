@@ -1,7 +1,7 @@
 <?php
 	$pageTitle = "Roamance - Dating for Travel Lovers";
 	$pageCSS = "/assets/css/signup.css";
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
 <!DOCTYPE html>
@@ -43,6 +43,6 @@
     </div>
 </body>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
 
 </html>

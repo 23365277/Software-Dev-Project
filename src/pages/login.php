@@ -1,5 +1,5 @@
 <?php
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/functions.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
 	$error = '';
 
@@ -18,7 +18,7 @@
 
 	$pageTitle = "Roamance - Dating for Travel Lovers";
 	$pageCSS = "/assets/css/login.css";
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/head.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 
 ?>
 
@@ -51,7 +51,7 @@
     </div>
 </div>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/footer.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

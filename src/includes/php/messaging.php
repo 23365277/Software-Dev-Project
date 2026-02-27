@@ -1,12 +1,6 @@
 <?php
     // Only include database if needed for functionality. For now, comment out to avoid errors.
     // require_once __DIR__ . '/../config/database.php';
-
-	function sendMessage($sender_id, $receiver_id, $text) {
-	
-	}
-
-	function receiveMessage(){}
 ?>
 
 <link rel="stylesheet" href="/assets/css/messaging.css">
@@ -25,7 +19,11 @@
         </div>
         <div id="chatbox-messages" class="centered-message">
             <span>No messages yet.</span>
-        </div>
+	</div>
+	<input type="text" name="Message Box" placeholder="Start typing to send a message..." id="messageBox">
     </div>
 </div>
 
+<script src="includes/js/utils.js">
+	collect_message();
+</script>

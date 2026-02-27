@@ -47,3 +47,7 @@ function verifyLogin($email, $password) {
     }
     return false;
 }
+
+function sendMessage($sender_id, $receiver_id, $message){
+	
+}
