@@ -29,4 +29,6 @@
     </div>
 </div>
 
-<script src="/includes/js/utils.js"></script>
+<?php if(isset($_SESSION["user_id"])): ?>
+	<script src="/includes/js/utils.js"></script>
+<?php endif; ?>

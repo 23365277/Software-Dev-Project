@@ -28,7 +28,6 @@ function collect_message(e) {
 }
 
 function fetchMessages() {
-	console.log("Loop");
     fetch("/includes/php/get_message.php")
         .then(res => res.json())
         .then(messages => {
