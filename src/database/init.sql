@@ -30,6 +30,7 @@ CREATE TABLE `activity_logs` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`log_id`),
   KEY `user_id` (`user_id`),
+  KEY `idx_activity_logs_user_id` (`user_id`),
   CONSTRAINT `activity_logs_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -60,6 +61,8 @@ CREATE TABLE `admin_actions` (
   PRIMARY KEY (`action_id`),
   KEY `fk_admin` (`admin_id`),
   KEY `fk_target` (`target_id`),
+  KEY `idx_admin_actions_admin_id` (`admin_id`),
+  KEY `idx_admin_actions_target_id` (`target_id`),
   CONSTRAINT `fk_admin` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_target` FOREIGN KEY (`target_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -141,6 +144,7 @@ CREATE TABLE `likes` (
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `unique_like` (`sender_id`,`receiver_id`),
   KEY `fk_likes_receiver` (`receiver_id`),
+  KEY `idx_likes_id` (`id`),
   CONSTRAINT `fk_likes_receiver` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_likes_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -170,6 +174,8 @@ CREATE TABLE `matches` (
   PRIMARY KEY (`match_id`),
   UNIQUE KEY `user1_id` (`user1_id`,`user2_id`),
   KEY `user2_id` (`user2_id`),
+  KEY `idx_matches_user1_id` (`user1_id`),
+  KEY `idx_matches_user2_id` (`user2_id`),
   CONSTRAINT `matches_ibfk_1` FOREIGN KEY (`user1_id`) REFERENCES `users` (`id`),
   CONSTRAINT `matches_ibfk_2` FOREIGN KEY (`user2_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -192,16 +198,23 @@ DROP TABLE IF EXISTS `messages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `messages` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `sender_id` int NOT NULL,
   `receiver_id` int NOT NULL,
   `message` text NOT NULL,
   `sent_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `match_id` int DEFAULT NULL,
+  `seen` tinyint(1) NOT NULL DEFAULT '0',
+  `received` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted_sender` tinyint(1) NOT NULL DEFAULT '0',
+  `deleted_receiver` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `sender_id` (`sender_id`),
   KEY `receiver_id` (`receiver_id`),
   KEY `fk_messages_match` (`match_id`),
+  KEY `idx_messages_sender_id` (`sender_id`),
+  KEY `idx_messages_receiver_id` (`receiver_id`),
+  KEY `idx_messages_match_id` (`match_id`),
   CONSTRAINT `fk_messages_match` FOREIGN KEY (`match_id`) REFERENCES `matches` (`match_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_messages_receiver` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_messages_sender` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
@@ -236,6 +249,8 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`notification_id`),
   KEY `user_id` (`user_id`),
+  KEY `idx_notifications_user_id` (`user_id`),
+  KEY `idx_notifcations_reference_id` (`reference_id`),
   CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -264,6 +279,7 @@ CREATE TABLE `photos` (
   `uploaded_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`photo_id`),
   KEY `user_id` (`user_id`),
+  KEY `idx_photos_user_id` (`user_id`),
   CONSTRAINT `photos_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -379,7 +395,6 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -387,7 +402,6 @@ CREATE TABLE `users` (
   `last_login` timestamp NULL DEFAULT NULL,
   `role` enum('USER','ADMIN') DEFAULT 'USER',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -398,7 +412,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (83,'Elizabeth.M699','elizabeth.m699@gmail.com','$2y$10$kV1mFwH/ZN7EH6JdhSBHqe0JysdQcJhC1PLvsP31Ebw7/zYIQhWza','2025-10-06 15:16:22','ACTIVE',NULL,'USER'),(84,'Jennifer.M324','jennifer.m324@gmail.com','$2y$10$142Q5qN7AAbQZdDyTccV7ugNKHNfJ9KM5GeFvhXI2hn9FdhjM0rUy','2025-08-08 15:16:22','ACTIVE',NULL,'USER'),(85,'Michael.A877','michael.a877@gmail.com','$2y$10$6hWxpLQdXldGCoO070JoaO8t8KhRNDgqq4TTd8v1V9aqg6QvJ5yNC','2026-02-13 15:16:23','ACTIVE',NULL,'USER'),(86,'Thomas.W371','thomas.w371@yahoo.com','$2y$10$YopQ452tWN6tgwiVKFw0lOIKJtjp53PlTRqVVe9QOXfI3wP5wd..O','2025-11-04 15:16:23','ACTIVE',NULL,'USER'),(87,'Richard.T213','richard.t213@hotmail.com','$2y$10$r1XZohAtjolYAb/7nBrl5eev9CO1Dyr.Uneng8CYAV4jK/tWXdY/O','2026-01-31 15:16:23','ACTIVE',NULL,'USER'),(88,'James.W635','james.w635@gmail.com','$2y$10$.qN3t4uBfqngHiS1w/DVm.uEpS.ig.Y3Y38Ql64TiTR9FC/0sjbd.','2025-08-19 15:16:23','ACTIVE',NULL,'USER'),(89,'Charles.H294','charles.h294@gmail.com','$2y$10$9tj/fDvaq4Yh/iR/wKsi6ePE8LsC49uY6fRCGnfV6jE6nXHJGtMMK','2026-01-24 15:16:23','ACTIVE',NULL,'USER'),(90,'Barbara.T167','barbara.t167@yahoo.com','$2y$10$2xqoSBhSmshldxtIeQzU5uUKznCDFWU3Thwi9.R9pDsPIcqcG6P.W','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(91,'Sarah.H524','sarah.h524@outlook.com','$2y$10$mWEmmy2qpba9cm59LWH3/uRuMGYeCzKG2hqYIMmvFOUpUEldCHfaS','2025-08-08 15:16:23','ACTIVE',NULL,'USER'),(92,'Elizabeth.J136','elizabeth.j136@yahoo.com','$2y$10$pT78S.D5UlIBU74npQPK3uMhTvnK1oMxhi/DeYdGVQ8ed8juUptGu','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(93,'Robert.H138','robert.h138@yahoo.com','$2y$10$UWa7UH8d5v7BSt/yrdyBf.hb3skJ5xyXA0U77Kd/wAUoUz104bYAe','2025-03-17 15:16:23','ACTIVE',NULL,'USER'),(94,'David.A545','david.a545@yahoo.com','$2y$10$ACSqXmFcYQirY60ySKxnwe9FWfoqvaMVKzx8Bgm3tli7pu.VcEaT.','2026-02-03 15:16:23','ACTIVE',NULL,'USER'),(95,'Karen.W286','karen.w286@outlook.com','$2y$10$m9h/C9/pYEU0ExRSWuaut.8M.XaBKtOl2lZrCY/uDDGpksSSBTLyO','2025-07-23 15:16:23','ACTIVE',NULL,'USER'),(96,'Joseph.M964','joseph.m964@hotmail.com','$2y$10$A8sE6gzIL65g52wA3vFwPuEOtn8oZCdiS6SN5jvN8a4pOxQK02E5m','2025-07-26 15:16:23','ACTIVE',NULL,'USER'),(97,'Mary.J608','mary.j608@yahoo.com','$2y$10$DXWsqtynzurZ5tjNfYU4xuAobax/UIcTxUH2LD4TI5zCizQJsdgqq','2025-03-14 15:16:23','ACTIVE',NULL,'USER'),(98,'Thomas.J508','thomas.j508@gmail.com','$2y$10$30Vp3/TdAyfdlhakw7riJuHC.PcUHmuhni5SXE/URjT5rFTjKue3S','2025-12-15 15:16:23','ACTIVE',NULL,'USER'),(99,'Richard.T797','richard.t797@yahoo.com','$2y$10$CalgS5/XNZANb3EB2RlNy.AroeQQ/9MPuelLEVipBQXE/xDlV97Le','2025-10-18 15:16:23','ACTIVE',NULL,'USER'),(100,'James.J805','james.j805@gmail.com','$2y$10$6zPMiD5WFAs1lCVhuJ807.doNCNEOgf.ezzOHdlVVF4Gw5b2ErJ0a','2025-04-05 15:16:23','ACTIVE',NULL,'USER'),(101,'Jessica.J866','jessica.j866@hotmail.com','$2y$10$14x9jbr63yy6hlOhDR5HWOEFTzgTOXHzrqYMH5AAG02GZX9LWaBaq','2025-11-01 15:16:23','ACTIVE',NULL,'USER'),(102,'James.A511','james.a511@outlook.com','$2y$10$AHEpMxVBx.o251jtYKZUUuaRvSreQnz6IvE.5/o8pf4.rJ0QZQTcy','2025-09-15 15:16:23','ACTIVE',NULL,'USER'),(103,'Patricia.T760','patricia.t760@outlook.com','$2y$10$dAkbWqDodDloxIooyDVOuegls5XthL2.eiNIOUaVzFlddBeYCCDpW','2025-07-30 15:16:23','ACTIVE',NULL,'USER'),(104,'Sarah.T169','sarah.t169@yahoo.com','$2y$10$j8BaHo/30AGq4YZRJ0ea1.z3Rw7cM1P6XN4LYFHFb2XAfeebzRY5.','2025-04-07 15:16:23','ACTIVE',NULL,'USER'),(105,'Susan.H61','susan.h61@hotmail.com','$2y$10$5BJNYPYO9eAVXUImJhgQp.k6JVv7/dmTDlzjZyWOx2Cae3t5gm/Ja','2025-05-10 15:16:24','ACTIVE',NULL,'USER'),(106,'Mary.A59','mary.a59@yahoo.com','$2y$10$KfueYczAjIFho.nmoKwVBuuJQ/pBpi4iD098f9NWD6DfU6A1K.Auu','2025-04-02 15:16:24','ACTIVE',NULL,'USER'),(107,'Elizabeth.M301','elizabeth.m301@gmail.com','$2y$10$Zil4o5wFSQMY9yHAXOVcu.BPe.8DwvSMDpx8Ii2lxoDRiPKi6I7l6','2026-02-08 15:16:24','ACTIVE',NULL,'USER'),(108,'Thomas.W996','thomas.w996@outlook.com','$2y$10$l3m9RdJqZW8XOu67H1IQveuWpvZLCNSzLpy5sHOl.W0IDjuPbToEC','2025-12-13 15:16:24','ACTIVE',NULL,'USER'),(109,'Elizabeth.S40','elizabeth.s40@outlook.com','$2y$10$TdcaW554CO1rDbPC6ko9QuIJ/x9QEplh7S/EFgEiho/CSeotK1Evq','2025-02-25 15:16:24','ACTIVE',NULL,'USER'),(110,'John.J935','john.j935@hotmail.com','$2y$10$r8Jok1seNZLjyFPPBs0vDeJ/PwpzUH1FrzWH5MSVNYwLZJG/EStc2','2025-08-11 15:16:24','ACTIVE',NULL,'USER'),(111,'James.J336','james.j336@gmail.com','$2y$10$sbC8VjjRHV0.IluyhSkMWuo.LbATOek3.a7o10sRX5HkfV2vCRG.i','2025-03-24 15:16:24','ACTIVE',NULL,'USER'),(112,'Sarah.H885','sarah.h885@yahoo.com','$2y$10$ozFCiAB6mwUy1qoDfQyBfOfWwDngNqkUvmCDuGtNSWRQL6TgigolC','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(113,'Barbara.J37','barbara.j37@gmail.com','$2y$10$uYafVePupl8SR6xRM7HsdO3tu8GcnAtWXi38vPN/FKDxAaOOJ79KK','2025-04-27 15:16:24','ACTIVE',NULL,'USER'),(114,'David.T42','david.t42@yahoo.com','$2y$10$XzxC/roplqshnA.1XnU1SeZZ/BE2AVZ5HGIeE6VcWJHRZhIBUhYSi','2025-12-25 15:16:24','ACTIVE',NULL,'USER'),(115,'Jessica.T200','jessica.t200@yahoo.com','$2y$10$hs0J.yM2dnLwzYlAAchHbedwVkxrpPQQg3DidDxHp1q/xFgByK8SS','2025-10-22 15:16:24','ACTIVE',NULL,'USER'),(116,'Jennifer.B48','jennifer.b48@hotmail.com','$2y$10$DLWQVHXcOjQvrdJx0KRUbOxafMzIP/NfPrwJaFAuwkMo/NO/4o6HW','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(117,'David.M510','david.m510@outlook.com','$2y$10$YA4spBZSkA3NLvCAE7ckVO87tgdiE299sAxKyI1LW3WkEU3ohnNI.','2025-06-08 15:16:24','ACTIVE',NULL,'USER'),(118,'Sarah.T676','sarah.t676@hotmail.com','$2y$10$xgIr3oU7wFpSlIcCuY9yZuOE0U7sqWHuCqS/CDvBM0y8yIWR5jcqq','2025-12-08 15:16:24','ACTIVE',NULL,'USER'),(119,'Jessica.W370','jessica.w370@hotmail.com','$2y$10$81EzoY6F6nmuAjgkxdSFP.RzItzkW2HQQLYT1vrqJlyd1yHl5ou2C','2025-12-09 15:16:24','ACTIVE',NULL,'USER'),(120,'Linda.T969','linda.t969@outlook.com','$2y$10$.PIn3t0yrOwwf7HQo7lmq.swSoT0.kQDsCLGs1BFzsB.9cogLtPl.','2025-10-02 15:16:24','ACTIVE',NULL,'USER'),(121,'Charles.A888','charles.a888@outlook.com','$2y$10$HfbRx16BQGKuHNbdZP7.eOOB07U6l58e9oC9yqAknzU8EqdAG1BmK','2025-07-04 15:16:24','ACTIVE',NULL,'USER'),(122,'David.T705','david.t705@hotmail.com','$2y$10$sw5oTGAKNFqyZNgxyEjDxOkm.ioKJ7Cg1vupNEqudl1O2b6Jb5okq','2025-10-07 15:16:24','ACTIVE',NULL,'USER'),(123,'John.J819','john.j819@gmail.com','$2y$10$HD.OMNav2yyC/9rzhB.oiezmJe1CbHgVvrrT130HaVIZrScQCZ.l.','2025-07-23 15:16:24','ACTIVE',NULL,'USER'),(124,'Elizabeth.B721','elizabeth.b721@outlook.com','$2y$10$aWJVyjd34TXTePrvtDEk5OmHi7/BcECycrjTJo1jOiupFUCx0m3y6','2025-06-29 15:16:24','ACTIVE',NULL,'USER'),(125,'Jennifer.J606','jennifer.j606@yahoo.com','$2y$10$1v4HTxbOiy2OsBr8oO5SZOrjemrPUj5ofpKjsITtWMuW62QxZIIzK','2026-01-21 15:16:24','ACTIVE',NULL,'USER'),(126,'David.W156','david.w156@hotmail.com','$2y$10$bKR85kTsJXi4HxCLCFpuUeR0Z7BsRSpDdk9EoByKkhjejJTwX.7F6','2025-10-04 15:16:25','ACTIVE',NULL,'USER'),(127,'Karen.T387','karen.t387@gmail.com','$2y$10$4gw5JKCzsBsQZTfF86.qqOYzd5lMGN7dNyeIGklNQ3TDoo7XLaF1C','2025-10-08 15:16:25','ACTIVE',NULL,'USER'),(128,'Jessica.B590','jessica.b590@hotmail.com','$2y$10$3dvR9FKa2mZ9m9G9afzUK.fAMdTymSVtU9Z1S7/Ghv8arjYADaQ1G','2025-06-28 15:16:25','ACTIVE',NULL,'USER'),(129,'William.J912','william.j912@outlook.com','$2y$10$yzZLpjMUTW.u7KYF.nTT0ujVFbiTNyIeRYnef2ei5/q4Pq2wtxUI6','2025-10-15 15:16:25','ACTIVE',NULL,'USER'),(130,'Jennifer.S348','jennifer.s348@gmail.com','$2y$10$U3tEx3qy.RPsQbwC7kkOa.90w5.91Sgxq7yxC.7EI7ZlCorght/5i','2025-09-02 15:16:25','ACTIVE',NULL,'USER'),(131,'Michael.J713','michael.j713@gmail.com','$2y$10$sUUx9PEIFunUev9UAce85.MMtMTNOCeevn008L.qPHuOTbcRRD2rO','2025-12-13 15:16:25','ACTIVE',NULL,'USER'),(132,'James.T595','james.t595@gmail.com','$2y$10$0ZJMUoRZzevRSnZ939QLCezLFaehhjrdV.FdNJ3Kdi.hkZYSfsLj.','2026-01-10 15:16:25','ACTIVE',NULL,'USER');
+INSERT INTO `users` VALUES (83,'elizabeth.m699@gmail.com','$2y$10$kV1mFwH/ZN7EH6JdhSBHqe0JysdQcJhC1PLvsP31Ebw7/zYIQhWza','2025-10-06 15:16:22','ACTIVE',NULL,'USER'),(84,'jennifer.m324@gmail.com','$2y$10$142Q5qN7AAbQZdDyTccV7ugNKHNfJ9KM5GeFvhXI2hn9FdhjM0rUy','2025-08-08 15:16:22','ACTIVE',NULL,'USER'),(85,'michael.a877@gmail.com','$2y$10$6hWxpLQdXldGCoO070JoaO8t8KhRNDgqq4TTd8v1V9aqg6QvJ5yNC','2026-02-13 15:16:23','ACTIVE',NULL,'USER'),(86,'thomas.w371@yahoo.com','$2y$10$YopQ452tWN6tgwiVKFw0lOIKJtjp53PlTRqVVe9QOXfI3wP5wd..O','2025-11-04 15:16:23','ACTIVE',NULL,'USER'),(87,'richard.t213@hotmail.com','$2y$10$r1XZohAtjolYAb/7nBrl5eev9CO1Dyr.Uneng8CYAV4jK/tWXdY/O','2026-01-31 15:16:23','ACTIVE',NULL,'USER'),(88,'james.w635@gmail.com','$2y$10$.qN3t4uBfqngHiS1w/DVm.uEpS.ig.Y3Y38Ql64TiTR9FC/0sjbd.','2025-08-19 15:16:23','ACTIVE',NULL,'USER'),(89,'charles.h294@gmail.com','$2y$10$9tj/fDvaq4Yh/iR/wKsi6ePE8LsC49uY6fRCGnfV6jE6nXHJGtMMK','2026-01-24 15:16:23','ACTIVE',NULL,'USER'),(90,'barbara.t167@yahoo.com','$2y$10$2xqoSBhSmshldxtIeQzU5uUKznCDFWU3Thwi9.R9pDsPIcqcG6P.W','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(91,'sarah.h524@outlook.com','$2y$10$mWEmmy2qpba9cm59LWH3/uRuMGYeCzKG2hqYIMmvFOUpUEldCHfaS','2025-08-08 15:16:23','ACTIVE',NULL,'USER'),(92,'elizabeth.j136@yahoo.com','$2y$10$pT78S.D5UlIBU74npQPK3uMhTvnK1oMxhi/DeYdGVQ8ed8juUptGu','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(93,'robert.h138@yahoo.com','$2y$10$UWa7UH8d5v7BSt/yrdyBf.hb3skJ5xyXA0U77Kd/wAUoUz104bYAe','2025-03-17 15:16:23','ACTIVE',NULL,'USER'),(94,'david.a545@yahoo.com','$2y$10$ACSqXmFcYQirY60ySKxnwe9FWfoqvaMVKzx8Bgm3tli7pu.VcEaT.','2026-02-03 15:16:23','ACTIVE',NULL,'USER'),(95,'karen.w286@outlook.com','$2y$10$m9h/C9/pYEU0ExRSWuaut.8M.XaBKtOl2lZrCY/uDDGpksSSBTLyO','2025-07-23 15:16:23','ACTIVE',NULL,'USER'),(96,'joseph.m964@hotmail.com','$2y$10$A8sE6gzIL65g52wA3vFwPuEOtn8oZCdiS6SN5jvN8a4pOxQK02E5m','2025-07-26 15:16:23','ACTIVE',NULL,'USER'),(97,'mary.j608@yahoo.com','$2y$10$DXWsqtynzurZ5tjNfYU4xuAobax/UIcTxUH2LD4TI5zCizQJsdgqq','2025-03-14 15:16:23','ACTIVE',NULL,'USER'),(98,'thomas.j508@gmail.com','$2y$10$30Vp3/TdAyfdlhakw7riJuHC.PcUHmuhni5SXE/URjT5rFTjKue3S','2025-12-15 15:16:23','ACTIVE',NULL,'USER'),(99,'richard.t797@yahoo.com','$2y$10$CalgS5/XNZANb3EB2RlNy.AroeQQ/9MPuelLEVipBQXE/xDlV97Le','2025-10-18 15:16:23','ACTIVE',NULL,'USER'),(100,'james.j805@gmail.com','$2y$10$6zPMiD5WFAs1lCVhuJ807.doNCNEOgf.ezzOHdlVVF4Gw5b2ErJ0a','2025-04-05 15:16:23','ACTIVE',NULL,'USER'),(101,'jessica.j866@hotmail.com','$2y$10$14x9jbr63yy6hlOhDR5HWOEFTzgTOXHzrqYMH5AAG02GZX9LWaBaq','2025-11-01 15:16:23','ACTIVE',NULL,'USER'),(102,'james.a511@outlook.com','$2y$10$AHEpMxVBx.o251jtYKZUUuaRvSreQnz6IvE.5/o8pf4.rJ0QZQTcy','2025-09-15 15:16:23','ACTIVE',NULL,'USER'),(103,'patricia.t760@outlook.com','$2y$10$dAkbWqDodDloxIooyDVOuegls5XthL2.eiNIOUaVzFlddBeYCCDpW','2025-07-30 15:16:23','ACTIVE',NULL,'USER'),(104,'sarah.t169@yahoo.com','$2y$10$j8BaHo/30AGq4YZRJ0ea1.z3Rw7cM1P6XN4LYFHFb2XAfeebzRY5.','2025-04-07 15:16:23','ACTIVE',NULL,'USER'),(105,'susan.h61@hotmail.com','$2y$10$5BJNYPYO9eAVXUImJhgQp.k6JVv7/dmTDlzjZyWOx2Cae3t5gm/Ja','2025-05-10 15:16:24','ACTIVE',NULL,'USER'),(106,'mary.a59@yahoo.com','$2y$10$KfueYczAjIFho.nmoKwVBuuJQ/pBpi4iD098f9NWD6DfU6A1K.Auu','2025-04-02 15:16:24','ACTIVE',NULL,'USER'),(107,'elizabeth.m301@gmail.com','$2y$10$Zil4o5wFSQMY9yHAXOVcu.BPe.8DwvSMDpx8Ii2lxoDRiPKi6I7l6','2026-02-08 15:16:24','ACTIVE',NULL,'USER'),(108,'thomas.w996@outlook.com','$2y$10$l3m9RdJqZW8XOu67H1IQveuWpvZLCNSzLpy5sHOl.W0IDjuPbToEC','2025-12-13 15:16:24','ACTIVE',NULL,'USER'),(109,'elizabeth.s40@outlook.com','$2y$10$TdcaW554CO1rDbPC6ko9QuIJ/x9QEplh7S/EFgEiho/CSeotK1Evq','2025-02-25 15:16:24','ACTIVE',NULL,'USER'),(110,'john.j935@hotmail.com','$2y$10$r8Jok1seNZLjyFPPBs0vDeJ/PwpzUH1FrzWH5MSVNYwLZJG/EStc2','2025-08-11 15:16:24','ACTIVE',NULL,'USER'),(111,'james.j336@gmail.com','$2y$10$sbC8VjjRHV0.IluyhSkMWuo.LbATOek3.a7o10sRX5HkfV2vCRG.i','2025-03-24 15:16:24','ACTIVE',NULL,'USER'),(112,'sarah.h885@yahoo.com','$2y$10$ozFCiAB6mwUy1qoDfQyBfOfWwDngNqkUvmCDuGtNSWRQL6TgigolC','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(113,'barbara.j37@gmail.com','$2y$10$uYafVePupl8SR6xRM7HsdO3tu8GcnAtWXi38vPN/FKDxAaOOJ79KK','2025-04-27 15:16:24','ACTIVE',NULL,'USER'),(114,'david.t42@yahoo.com','$2y$10$XzxC/roplqshnA.1XnU1SeZZ/BE2AVZ5HGIeE6VcWJHRZhIBUhYSi','2025-12-25 15:16:24','ACTIVE',NULL,'USER'),(115,'jessica.t200@yahoo.com','$2y$10$hs0J.yM2dnLwzYlAAchHbedwVkxrpPQQg3DidDxHp1q/xFgByK8SS','2025-10-22 15:16:24','ACTIVE',NULL,'USER'),(116,'jennifer.b48@hotmail.com','$2y$10$DLWQVHXcOjQvrdJx0KRUbOxafMzIP/NfPrwJaFAuwkMo/NO/4o6HW','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(117,'david.m510@outlook.com','$2y$10$YA4spBZSkA3NLvCAE7ckVO87tgdiE299sAxKyI1LW3WkEU3ohnNI.','2025-06-08 15:16:24','ACTIVE',NULL,'USER'),(118,'sarah.t676@hotmail.com','$2y$10$xgIr3oU7wFpSlIcCuY9yZuOE0U7sqWHuCqS/CDvBM0y8yIWR5jcqq','2025-12-08 15:16:24','ACTIVE',NULL,'USER'),(119,'jessica.w370@hotmail.com','$2y$10$81EzoY6F6nmuAjgkxdSFP.RzItzkW2HQQLYT1vrqJlyd1yHl5ou2C','2025-12-09 15:16:24','ACTIVE',NULL,'USER'),(120,'linda.t969@outlook.com','$2y$10$.PIn3t0yrOwwf7HQo7lmq.swSoT0.kQDsCLGs1BFzsB.9cogLtPl.','2025-10-02 15:16:24','ACTIVE',NULL,'USER'),(121,'charles.a888@outlook.com','$2y$10$HfbRx16BQGKuHNbdZP7.eOOB07U6l58e9oC9yqAknzU8EqdAG1BmK','2025-07-04 15:16:24','ACTIVE',NULL,'USER'),(122,'david.t705@hotmail.com','$2y$10$sw5oTGAKNFqyZNgxyEjDxOkm.ioKJ7Cg1vupNEqudl1O2b6Jb5okq','2025-10-07 15:16:24','ACTIVE',NULL,'USER'),(123,'john.j819@gmail.com','$2y$10$HD.OMNav2yyC/9rzhB.oiezmJe1CbHgVvrrT130HaVIZrScQCZ.l.','2025-07-23 15:16:24','ACTIVE',NULL,'USER'),(124,'elizabeth.b721@outlook.com','$2y$10$aWJVyjd34TXTePrvtDEk5OmHi7/BcECycrjTJo1jOiupFUCx0m3y6','2025-06-29 15:16:24','ACTIVE',NULL,'USER'),(125,'jennifer.j606@yahoo.com','$2y$10$1v4HTxbOiy2OsBr8oO5SZOrjemrPUj5ofpKjsITtWMuW62QxZIIzK','2026-01-21 15:16:24','ACTIVE',NULL,'USER'),(126,'david.w156@hotmail.com','$2y$10$bKR85kTsJXi4HxCLCFpuUeR0Z7BsRSpDdk9EoByKkhjejJTwX.7F6','2025-10-04 15:16:25','ACTIVE',NULL,'USER'),(127,'karen.t387@gmail.com','$2y$10$4gw5JKCzsBsQZTfF86.qqOYzd5lMGN7dNyeIGklNQ3TDoo7XLaF1C','2025-10-08 15:16:25','ACTIVE',NULL,'USER'),(128,'jessica.b590@hotmail.com','$2y$10$3dvR9FKa2mZ9m9G9afzUK.fAMdTymSVtU9Z1S7/Ghv8arjYADaQ1G','2025-06-28 15:16:25','ACTIVE',NULL,'USER'),(129,'william.j912@outlook.com','$2y$10$yzZLpjMUTW.u7KYF.nTT0ujVFbiTNyIeRYnef2ei5/q4Pq2wtxUI6','2025-10-15 15:16:25','ACTIVE',NULL,'USER'),(130,'jennifer.s348@gmail.com','$2y$10$U3tEx3qy.RPsQbwC7kkOa.90w5.91Sgxq7yxC.7EI7ZlCorght/5i','2025-09-02 15:16:25','ACTIVE',NULL,'USER'),(131,'michael.j713@gmail.com','$2y$10$sUUx9PEIFunUev9UAce85.MMtMTNOCeevn008L.qPHuOTbcRRD2rO','2025-12-13 15:16:25','ACTIVE',NULL,'USER'),(132,'james.t595@gmail.com','$2y$10$0ZJMUoRZzevRSnZ939QLCezLFaehhjrdV.FdNJ3Kdi.hkZYSfsLj.','2026-01-10 15:16:25','ACTIVE',NULL,'USER');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -411,4 +425,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-22 15:18:18
+-- Dump completed on 2026-02-28 15:50:47
