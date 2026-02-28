@@ -4,4 +4,5 @@
 	$pageTitle = "Roamance - Home";
 	$pageCSS = "/assets/css/home.css";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
+	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/messaging.php";
 ?>

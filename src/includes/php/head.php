@@ -1,3 +1,9 @@
+<?php
+if(session_status() == PHP_SESSION_NONE){
+	session_start();
+}
+?>
+
 <!-- src/includes/head.php -->
 <head>
     <meta charset="UTF-8">

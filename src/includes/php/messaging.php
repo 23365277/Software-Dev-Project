@@ -1,6 +1,7 @@
 <?php
     // Only include database if needed for functionality. For now, comment out to avoid errors.
-    // require_once __DIR__ . '/../config/database.php';
+	require_once __DIR__ . '/../../config/database.php';
+	
 ?>
 
 <link rel="stylesheet" href="/assets/css/messaging.css">
@@ -18,12 +19,14 @@
             <label for="chatbox-toggle" style="cursor:pointer; font-size:1.3em; color:#fff;">&times;</label>
         </div>
         <div id="chatbox-messages" class="centered-message">
-            <span>No messages yet.</span>
+		<?php if(!isset($_SESSION['user_id'])): ?>
+			<span>Please log in to use chat.</span>
+		<?php else: ?>
+			<span>No messages yet</span>
+		<?php endif; ?>
 	</div>
 	<input type="text" name="Message Box" placeholder="Start typing to send a message..." id="messageBox">
     </div>
 </div>
 
-<script src="includes/js/utils.js">
-	collect_message();
-</script>
+<script src="includes/js/utils.js"></script>

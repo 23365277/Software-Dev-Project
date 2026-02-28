@@ -1,0 +1,1 @@
+This folder will have action php files, like logout.php to logout a user and end their session.

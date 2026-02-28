@@ -1,4 +1,6 @@
 <?php
+	session_start();
+
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
 	$error = '';
@@ -9,6 +11,7 @@
 
 		$user_id = verifyLogin($email, $password);
 		if($user_id){
+			$_SESSION['user_id'] = $user_id;
 			header('Location: /pages/home.php');
 			exit();
 		} else {
