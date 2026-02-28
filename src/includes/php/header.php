@@ -4,10 +4,12 @@
     </a>
 
     <nav class="site-nav">
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="/index.php">Home</a>
-            </li>
+	<ul class="nav">
+		<?php if(isset($_SESSION['user_id'])): ?>
+            		<li class="nav-item">
+                		<a class="nav-link" href="/index.php">Home</a>
+           		</li>
+		<?php endif; ?>
 
             <li class="nav-item">
                 <a class="nav-link" href="/pages/about.php">About</a>

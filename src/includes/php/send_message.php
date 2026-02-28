@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}	
 
 	try {
-		sendMessage($sender_id, $reciever_id, $message);
+		sendMessage($sender_id, $receiver_id, $message);
 		echo "Message sent";
 	} catch (Exception $e) {
 		http_response_code(500); //500 is for server error
@@ -25,6 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 } else {
 	//If not a POST, reject it
-	http_response_code(405); //405 is for bad method request
+	http_response_code(400); //400 is for bad method request
 	echo "Invalid request method";
 }
