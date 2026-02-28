@@ -29,4 +29,4 @@
     </div>
 </div>
 
-<script src="includes/js/utils.js"></script>
+<script src="/includes/js/utils.js"></script>
