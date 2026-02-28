@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <?php
-	include $_SERVER['DOCUMENT_ROOT'] . "/includes/header.php";
+	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/header.php";
 	?>
 
     <title><?php echo isset($pageTitle) ? $pageTitle : "Roamance"; ?></title>
