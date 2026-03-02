@@ -1,7 +1,12 @@
 <header class="mb-4">
-    <a href="/index.php">
+    <!-- <a href="/index.php">
+        <img class="logo" src="/assets/images/Roamance v7.png" alt="Roamance Logo">
+    </a> -->
+
+    <a href="<?= isset($_SESSION['user_id']) ? '/pages/home.php' : '/pages/login.php' ?>">
         <img class="logo" src="/assets/images/Roamance v7.png" alt="Roamance Logo">
     </a>
+
 
     <nav class="site-nav">
 	<ul class="nav">
