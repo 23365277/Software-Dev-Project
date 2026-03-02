@@ -33,8 +33,9 @@ function fetchMessages() {
         .then(messages => {
             const chatBox = document.getElementById("chatbox-messages");
             chatBox.innerHTML = '';
+		
             messages.forEach(msg => {
-                const div = document.createElement('div');
+		const div = document.createElement('div');
                 div.textContent = msg.sender_id + ': ' + msg.message;
                 chatBox.appendChild(div);
             });

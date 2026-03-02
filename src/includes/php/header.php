@@ -26,7 +26,6 @@
 
             <?php if (isset($_SESSION['user_id'])): ?>
                 
-                <!-- Profile Dropdown -->
                 <li class="nav-item profile-wrapper">
                     <a href="#" class="profile-circle" id="profileToggle">
                         <img src="/assets/images/default_profile.jpg"
@@ -40,18 +39,16 @@
                         <li><a href="/actions/logout.php">Logout</a></li>
                     </ul>
                 </li>
-
-            <?php else: ?>
-
-                <!-- Sign Up Button -->
-                <li class="nav-item">
-                    <a href="/pages/create_account.php" class="btn btn-custom">
-                        Sign Up
-                    </a>
+		
+		<?php else: ?>
+		
+		<li class="nav-buttons">
+			<a href="/pages/login.php" class="btn btn-customLogin">Log In</a>
+                    	<a href="/pages/create_account.php" class="btn btn-customSignUp">Sign Up</a>
                 </li>
 
-            <?php endif; ?>
-        </ul>
+            	<?php endif; ?>
+	</ul>
     </nav>
 </header>
 
