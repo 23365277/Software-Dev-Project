@@ -12,7 +12,7 @@
 	<ul class="nav">
 		<?php if(isset($_SESSION['user_id'])): ?>
             		<li class="nav-item">
-                		<a class="nav-link" href="/index.php">Home</a>
+                		<a class="nav-link" href="/pages/home.php">Home</a>
            		</li>
 		<?php endif; ?>
 
