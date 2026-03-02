@@ -1,61 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.mainblock{
-    display: flex;
-    gap: 30px;
-    max-width: 750px;
-    padding: 20px;
-    align-items: center;
-    margin-right: auto;
-    margin-left: auto;
-    justify-content: center;
-    flex: 1;
-}
-
- body {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow-x: hidden;
-} 
-
-.bg-slide {
-    position: fixed;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0;
-    z-index: -2;
-    animation: fadeSlides 18s infinite;
-}
-
-/* stagger animations: 0s, 6s, 12s for 3 images over 18s */
-.bg-slide-1 { animation-delay: 0s; }
-.bg-slide-2 { animation-delay: 6s; }
-.bg-slide-3 { animation-delay: 12s; }
-
-/* Smooth crossfade with overlap */
-@keyframes fadeSlides {
-    0%   { opacity: 0; }
-    10%  { opacity: 1; }    /* fade in */
-    40%  { opacity: 1; }    /* stay visible */
-    50%  { opacity: 0; }    /* fade out */
-    100% { opacity: 0; }
-}
-
-.bg-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(231, 227, 227, 0); /* light overlay */
-    z-index: -1;
-}
 .info-box, .auth-box {
     background: rgba(255, 255, 255, 0);
     padding: 40px;
@@ -127,16 +69,7 @@
     background: #5568d3;
 }
 
-.btn-login {
-    background: #f0f0f0;
-    color: #333;
-}
-
-.btn-login:hover {
-    background: #e0e0e0;
-}
-
-/* @media (max-width: 768px) {
+ @media (max-width: 768px) {
     .container {
         flex-direction: column;
     }
@@ -144,8 +77,5 @@
     .auth-box {
         flex: 1;
     }
-} */
-
-.bio-submit{
-    height: 3%;
 }
+

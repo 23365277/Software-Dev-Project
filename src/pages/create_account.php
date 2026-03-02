@@ -5,7 +5,7 @@
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 ?>
 
-<div class="mainblock">
+<div class="container-liquid">
 <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $email = $_POST['email'] ?? '';
@@ -21,9 +21,9 @@
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
 
-    <div class="container mt-5">
+    <div class="row">
 
-        <div class="auth-box">
+        <div class="col-4 offset-4">
             <form method="POST" action="">
                 <input type="text" name="email" placeholder="Email" required>
                 <input type="text" name="password" placeholder="Password" required>
