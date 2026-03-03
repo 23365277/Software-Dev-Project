@@ -1,0 +1,114 @@
+/* General Page */
+body {
+  font-family: Arial, sans-serif;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 0;
+}
+
+/* Passport Container */
+.passport {
+  display: flex;
+  width: 800px;
+  margin: 2rem auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Left Page (Gallery) */
+.passport-left {
+  width: 45%;
+  position: relative;
+  min-height: 400px;
+  background: linear-gradient(to bottom, #e8f0ff, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.passport-left img {
+  width: 90%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.passport-left button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  font-size: 2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  user-select: none;
+}
+
+#prev { left: 10px; }
+#next { right: 10px; }
+
+/* Right Page (Profile + Stamps) */
+.passport-right {
+  width: 55%;
+  padding: 1.5rem;
+  position: relative;
+  background: #fdfdfd;
+}
+
+.profile-photo img {
+  width: 120px;
+  height: 160px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 3px solid #1e3a5f;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.passport-right h2 {
+  margin: 0;
+  color: #1e3a5f;
+}
+
+.passport-right p {
+  margin: 0.2rem 0;
+  color: #333;
+}
+
+.bio {
+  font-style: italic;
+  margin: 0.5rem 0 1rem 0;
+}
+
+/* Stamps */
+.stamps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.stamp {
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  background: #fff;
+  text-align: center;
+  width: 80px;
+  font-size: 0.8rem;
+}
+
+.stamp .icon {
+  font-size: 1.2rem;
+  display: block;
+}
+
+.stamp .country,
+.stamp .date {
+  display: block;
+}
