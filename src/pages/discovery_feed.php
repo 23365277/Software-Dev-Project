@@ -7,54 +7,61 @@
 <div class="container py-2">
 
     <div class="row">
+
+        <!-- Pictures -->
         <div class="col-lg-4 col-md-7 col-sm-10 text-center mb-4">
-            <h2 class="mb-3">Discover New Connections</h2>
-            <p class="text-muted">
-                Explore profiles of fellow travelers and find your next adventure buddy!
-            </p>
+            <div class="position-relative">
+                <img src="/assets/images/profile-pic.jpg" class="img-fluid rounded" alt="Profile Image">
+                <button class="btn btn-lg position-absolute top-50 start-0 translate-middle-y">
+                    <i class="bi bi-arrow-left-circle-fill"></i>
+                </button>
+                <button class="btn btn-lg position-absolute top-50 end-0 translate-middle-y">
+                    <i class="bi bi-arrow-right-circle-fill"></i>
+                </button>
+            </div>
         </div>
         
 
+        <div class="col-lg-8 col-md-10 col-sm-12">
 
-        <div class="col-lg-6 col-md-9 col-sm-12">
-            <div class="card shadow">
+            <!-- Name & Age -->
+            <div class="col-lg-4 col-md-6 col-sm-8">
                 <h3 class="card-title">Name Surname, 28</h3>
             </div>
-            <!-- Profile Card -->
-            <div class="card shadow">
 
-                <div class="card-body text-center">
+            <!-- Bio -->
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="card shadow">
 
-                    <!-- Pictures -->
-                    <div class="mb-3">
-                        <img src="https://via.placeholder.com/400x300"
-                             class="img-fluid rounded"
-                             alt="Profile Image">
-                    </div>
+                    <div class="card-body text-center">
 
-                    <!-- Info -->
-                    <p class="card-text text-muted">
-                        Loves travelling 🌍 | Based in Dublin | Hiking & Photography
-                    </p>
+                        <!-- Info -->
+                        <p class="card-text text-muted">
+                            Bio: Hello everyone! I am an avid traveler and love to explore new places. Let's connect and share our travel experiences!
+                            <br>
+                            Stats: 5 Trips | 3 Countries | 10 Likes
+                            <br>
+                            Destinations: Paris, Tokyo, New York
+                            <br>
+                            Interests: Photography, Hiking, Food
+                        </p>
 
-                    <!-- Buttons -->
-                    <div class="d-flex justify-content-center gap-3 mt-3">
-                        <button class="btn btn-outline-danger px-4">
-                            Dislike
-                        </button>
-
-                        <button class="btn btn-success px-4">
-                            Like
-                        </button>
                     </div>
 
                 </div>
-
             </div>
+        </div>
 
+        <!-- Like & Dislike Buttons -->
+        <div class="col-lg-12 col-md-12 col-sm-12 text-center mt-4">
+            <button class="btn btn-outline-danger btn-lg me-3">
+                <i class="bi bi-x-lg"></i> Dislike
+            </button>
+            <button class="btn btn-outline-success btn-lg ms-3">
+                <i class="bi bi-heart-fill"></i> Like
+            </button>
         </div>
     </div>
-
 </div>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
