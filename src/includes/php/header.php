@@ -35,6 +35,10 @@
                 <a class="nav-link" href="/pages/destination_search.php">Atlas</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/profile_view.php">Profile</a>
+            </li>
+
             <?php if (isset($_SESSION['user_id'])): ?>
                 
                 <li class="nav-item profile-wrapper">
