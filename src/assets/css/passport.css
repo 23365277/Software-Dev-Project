@@ -9,7 +9,7 @@ body {
 /* Passport Container */
 .passport {
   display: flex;
-  width: 800px;
+  width: 1000px;
   margin: 2rem auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   border-radius: 12px;
@@ -60,31 +60,64 @@ body {
   background: #fdfdfd;
 }
 
-.profile-photo img {
-  width: 120px;
-  height: 160px;
-  border-radius: 8px;
-  object-fit: cover;
-  border: 3px solid #1e3a5f;
-  display: block;
-  margin-bottom: 1rem;
+/* Profile Header: Image on left, info on right */
+.profile-header {
+    display: flex;             /* horizontal layout */
+    align-items: flex-start;   /* align top of image with top of text */
+    gap: 1rem;                 /* space between image and user info */
 }
 
-.passport-right h2 {
-  margin: 0;
-  color: #1e3a5f;
+.profile-header .profile-img {
+    width: 120px;
+    height: 160px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 3px solid #1e3a5f;
+    flex-shrink: 0;            /* prevent image from shrinking */
 }
 
-.passport-right p {
-  margin: 0.2rem 0;
-  color: #333;
+.profile-header .user-info {
+    display: flex;
+    flex-direction: column;    /* stack name, country/age, bio vertically */
+    justify-content: flex-start;
+}
+
+.tpass-header { 
+	display: flex;
+	gap: 0.3rem;
+	align-items: center;
+}
+
+
+#tpassIcon {
+	height: 23px;
+	width: 23px;
+}
+
+#tpass {
+	font-family: "Times New Roman", Times, serif;
+	font-size: 1.4rem;
+	font-weight: normal;
+	color: #1e3a5f;
+	margin: 0;
+}
+
+#tpass + hr {
+    margin-top: 0.05rem;      /* almost resting on the text */
+    margin-bottom: 0.8rem;    /* space after hr before next content */
+    border: none;
+    height: 1px;              /* thickness of the line */
+    background-color: #1e3a5f; /* same color as title */
+}
+
+.passport-right .profile-header .user-info .name-header {
+	display: flex;
 }
 
 .bio {
-  font-style: italic;
-  margin: 0.5rem 0 1rem 0;
+    font-style: italic;
+    color: #555;
 }
-
 /* Stamps */
 .stamps {
   display: flex;
