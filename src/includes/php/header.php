@@ -31,6 +31,10 @@
                 <a class="nav-link" href="/pages/discovery_feed.php">Discovery Feed</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/destination_search.php">Destination Search</a>
+            </li>
+
             <?php if (isset($_SESSION['user_id'])): ?>
                 
                 <li class="nav-item profile-wrapper">
