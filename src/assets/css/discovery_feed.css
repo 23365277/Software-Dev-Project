@@ -1,0 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+}
+
+.name{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.info{
+    font-size: 1em;
+    color: #555;
+}
