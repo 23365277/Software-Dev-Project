@@ -1,9 +1,9 @@
 
     .info-box, .auth-box {
         background: rgba(255, 255, 255, 0);
-        height: 60vh;
+        height: 64vh;
         width: 50vh;
-        padding: 40px;
+        padding: 50px;
         border-radius: 10px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     }
@@ -41,7 +41,7 @@
 .auth-box form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .auth-box input {
@@ -54,7 +54,7 @@
 .auth-box button {
     padding: 12px;
     border: none;
-    border-radius: 5px;
+    border-radius: 20px;
     font-size: 2em;
     cursor: pointer;
     transition: background 0.3s;

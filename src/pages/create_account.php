@@ -21,20 +21,25 @@
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" id="create_user">
 
         <div class="auth-box col-3">
-            <form method="POST" action="">
+            <form>
                 <h2 class="signup-Title">Create Account</h2>
                 <input type="text" name="email" placeholder="Email" required>
                 <input type="text" name="password" placeholder="Password" required>
                 <input type="text" name="first_name" placeholder="First Name" required>
                 <input type="text" name="last_name" placeholder="Last Name" required>
                 <input type="date" name="date_of_birth" placeholder="Date of Birth" required>
-                <button type="submit" class="btn-signup">Sign-up</button>
+                <button type="submit" onclick=interests_form() class="btn-signup">Sign-up</button>
             </form>
         </div>
 
     </div>
 </div>
+
+<script src="/includes/js/create_account.js"></script>
+
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
+
+<!-- method="POST" action="" -->
