@@ -6,7 +6,7 @@
 	$error = '';
 
 
-	if (isset($_POST['signup'])) {
+	if (isset($_POST['login'])) {
 		$email = $_POST['email'];
 		$password = $_POST['password'];
 
@@ -48,8 +48,8 @@
         <form method="POST" action="">
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" name="signup" class="btn btn-primary btn-signup">Sign Up</button>
-            <button type="button" name="login" class="btn btn-secondary btn-login">Log In</button>
+			<button type="submit" name="login" class="btn btn-secondary btn-signup">Log In</button>
+            <!-- <button type="button" name="signup" class="btn btn-primary btn-signup">Sign Up</button> -->
         </form>
     </div>
 </div>

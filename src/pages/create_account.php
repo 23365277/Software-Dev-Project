@@ -21,10 +21,11 @@
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
 
-    <div class="row ">
+    <div class="row justify-content-center">
 
-        <div class="auth-box col-2 offset-5">
+        <div class="auth-box col-3">
             <form method="POST" action="">
+                <h2 class="signup-Title">Create Account</h2>
                 <input type="text" name="email" placeholder="Email" required>
                 <input type="text" name="password" placeholder="Password" required>
                 <input type="text" name="first_name" placeholder="First Name" required>
