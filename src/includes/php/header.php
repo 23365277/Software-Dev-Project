@@ -7,6 +7,9 @@
         <img class="logo" src="/assets/images/Roamance v7.png" alt="Roamance Logo">
     </a>
 
+    <?php
+        $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+    ?>
 
     <nav class="site-nav">
 	<ul class="nav">
@@ -40,12 +43,15 @@
                     </ul>
                 </li>
 		
-		<?php else: ?>
+		<?php elseif ( strpos($url, 'create_account.php') == false):?>
 		
+        
 		<li class="nav-buttons">
 			<a href="/pages/login.php" class="btn btn-customLogin">Log In</a>
                     	<a href="/pages/create_account.php" class="btn btn-customSignUp">Sign Up</a>
                 </li>
+
+            <?php else:?>
 
             	<?php endif; ?>
 	</ul>
