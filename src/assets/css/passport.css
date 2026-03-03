@@ -22,7 +22,6 @@ body {
   width: 45%;
   position: relative;
   min-height: 400px;
-  background: linear-gradient(to bottom, #e8f0ff, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,12 +51,17 @@ body {
 #prev { left: 10px; }
 #next { right: 10px; }
 
-/* Right Page (Profile + Stamps) */
 .passport-right {
-  width: 55%;
-  padding: 1.5rem;
-  position: relative;
-  background: #fdfdfd;
+    	width: 55%;
+    	padding: 1.5rem;
+    	position: relative;
+    	background: #fcfafa;
+
+    	border: 1px solid #000;        	
+	border-radius: 12px;    
+	border-color: grey;
+	
+	margin: 1rem;
 }
 
 /* Profile Header: Image on left, info on right */
@@ -95,11 +99,12 @@ body {
 }
 
 #tpass {
-	font-family: "Times New Roman", Times, serif;
+	font-family: "Playfair Display", serif;
 	font-size: 1.4rem;
-	font-weight: normal;
+	font-weight: 450;
 	color: #1e3a5f;
 	margin: 0;
+	letter-spacing: 0.05rem;
 }
 
 #tpass + hr {
@@ -110,14 +115,98 @@ body {
     background-color: #1e3a5f; /* same color as title */
 }
 
-.passport-right .profile-header .user-info .name-header {
+.header {
+	color: #8B89A0;
+	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", 
+                 sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: 0.8px;
+	line-height: 24px;
+	margin-bottom: 2px;
+}
+
+.other-field {
+	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", 
+                 sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: 17.6px;
+	font-weight: 600;
+	letter-spacing: 0.05rem;
+	margin: 0 1rem 0.5rem 0;
+	color: #212529;
+}
+
+.name-field {
+	font-family: "Pilayfair Display", serif;
+	font-size: 17.6px;
+	font-weight: 600;
+	letter-spacing: 0.05rem;
+	margin: 0 1rem 0.5rem 0;
+	color: #212529;
+}
+
+.details-left {
+	margin: 0 3rem 0 0;
+}
+
+.details {
 	display: flex;
 }
 
-.bio {
-    font-style: italic;
-    color: #555;
+#heading {
+	color: #8B89A0;
+	margin-bottom: 2px;
+	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: 16px;
+	font-weight: 500;
+	tab-size: 4;
 }
+
+#body {
+	color: #545167;
+	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-style: italic;
+	font-size: 14px;
+	font-weight: 
+}
+
+/* Separator line with label */
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.separator::before,
+.separator::after {
+    content: "";
+    flex: 1;
+    height: 1px; /* thin line */
+    background-image: repeating-linear-gradient(
+        to right,
+        #ccc,         /* grey color */
+        #ccc 6px,     /* dot length */
+        transparent 6px,
+        transparent 12px /* gap length */
+    );
+    margin: 0 0.5rem; /* spacing around label */
+}
+
+.separator span {
+    padding: 0 0.75rem;
+    background: #fdfdfd; /* match passport page */
+    font-family: "Playfair Display", serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #1e3a5f;
+    border: 1px solid #ccc; /* thin grey border for the box */
+    border-radius: 4px;
+    display: inline-block;
+}
+
 /* Stamps */
 .stamps {
   display: flex;
@@ -127,13 +216,22 @@ body {
 }
 
 .stamp {
-  border: 2px solid #ccc;
-  border-radius: 6px;
-  padding: 0.3rem 0.5rem;
-  background: #fff;
-  text-align: center;
-  width: 80px;
-  font-size: 0.8rem;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    background: #fff;
+    text-align: center;
+    width: 80px;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.stamp:hover {
+    border-color: #ccc;
+
+    box-shadow: 0 0 0 2px rgba(255,0,0,0.6);
+    background-color: rgba(255, 0, 0, 0.05); 
+    transform: scale(1.05);
 }
 
 .stamp .icon {

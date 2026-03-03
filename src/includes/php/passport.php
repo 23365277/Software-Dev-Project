@@ -16,6 +16,8 @@ $galleryImages = [
     "/assets/images/travel2.jpg",
     "/assets/images/travel3.jpg"
 ];
+
+	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php"
 ?>
 
 <link rel="stylesheet" href="/assets/css/passport.css">
@@ -36,16 +38,33 @@ $galleryImages = [
 					<p id="tpass">Travel Passport</p>
 				</div>
 				<hr>
-				<p class="name-header">SURNAME</p>
-				<p class="name-field"><?= $lastName ?></p>
-				<p class="name-header">FORENAME</p>
-				<p class="name-field"><?= $firstName ?></p>
-        			<p><?= $country ?> • <?= $age ?> years</p>
-        			<?php if($bio): ?>
-            				<p class="bio"><?= $bio ?></p>
-        			<?php endif; ?>
+				<div class ="details">
+					<div class="details-left">
+						<p class="header">SURNAME</p>
+						<p class="name-field"><?= $lastName ?></p>
+						<p class="header">FORENAME</p>
+						<p class="name-field"><?= $firstName ?></p>
+					</div>
+					<div class="details-right">
+						<p class="header">NATIONALITY</p>
+						<p class="other-field"><?= $country ?></p> 
+						<p class="header">AGE</p>
+						<p class="other-field"><?= $age ?> years</p>
+					</div>
+				</div>
+				<?php if($bio): ?>
+					<div class=bio>
+						<p id="heading">TRAVELLER BIO</p>
+						<p id="body"><?= $bio ?></p>
+					</div>
+				<?php endif; ?>
+				
     			</div>
 		</div>
+		
+		<div class="separator">
+			<span>VISA STAMPS</span>
+		</div>		
 
     		<div class="stamps">
       			<?php foreach($stamps as $stamp): ?>
@@ -60,3 +79,14 @@ $galleryImages = [
 </div>
 
 <script src="/includes/js/passport.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const stamps = document.querySelectorAll(".stamps .stamp");
+
+    stamps.forEach(stamp => {
+        const angle = (Math.random() * 10) - 5;
+        stamp.style.transform = `rotate(${angle}deg)`;
+    });
+});
+</script>
