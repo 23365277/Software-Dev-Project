@@ -32,7 +32,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/pages/destination_search.php">Destination Search</a>
+                <a class="nav-link" href="/pages/destination_search.php">Atlas</a>
             </li>
 
             <?php if (isset($_SESSION['user_id'])): ?>
