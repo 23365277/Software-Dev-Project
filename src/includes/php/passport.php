@@ -27,78 +27,90 @@ $galleryImages = [
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php"
 ?>
 
+
+<body>
 <link rel="stylesheet" href="/assets/css/passport.css">
-<div class="cover">
-<div class="passport">
-	<div class="passport-left">
-    		<p class="gallery-title">MY TRAVELS</p>
-    		<div class="title-line"></div>
 
-    		<div class="gallery-wrapper">
-        		<img id="gallery-image" src="<?= $galleryImages[0] ?>" alt="Travel Photo">
-        		<button id="prev">&#10094;</button>
-        		<button id="next">&#10095;</button>
-    		</div>
-	</div>
+<div class="passport-wrapper">
+	<div class="cover"></div>
 
-	<div class="passport-right">
-		<div class="info">
-			<div class="profile-header">
-				<img src="<?= $profileImage ?>" alt="<?= $name ?>" class="profile-img">	
-				<div class="user-info">
-					<div class="tpass-header">
-						<img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
-						<p id="tpass">Travel Passport</p>
-					</div>
-					<hr>
-					<div class ="details">
-						<div class="details-left">
-							<p class="header">SURNAME</p>
-							<p class="name-field"><?= $lastName ?></p>
-							<p class="header">FORENAME</p>
-							<p class="name-field"><?= $firstName ?></p>
-						</div>
-						<div class="details-right">
-							<p class="header">NATIONALITY</p>
-							<p class="other-field"><?= $country ?></p> 
-							<p class="header">AGE</p>
-							<p class="other-field"><?= $age ?> years</p>
-						</div>
-					</div>
-				
+		<div class="passport">
+			<div class="passport-left">
+    				<p class="gallery-title">MY TRAVELS</p>
+    				<div class="title-line"></div>
+
+    				<div class="gallery-wrapper">
+        				<img id="gallery-image" src="<?= $galleryImages[0] ?>" alt="Travel Photo">
+        				<button id="prev">&#10094;</button>
+        				<button id="next">&#10095;</button>
     				</div>
 			</div>
-		<div class="BioDest">
-  			<?php if($bio): ?>
-    				<div class="bio">
-      					<p class="heading">TRAVELLER BIO</p>
-      					<p class="body-text"><?= $bio ?></p>
-    				</div>
-  			<?php endif; ?>
-  			<div class="dest">
-    				<p class="heading">PLANNED TRIPS</p>
-    				<p class="body-text">France • 6 Months</p>
+
+			<div class="passport-right">
+				<div class="info">
+					<div class="profile-header">
+						<img src="<?= $profileImage ?>" alt="<?= $name ?>" class="profile-img">	
+						<div class="user-info">
+							<div class="tpass-header">
+								<img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
+								<p id="tpass">Travel Passport</p>
+							</div>
+							<hr>
+							<div class ="details">
+								<div class="details-left">
+									<p class="header">SURNAME</p>
+									<p class="name-field"><?= $lastName ?></p>
+										<p class="header">FORENAME</p>
+									<p class="name-field"><?= $firstName ?></p>
+								</div>
+								<div class="details-right">
+									<p class="header">NATIONALITY</p>
+									<p class="other-field"><?= $country ?></p> 
+									<p class="header">AGE</p>
+									<p class="other-field"><?= $age ?> years</p>
+								</div>
+							</div>
+				
+    						</div>		
+					</div>
+					<div class="BioDest">
+  						<?php if($bio): ?>
+    							<div class="bio">
+      								<p class="heading">TRAVELLER BIO</p>
+      								<p class="body-text"><?= $bio ?></p>
+    							</div>
+  						<?php endif; ?>
+  						<div class="dest">
+    							<p class="heading">PLANNED TRIPS</p>
+    							<p class="body-text">France • 6 Months</p>
+  						</div>	
+					</div>
+				</div>
+				<div class="separator">
+					<span>VISA STAMPS</span>
+				</div>		
+		
+				<div class="stamps-container">
+    					<div class="stamps">
+      						<?php foreach($stamps as $stamp): ?>
+        					<div class="stamp">
+          						<span class="icon"><?= $stamp['icon'] ?></span>
+          						<span class="country"><?= $stamp['country'] ?></span>
+          						<span class="date"><?= $stamp['date'] ?></span>
+        					</div>
+      						<?php endforeach; ?>
+					</div>
+				</div>
   			</div>
 		</div>
-		</div>
-		<div class="separator">
-			<span>VISA STAMPS</span>
-		</div>		
-		
-		<div class="stamps-container">
-    			<div class="stamps">
-      				<?php foreach($stamps as $stamp): ?>
-        			<div class="stamp">
-          				<span class="icon"><?= $stamp['icon'] ?></span>
-          				<span class="country"><?= $stamp['country'] ?></span>
-          				<span class="date"><?= $stamp['date'] ?></span>
-        			</div>
-      				<?php endforeach; ?>
-			</div>
-		</div>
-  	</div>
+	<div class="cover top-cover"></div>
+	</div>
 </div>
-</div>
+
+
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
 
 <script src="/includes/js/passport.js"></script>
 

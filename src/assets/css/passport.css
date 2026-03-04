@@ -1,22 +1,54 @@
 /* General Page */
 body {
-  font-family: Arial, sans-serif;
-  background: #f8f9fb;
-  margin: 0;
-  padding: 0;
+  	font-family: Arial, sans-serif;
+  	background: #f8f9fb;
+  	margin: 0;
+  	padding-top: 120px;
+
 }
 
-/* Passport Container */
+.passport-wrapper {
+	margin-left: 2rem;
+	position: relative;
+	display: inline-block;  /* shrink-wrap to passport size */
+}
+
+/* Back cover */
+.cover {
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    width: calc(100% + 24px);  /* slightly bigger than passport */
+    height: calc(100% + 24px);
+    background-color: #2c3e50;
+    border-radius: 16px;
+    z-index: 1;
+}
+
+/* Passport page */
 .passport {
-  display: flex;
-  width: 1000px;
-  margin: 2rem auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  border-radius: 12px;
-  overflow: hidden;
-  background: #fff;
+    display: flex;
+    position: relative;
+    width: 1000px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 2;
 }
 
+/* Top/front cover */
+.top-cover {
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    width: calc(100% + 24px);  /* slightly bigger than passport */
+    height: calc(100% + 24px);
+    background-color: #1e3a5f;
+    border-radius: 16px;
+    z-index: 3;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
 /* Left Page (Gallery) */
 .passport-left {
   width: 45%;
@@ -188,27 +220,16 @@ body {
     background-color: #1e3a5f; /* same color as title */
 }
 
-.header {
-	color: #8B89A0;
-	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-                 "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", 
-                 sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-	font-size: 16px;
-	font-weight: 500;
-	letter-spacing: 0.8px;
-	line-height: 24px;
-	margin-bottom: 2px;
-}
 
-.other-field {
+.header {
 	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
                  "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", 
                  sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	font-size: 17.6px;
 	font-weight: 600;
 	letter-spacing: 0.05rem;
-	margin: 0 1rem 0.5rem 0;
-	color: #212529;
+	margin: 0 1rem 0 0;
+	color: #7C818D;
 }
 
 .name-field {
@@ -217,7 +238,7 @@ body {
 	font-weight: 600;
 	letter-spacing: 0.05rem;
 	margin: 0 1rem 0.5rem 0;
-	color: #212529;
+	color: #242833;
 }
 
 .details-left {
@@ -236,7 +257,7 @@ body {
 	gap: 0.5rem;
 }
 
-#heading {
+.heading {
 	color: #8B89A0;
 	margin-bottom: 2px;
 	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -245,7 +266,7 @@ body {
 	tab-size: 4;
 }
 
-#body {
+.body {
 	color: #545167;
 	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	font-style: italic;
@@ -253,19 +274,33 @@ body {
 }
 
 .BioDest {
-	align-items: center;
-	display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* two equal columns */
+    gap: 2rem;
+    margin-top: 1.5rem;
 }
 
-.bio {
-	max-width: 20rem;
-	margin-right: 6rem;
+/* Individual sections */
+.BioDest .bio,
+.BioDest .dest {
+    display: flex;
+    flex-direction: column;
 }
 
-.dest {
-	min-width: 15rem;
+/* Section headings */
+.BioDest .heading {
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
 }
 
+/* Body text */
+.BioDest .body-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
 /* Separator line with label */
 .separator {
     display: flex;
