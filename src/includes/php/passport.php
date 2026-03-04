@@ -31,9 +31,10 @@ $galleryImages = [
 <body>
 <link rel="stylesheet" href="/assets/css/passport.css">
 
+
+
 <div class="passport-wrapper">
 	<div class="cover"></div>
-
 		<div class="passport">
 			<div class="passport-left">
     				<p class="gallery-title">MY TRAVELS</p>
@@ -103,7 +104,10 @@ $galleryImages = [
 				</div>
   			</div>
 		</div>
-	<div class="cover top-cover"></div>
+	<div class="cover top-cover">
+		<img src="/assets/images/embroidery.svg" alt="emb">
+	</div>
+	</div>
 	</div>
 	<img class="stamper" src="/assets/images/Stamp.png" alt="Stamp Pic">
 </div>
