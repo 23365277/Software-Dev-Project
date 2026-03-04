@@ -63,7 +63,8 @@ function returnXY() {
 		y: originalY,
 		rotation: originalRotation,
 		ease: "power3.out",
-		duration: 0.8
+		duration: 0.8,
+		onComplete: closeCover
 	});
 }
 </script>
