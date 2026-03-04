@@ -105,6 +105,7 @@ $galleryImages = [
 		</div>
 	<div class="cover top-cover"></div>
 	</div>
+	<img class="stamper" src="/assets/images/Stamp.png" alt="Stamp Pic">
 </div>
 
 

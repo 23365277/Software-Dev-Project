@@ -386,3 +386,9 @@ body {
 .stamp .date {
   display: block;
 }
+
+.stamper {
+    transform: rotate(-20deg); /* rotate 15 degrees clockwise */
+    width: 140px;
+    height: 140px;
+}
