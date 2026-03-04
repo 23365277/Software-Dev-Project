@@ -25,11 +25,11 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="/pages/contact.php">Contact</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="/pages/discovery_feed.php">Discovery Feed</a>
-            </li>
+	    </li>
+		
+		<li class="nav-item">
+			<a class="nav-link" href="/pages/testfile.php">Test File</a>
+		</li>
 
             <li class="nav-item">
                 <a class="nav-link" href="/pages/destination_search.php">Atlas</a>
@@ -44,7 +44,9 @@
             </li>
 
             <?php if (isset($_SESSION['user_id'])): ?>
-                
+		<li class="nav-item">
+                	<a class="nav-link" href="/pages/discovery_feed.php">Discovery Feed</a>
+            	</li>	    
                 <li class="nav-item profile-wrapper">
                     <a href="#" class="profile-circle" id="profileToggle">
                         <img src="/assets/images/default_profile.jpg"
