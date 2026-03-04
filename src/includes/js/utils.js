@@ -3,9 +3,7 @@ const input = document.getElementById("messageBox");
 const chatBox = document.getElementById("chatbox-messages");
 const contactsContainer = document.getElementById("chatbox-contacts");
 
-// =====================
-// Load contacts dynamically
-// =====================
+//Load the contacts
 async function loadContacts() {
     try {
         const res = await fetch("/includes/php/get_contacts.php");
@@ -22,8 +20,7 @@ async function loadContacts() {
             const div = document.createElement('div');
             div.classList.add('contact');
             div.dataset.userid = contact.id;
-            div.textContent = contact.email; // replace with name if you have one
-
+            div.textContent = contact.email; //might need to change thi, No I will im thinking out loud to change it to there name
             div.addEventListener('click', () => selectContact(contact.id, div));
 
             contactsContainer.appendChild(div);
@@ -35,9 +32,8 @@ async function loadContacts() {
     }
 }
 
-// =====================
-// Select a contact
-// =====================
+
+// Select the bomberclarting contact
 function selectContact(contactId, contactElement) {
     currentContact = contactId;
     input.disabled = false;
@@ -72,10 +68,8 @@ function fetchMessages() {
         })
         .catch(err => console.error(err));
 }
-
-// =====================
 // Send a message
-// =====================
+
 function collect_message() {
     if (!currentContact) return;
     const message = input.value.trim();
@@ -93,7 +87,7 @@ function collect_message() {
     .then(data => {
         if (data.success) {
             input.value = "";
-            fetchMessages(); // refresh messages immediately
+            fetchMessages(); // refresh messages quickly after sending - yes please
         } else {
             console.error(data.error);
         }
