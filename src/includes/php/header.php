@@ -43,6 +43,10 @@
                 <a class="nav-link" href="/pages/home.php">Home</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/post_a_trip.php">Post A Trip</a>
+            </li>
+
             <?php if (isset($_SESSION['user_id'])): ?>
                 
                 <li class="nav-item profile-wrapper">
