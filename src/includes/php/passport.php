@@ -68,18 +68,18 @@ $galleryImages = [
 				
     				</div>
 			</div>
-			<div class="BioDest">
-				<?php if($bio): ?>
-					<div class="bio">
-						<p id="heading">TRAVELLER BIO</p>
-						<p id="body"><?= $bio ?></p>
-					</div>
-				<?php endif; ?>
-				<div class="dest">
-					<p id="heading">PLANNED TRIPS</p>
-					<p id="body">Fance • 6 Months</p>
-				</div>
-			</div>	
+		<div class="BioDest">
+  			<?php if($bio): ?>
+    				<div class="bio">
+      					<p class="heading">TRAVELLER BIO</p>
+      					<p class="body-text"><?= $bio ?></p>
+    				</div>
+  			<?php endif; ?>
+  			<div class="dest">
+    				<p class="heading">PLANNED TRIPS</p>
+    				<p class="body-text">France • 6 Months</p>
+  			</div>
+		</div>
 		</div>
 		<div class="separator">
 			<span>VISA STAMPS</span>
