@@ -4,27 +4,37 @@ require_once __DIR__ . '/functions.php';
 
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$message = $_POST['message'] ?? '';
-	$receiver_id = $_POST['receiver_id'] ?? null;
+// Check if user is logged in
+$sender_id = $_SESSION['user_id'] ?? null;
+if (!$sender_id) {
+    http_response_code(401); // Unauthorized
+    echo json_encode(['error' => 'Not logged in']);
+    exit;
+}
 
-	$sender_id = $_SESSION['user_id'] ?? null;
+// Only allow POST requests
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405); // Method Not Allowed
+    echo json_encode(['error' => 'Invalid request method']);
+    exit;
+}
 
-	if(!$message || !$receiver_id || !$sender_id){
-		http_response_code(405); //405 is for bad request
-		echo "Missing data";
-		exit;
-	}	
+// Get POST data
+$message = trim($_POST['message'] ?? '');
+$receiver_id = $_POST['receiver_id'] ?? null;
 
-	try {
-		sendMessage($sender_id, $receiver_id, $message);
-		echo "Message sent";
-	} catch (Exception $e) {
-		http_response_code(500); //500 is for server error
-		echo "Erro sending message";
-	}
-} else {
-	//If not a POST, reject it
-	http_response_code(400); //400 is for bad method request
-	echo "Invalid request method";
+// Validate input
+if (!$message || !$receiver_id) {
+    http_response_code(400); // Bad Request
+    echo json_encode(['error' => 'Missing data']);
+    exit;
+}
+
+// Try to send the message
+try {
+    sendMessage($sender_id, $receiver_id, $message);
+    echo json_encode(['success' => true, 'message' => 'Message sent']);
+} catch (Exception $e) {
+    http_response_code(500); // Server error
+    echo json_encode(['error' => 'Error sending message']);
 }

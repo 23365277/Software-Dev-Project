@@ -131,3 +131,51 @@
 #chatbox-send:hover {
     background: #5a67d8;
 }
+
+#chatbox-input-area {
+    display: flex;
+    border-top: 1px solid #e2e8f0;
+    padding: 8px;
+    background: #fff;
+}
+
+.chatbox-body {
+    display: flex;
+    flex-direction: 1;
+    height: 100%;
+}
+
+.chatbox-contacts {
+    width: 100px;
+    background: #f0f0f5;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact {
+    padding:10px;
+    cursor:pointer;
+    border-bottom: 1px solid #ddd;
+}
+
+.contact:hover {
+    background: #e2e8f0;
+}
+
+.contact.active {
+    background: #e2e8f0
+}
+
+#chatbox-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: #f7f7fa;
+}
+
+
+
+
+
