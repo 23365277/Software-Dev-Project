@@ -23,9 +23,33 @@ body {
   position: relative;
   min-height: 400px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
+
+.gallery-title {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	font-family: "Playfair Display", serif;
+	font-size: 1.2rem;
+	font-weight: 600;
+	text-align: center;
+}
+
+.title-line {
+	width: 180px;
+	height: 2px;
+	font-size: 1.2rem;
+	margin: 0 auto 1rem auto;
+
+	background: linear-gradient(
+		to right,
+		transparent,
+		rgba(0, 0, 0, 0.4),
+		transparent
+	);
+}
+
 
 .passport-left img {
   width: 90%;
@@ -48,6 +72,39 @@ body {
   user-select: none;
 }
 
+.gallery-wrapper {
+    width: 100%;
+    max-height: 300px;
+    overflow: hidden;           /* hide anything outside */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;        /* center vertically */
+}
+
+#gallery-image {
+    max-width: 90%;
+    max-height: 280px;
+    object-fit: contain;
+
+    /* slide animation */
+    transition: transform 0.4s ease-in-out;
+    position: absolute;         /* stack on top for animation */
+}
+
+.gallery-wrapper button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    font-size: 2rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 2;
+}
+
 #prev { left: 10px; }
 #next { right: 10px; }
 
@@ -56,12 +113,28 @@ body {
     	padding: 1.5rem;
     	position: relative;
     	background: #fcfafa;
-
     	border: 1px solid #000;        	
 	border-radius: 12px;    
 	border-color: grey;
 	
 	margin: 1rem;
+}
+
+.passport-right::before {
+    content: "";
+    position: absolute;
+    inset: 0;                  /* covers the whole box */
+    border-radius: 12px;       /* match your box corners */
+    background-image: url("/assets/images/random-shapes.svg");
+    background-size: cover;    /* cover entire box */
+    background-position: center;
+    opacity: 0.05;             /* very subtle */
+    z-index: 0;                /* behind content */
+}
+
+.passport-right > * {
+    position: relative;
+    z-index: 1;
 }
 
 /* Profile Header: Image on left, info on right */
@@ -155,6 +228,14 @@ body {
 	display: flex;
 }
 
+.info {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+
 #heading {
 	color: #8B89A0;
 	margin-bottom: 2px;
@@ -169,7 +250,20 @@ body {
 	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	font-style: italic;
 	font-size: 14px;
-	font-weight: 
+}
+
+.BioDest {
+	align-items: center;
+	display: flex;
+}
+
+.bio {
+	max-width: 20rem;
+	margin-right: 6rem;
+}
+
+.dest {
+	min-width: 15rem;
 }
 
 /* Separator line with label */
@@ -207,36 +301,50 @@ body {
     display: inline-block;
 }
 
-/* Stamps */
+.stamps-container {
+    width: 100%;
+    overflow-x: auto;          
+    overflow-y: visible;     
+    padding: 0 1rem;       
+    box-sizing: border-box;
+}
+
 .stamps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1rem;
+    	display: flex;
+    	gap: 0.5rem;
+    	flex-wrap: nowrap;
+    	justify-content: flex-start;
+    	align-items: flex-start;
+    	padding: 0.5rem;
 }
 
 .stamp {
-    border: 2px solid #ccc;
-    border-radius: 6px;
-    padding: 0.3rem 0.5rem;
-    background: #fff;
-    text-align: center;
-    width: 80px;
-    font-size: 0.8rem;
-    transition: all 0.3s ease;
+    	flex: 0 0 auto;
+    	border: 2px solid #ccc;
+    	border-radius: 6px;
+    	padding: 0.3rem 0.5rem;
+    	background: #fff;
+    	text-align: center;
+    	width: 80px;
+    	font-size: 0.8rem;
+    	transition: all 0.3s ease;
+    	transform-origin: center center; /* so rotations don't push outside */
 }
 
 .stamp:hover {
-    border-color: #ccc;
-
     box-shadow: 0 0 0 2px rgba(255,0,0,0.6);
-    background-color: rgba(255, 0, 0, 0.05); 
-    transform: scale(1.05);
+    background-color: rgba(255,0,0,0.05);
+
 }
 
 .stamp .icon {
   font-size: 1.2rem;
   display: block;
+}
+
+.passport-left,
+.passport-right {
+  border-radius: 12px;
 }
 
 .stamp .country,
