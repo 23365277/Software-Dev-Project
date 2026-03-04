@@ -28,7 +28,7 @@ $galleryImages = [
 ?>
 
 <link rel="stylesheet" href="/assets/css/passport.css">
-
+<div class="cover">
 <div class="passport">
 	<div class="passport-left">
     		<p class="gallery-title">MY TRAVELS</p>
@@ -97,6 +97,7 @@ $galleryImages = [
 			</div>
 		</div>
   	</div>
+</div>
 </div>
 
 <script src="/includes/js/passport.js"></script>
