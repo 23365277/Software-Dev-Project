@@ -5,6 +5,9 @@
 
 	$error = '';
 
+	if (isset($_SESSION['user_id'])){
+		header('Location: /pages/home.php');
+	}
 
 	if (isset($_POST['login'])) {
 		$email = $_POST['email'];
