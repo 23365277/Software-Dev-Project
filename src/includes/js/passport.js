@@ -13,6 +13,18 @@ function peelCover() {
 
 function closeCover(){
 	gsap.to(".top-cover", {
-		rotationX: 0, duration: 0.8, transformOrigin: "50% 0%", ease: "power.2inOut"
+		rotationX: 0, 
+		duration: 0.8, 
+		transformOrigin: "50% 0%", 
+		ease: "power.2inOut",
+		onComplete: offScreen
+	});
+}
+
+function offScreen() {
+	gsap.to(".passport-wrapper", {
+		x: -1400,
+		duration: 1,
+		ease: "power2.out"
 	});
 }
