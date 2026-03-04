@@ -47,6 +47,14 @@
                 <a class="nav-link" href="/pages/post_a_trip.php">Post A Trip</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/discovery_feed.php">Discovery Feed</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/inbox.php">Inbox</a>
+            </li>
+
             <?php if (isset($_SESSION['user_id'])): ?>
 		<li class="nav-item">
                 	<a class="nav-link" href="/pages/discovery_feed.php">Discovery Feed</a>
