@@ -20,6 +20,8 @@
 const stamp = document.querySelector(".stamper");
 const button = document.getElementById("stampBtn");
 
+
+
 const originalX = gsap.getProperty(stamp, "x");
 const originalY = gsap.getProperty(stamp, "y");
 
@@ -27,7 +29,8 @@ const originalRotation = gsap.getProperty(stamp, "rotation");
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    button.addEventListener("click", () => {
+button.addEventListener("click", () => {
+	button.disabled = true;
         gsap.to(stamp, {
             	x: -330,       // target X inside passport
 		y: 180,
@@ -64,7 +67,9 @@ function returnXY() {
 		rotation: originalRotation,
 		ease: "power3.out",
 		duration: 0.8,
-		onComplete: closeCover
+		onComplete: () => {
+			window.closeCover();
+		}	
 	});
 }
 </script>
