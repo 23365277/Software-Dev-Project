@@ -105,7 +105,7 @@ $galleryImages = [
   			</div>
 		</div>
 	<div class="cover top-cover">
-		<img src="/assets/images/embroidery.svg" alt="emb">
+		<img src="/assets/images/favicon_light.ico" alt="emb">
 	</div>
 	</div>
 	</div>

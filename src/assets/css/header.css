@@ -129,3 +129,7 @@ header .nav a.btn-customSignUp:hover {
 .dropdown-menu {
 	display: none;
 }
+
+.header-spacer {
+	height: 120px;
+}

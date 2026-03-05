@@ -88,6 +88,8 @@
     </nav>
 </header>
 
+<div class="header-spacer"></div>
+
 <!-- Dropdown Script -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {

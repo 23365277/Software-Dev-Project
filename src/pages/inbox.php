@@ -3,7 +3,7 @@
 	$pageCSS = "/assets/css/inbox.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
-<div class="card ms-4" style="margin-top: 100px; min-height: 70vh;">
+<div class="card ms-4" style="min-height: 70vh;">
     <div class="row g-0">
         <div class="col-lg-4 col-md-4 col-sm-4">
             <div class="card" style="min-height: 80vh;">
