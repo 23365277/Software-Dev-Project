@@ -1,4 +1,4 @@
--- MySQL dump 10.13  Distrib 8.0.45, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.45, for Linux (aarch64)
 --
 -- Host: localhost    Database: roamance
 -- ------------------------------------------------------
@@ -78,6 +78,32 @@ LOCK TABLES `admin_actions` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `banned_users`
+--
+
+DROP TABLE IF EXISTS `banned_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `banned_users` (
+  `target_id` int NOT NULL,
+  `admin_id` int NOT NULL,
+  PRIMARY KEY (`target_id`,`admin_id`),
+  KEY `admin_id` (`admin_id`),
+  CONSTRAINT `banned_users_ibfk_1` FOREIGN KEY (`target_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `banned_users_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `banned_users`
+--
+
+LOCK TABLES `banned_users` WRITE;
+/*!40000 ALTER TABLE `banned_users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `banned_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `blocks`
 --
 
@@ -102,6 +128,29 @@ CREATE TABLE `blocks` (
 LOCK TABLES `blocks` WRITE;
 /*!40000 ALTER TABLE `blocks` DISABLE KEYS */;
 /*!40000 ALTER TABLE `blocks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `destinations`
+--
+
+DROP TABLE IF EXISTS `destinations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `destinations` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `location` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `destinations`
+--
+
+LOCK TABLES `destinations` WRITE;
+/*!40000 ALTER TABLE `destinations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `destinations` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -325,7 +374,7 @@ CREATE TABLE `profiles` (
 
 LOCK TABLES `profiles` WRITE;
 /*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
-INSERT INTO `profiles` VALUES (83,'Elizabeth','Martin','1973-12-20','OTHER','Enjoys reading, hiking, and good music.',162,'San Jose','Netherlands','RELATIONSHIP','https://i.pravatar.cc/150?img=24','2025-10-06 15:16:22'),(84,'Jennifer','Martin','1972-09-04','FEMALE','Always curious and learning new things.',173,'Dallas','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=14','2025-08-08 15:16:22'),(85,'Michael','Anderson','1999-07-13','MALE','Love adventures and meeting new people.',171,'Los Angeles','Sweden','CASUAL','https://i.pravatar.cc/150?img=32','2026-02-13 15:16:23'),(86,'Thomas','White','1996-03-01','MALE','Love adventures and meeting new people.',198,'Los Angeles','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=19','2025-11-04 15:16:23'),(87,'Richard','Thomas','2007-12-25','MALE','Looking for meaningful connections.',154,'Dallas','UK','RELATIONSHIP','https://i.pravatar.cc/150?img=32','2026-01-31 15:16:23'),(88,'James','White','1991-04-21','MALE','Tech enthusiast and coffee lover.',192,'Dallas','France','RELATIONSHIP','https://i.pravatar.cc/150?img=43','2025-08-19 15:16:23'),(89,'Charles','Harris','1996-04-26','OTHER','Love adventures and meeting new people.',172,'San Antonio','Italy','CASUAL','https://i.pravatar.cc/150?img=23','2026-01-24 15:16:23'),(90,'Barbara','Thomas','1990-04-08','OTHER','Enjoys reading, hiking, and good music.',189,'Phoenix','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=23','2025-03-29 15:16:23'),(91,'Sarah','Harris','1970-05-26','OTHER','Always curious and learning new things.',187,'Phoenix','Germany','FRIENDSHIP','https://i.pravatar.cc/150?img=5','2025-08-08 15:16:23'),(92,'Elizabeth','Jackson','2008-06-16','OTHER','Looking for meaningful connections.',175,'Dallas','Germany','CASUAL','https://i.pravatar.cc/150?img=6','2025-03-29 15:16:23'),(93,'Robert','Harris','1968-08-02','MALE','Love adventures and meeting new people.',156,'San Diego','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=70','2025-03-17 15:16:23'),(94,'David','Anderson','1985-10-04','OTHER','Always curious and learning new things.',157,'Houston','Australia','CASUAL','https://i.pravatar.cc/150?img=50','2026-02-03 15:16:23'),(95,'Karen','White','2003-10-13','OTHER','Always curious and learning new things.',188,'Philadelphia','Germany','CASUAL','https://i.pravatar.cc/150?img=31','2025-07-23 15:16:23'),(96,'Joseph','Martin','1969-01-09','MALE','Enjoys reading, hiking, and good music.',176,'Philadelphia','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=32','2025-07-26 15:16:23'),(97,'Mary','Johnson','1994-10-05','OTHER','Enjoys reading, hiking, and good music.',151,'Philadelphia','USA','CASUAL','https://i.pravatar.cc/150?img=65','2025-03-14 15:16:23'),(98,'Thomas','Jackson','1991-07-09','MALE','Love adventures and meeting new people.',194,'Houston','Australia','CASUAL','https://i.pravatar.cc/150?img=17','2025-12-15 15:16:23'),(99,'Richard','Thomas','1976-07-21','MALE','Enjoys reading, hiking, and good music.',155,'San Jose','Canada','RELATIONSHIP','https://i.pravatar.cc/150?img=7','2025-10-18 15:16:23'),(100,'James','Johnson','1993-04-14','MALE','Enjoys reading, hiking, and good music.',194,'New York','Canada','FRIENDSHIP','https://i.pravatar.cc/150?img=39','2025-04-05 15:16:23'),(101,'Jessica','Johnson','1973-03-23','FEMALE','Love adventures and meeting new people.',188,'Los Angeles','USA','CASUAL','https://i.pravatar.cc/150?img=11','2025-11-01 15:16:23'),(102,'James','Anderson','1984-01-19','MALE','Fun, outgoing, and spontaneous.',190,'Los Angeles','UK','CASUAL','https://i.pravatar.cc/150?img=5','2025-09-15 15:16:23'),(103,'Patricia','Thomas','1968-09-13','OTHER','Enjoys reading, hiking, and good music.',170,'San Jose','Sweden','FRIENDSHIP','https://i.pravatar.cc/150?img=9','2025-07-30 15:16:23'),(104,'Sarah','Taylor','1983-03-17','OTHER','Enjoys reading, hiking, and good music.',176,'Dallas','France','FRIENDSHIP','https://i.pravatar.cc/150?img=32','2025-04-07 15:16:23'),(105,'Susan','Harris','1972-06-15','OTHER','Fun, outgoing, and spontaneous.',174,'Los Angeles','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=68','2025-05-10 15:16:24'),(106,'Mary','Anderson','1982-04-18','FEMALE','Enjoys reading, hiking, and good music.',183,'Philadelphia','UK','RELATIONSHIP','https://i.pravatar.cc/150?img=44','2025-04-02 15:16:24'),(107,'Elizabeth','Martin','1981-09-01','OTHER','Love adventures and meeting new people.',187,'Los Angeles','UK','FRIENDSHIP','https://i.pravatar.cc/150?img=22','2026-02-08 15:16:24'),(108,'Thomas','White','2005-02-24','OTHER','Always curious and learning new things.',200,'Chicago','Australia','CASUAL','https://i.pravatar.cc/150?img=43','2025-12-13 15:16:24'),(109,'Elizabeth','Smith','1987-11-24','FEMALE','Fun, outgoing, and spontaneous.',151,'Chicago','Netherlands','FRIENDSHIP','https://i.pravatar.cc/150?img=11','2025-02-25 15:16:24'),(110,'John','Johnson','1976-11-07','OTHER','Looking for meaningful connections.',186,'Phoenix','Germany','FRIENDSHIP','https://i.pravatar.cc/150?img=55','2025-08-11 15:16:24'),(111,'James','Johnson','1998-03-14','OTHER','Love adventures and meeting new people.',174,'San Antonio','Netherlands','RELATIONSHIP','https://i.pravatar.cc/150?img=11','2025-03-24 15:16:24'),(112,'Sarah','Harris','1968-01-04','FEMALE','Fun, outgoing, and spontaneous.',198,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=26','2025-06-26 15:16:24'),(113,'Barbara','Johnson','1982-08-04','FEMALE','Love adventures and meeting new people.',188,'Los Angeles','Netherlands','FRIENDSHIP','https://i.pravatar.cc/150?img=65','2025-04-27 15:16:24'),(114,'David','Thomas','2001-11-06','MALE','Enjoys reading, hiking, and good music.',150,'Houston','Canada','CASUAL','https://i.pravatar.cc/150?img=57','2025-12-25 15:16:24'),(115,'Jessica','Thomas','1978-04-25','FEMALE','Looking for meaningful connections.',165,'San Jose','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=35','2025-10-22 15:16:24'),(116,'Jennifer','Brown','1996-05-15','FEMALE','Fun, outgoing, and spontaneous.',174,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=69','2025-06-26 15:16:24'),(117,'David','Martin','2000-07-25','MALE','Tech enthusiast and coffee lover.',173,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=66','2025-06-08 15:16:24'),(118,'Sarah','Taylor','1998-11-14','OTHER','Looking for meaningful connections.',161,'Houston','Spain','CASUAL','https://i.pravatar.cc/150?img=46','2025-12-08 15:16:24'),(119,'Jessica','White','1999-12-14','OTHER','Fun, outgoing, and spontaneous.',186,'Chicago','Australia','RELATIONSHIP','https://i.pravatar.cc/150?img=4','2025-12-09 15:16:24'),(120,'Linda','Taylor','2007-06-05','FEMALE','Always curious and learning new things.',175,'Los Angeles','Sweden','FRIENDSHIP','https://i.pravatar.cc/150?img=1','2025-10-02 15:16:24'),(121,'Charles','Anderson','1980-07-01','OTHER','Enjoys reading, hiking, and good music.',162,'Philadelphia','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=39','2025-07-04 15:16:24'),(122,'David','Thomas','1983-10-01','OTHER','Fun, outgoing, and spontaneous.',187,'Houston','UK','CASUAL','https://i.pravatar.cc/150?img=17','2025-10-07 15:16:24'),(123,'John','Johnson','1977-08-18','OTHER','Love adventures and meeting new people.',158,'Los Angeles','Canada','RELATIONSHIP','https://i.pravatar.cc/150?img=5','2025-07-23 15:16:24'),(124,'Elizabeth','Brown','1993-04-23','FEMALE','Enjoys reading, hiking, and good music.',174,'Los Angeles','Italy','CASUAL','https://i.pravatar.cc/150?img=20','2025-06-29 15:16:24'),(125,'Jennifer','Johnson','1986-04-18','OTHER','Looking for meaningful connections.',188,'Dallas','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=70','2026-01-21 15:16:24'),(126,'David','White','2003-08-24','OTHER','Looking for meaningful connections.',157,'Los Angeles','France','FRIENDSHIP','https://i.pravatar.cc/150?img=32','2025-10-04 15:16:25'),(127,'Karen','Taylor','1976-07-09','OTHER','Love adventures and meeting new people.',165,'Los Angeles','UK','FRIENDSHIP','https://i.pravatar.cc/150?img=61','2025-10-08 15:16:25'),(128,'Jessica','Brown','1998-11-08','FEMALE','Love adventures and meeting new people.',196,'Philadelphia','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=44','2025-06-28 15:16:25'),(129,'William','Jackson','1983-05-25','MALE','Tech enthusiast and coffee lover.',171,'Houston','Spain','FRIENDSHIP','https://i.pravatar.cc/150?img=63','2025-10-15 15:16:25'),(130,'Jennifer','Smith','1992-09-07','OTHER','Tech enthusiast and coffee lover.',195,'San Antonio','Canada','FRIENDSHIP','https://i.pravatar.cc/150?img=58','2025-09-02 15:16:25'),(131,'Michael','Jackson','1973-12-14','MALE','Always curious and learning new things.',181,'San Antonio','France','CASUAL','https://i.pravatar.cc/150?img=31','2025-12-13 15:16:25'),(132,'James','Thomas','1989-03-05','MALE','Love adventures and meeting new people.',156,'San Diego','Spain','FRIENDSHIP','https://i.pravatar.cc/150?img=52','2026-01-10 15:16:25');
+INSERT INTO `profiles` VALUES (83,'Elizabeth','Martin','1973-12-20','OTHER','Enjoys reading, hiking, and good music.',162,'San Jose','Netherlands','RELATIONSHIP','https://i.pravatar.cc/150?img=24','2025-10-06 15:16:22'),(84,'Jennifer','Martin','1972-09-04','FEMALE','Always curious and learning new things.',173,'Dallas','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=14','2025-08-08 15:16:22'),(85,'Michael','Anderson','1999-07-13','MALE','Love adventures and meeting new people.',171,'Los Angeles','Sweden','CASUAL','https://i.pravatar.cc/150?img=32','2026-02-13 15:16:23'),(86,'Thomas','White','1996-03-01','MALE','Love adventures and meeting new people.',198,'Los Angeles','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=19','2025-11-04 15:16:23'),(87,'Richard','Thomas','2007-12-25','MALE','Looking for meaningful connections.',154,'Dallas','UK','RELATIONSHIP','https://i.pravatar.cc/150?img=32','2026-01-31 15:16:23'),(88,'James','White','1991-04-21','MALE','Tech enthusiast and coffee lover.',192,'Dallas','France','RELATIONSHIP','https://i.pravatar.cc/150?img=43','2025-08-19 15:16:23'),(89,'Charles','Harris','1996-04-26','OTHER','Love adventures and meeting new people.',172,'San Antonio','Italy','CASUAL','https://i.pravatar.cc/150?img=23','2026-01-24 15:16:23'),(90,'Barbara','Thomas','1990-04-08','OTHER','Enjoys reading, hiking, and good music.',189,'Phoenix','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=23','2025-03-29 15:16:23'),(91,'Sarah','Harris','1970-05-26','OTHER','Always curious and learning new things.',187,'Phoenix','Germany','FRIENDSHIP','https://i.pravatar.cc/150?img=5','2025-08-08 15:16:23'),(92,'Elizabeth','Jackson','2008-06-16','OTHER','Looking for meaningful connections.',175,'Dallas','Germany','CASUAL','https://i.pravatar.cc/150?img=6','2025-03-29 15:16:23'),(93,'Robert','Harris','1968-08-02','MALE','Love adventures and meeting new people.',156,'San Diego','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=70','2025-03-17 15:16:23'),(94,'David','Anderson','1985-10-04','OTHER','Always curious and learning new things.',157,'Houston','Australia','CASUAL','https://i.pravatar.cc/150?img=50','2026-02-03 15:16:23'),(95,'Karen','White','2003-10-13','OTHER','Always curious and learning new things.',188,'Philadelphia','Germany','CASUAL','https://i.pravatar.cc/150?img=31','2025-07-23 15:16:23'),(96,'Joseph','Martin','1969-01-09','MALE','Enjoys reading, hiking, and good music.',176,'Philadelphia','Spain','RELATIONSHIP','https://i.pravatar.cc/150?img=32','2025-07-26 15:16:23'),(97,'Mary','Johnson','1994-10-05','OTHER','Enjoys reading, hiking, and good music.',151,'Philadelphia','USA','CASUAL','https://i.pravatar.cc/150?img=65','2025-03-14 15:16:23'),(98,'Thomas','Jackson','1991-07-09','MALE','Love adventures and meeting new people.',194,'Houston','Australia','CASUAL','https://i.pravatar.cc/150?img=17','2025-12-15 15:16:23'),(99,'Richard','Thomas','1976-07-21','MALE','Enjoys reading, hiking, and good music.',155,'San Jose','Canada','RELATIONSHIP','https://i.pravatar.cc/150?img=7','2025-10-18 15:16:23'),(100,'James','Johnson','1993-04-14','MALE','Enjoys reading, hiking, and good music.',194,'New York','Canada','FRIENDSHIP','https://i.pravatar.cc/150?img=39','2025-04-05 15:16:23'),(101,'Jessica','Johnson','1973-03-23','FEMALE','Love adventures and meeting new people.',188,'Los Angeles','USA','CASUAL','https://i.pravatar.cc/150?img=11','2025-11-01 15:16:23'),(102,'James','Anderson','1984-01-19','MALE','Fun, outgoing, and spontaneous.',190,'Los Angeles','UK','CASUAL','https://i.pravatar.cc/150?img=5','2025-09-15 15:16:23'),(103,'Patricia','Thomas','1968-09-13','OTHER','Enjoys reading, hiking, and good music.',170,'San Jose','Sweden','FRIENDSHIP','https://i.pravatar.cc/150?img=9','2025-07-30 15:16:23'),(104,'Sarah','Taylor','1983-03-17','OTHER','Enjoys reading, hiking, and good music.',176,'Dallas','France','FRIENDSHIP','https://i.pravatar.cc/150?img=32','2025-04-07 15:16:23'),(105,'Susan','Harris','1972-06-15','OTHER','Fun, outgoing, and spontaneous.',174,'Los Angeles','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=68','2025-05-10 15:16:24'),(106,'Mary','Anderson','1982-04-18','FEMALE','Enjoys reading, hiking, and good music.',183,'Philadelphia','UK','RELATIONSHIP','https://i.pravatar.cc/150?img=44','2025-04-02 15:16:24'),(107,'Elizabeth','Martin','1981-09-01','OTHER','Love adventures and meeting new people.',187,'Los Angeles','UK','FRIENDSHIP','https://i.pravatar.cc/150?img=22','2026-02-08 15:16:24'),(108,'Thomas','White','2005-02-24','OTHER','Always curious and learning new things.',200,'Chicago','Australia','CASUAL','https://i.pravatar.cc/150?img=43','2025-12-13 15:16:24'),(109,'Elizabeth','Smith','1987-11-24','FEMALE','Fun, outgoing, and spontaneous.',151,'Chicago','Netherlands','FRIENDSHIP','https://i.pravatar.cc/150?img=11','2025-02-25 15:16:24'),(110,'John','Johnson','1976-11-07','OTHER','Looking for meaningful connections.',186,'Phoenix','Germany','FRIENDSHIP','https://i.pravatar.cc/150?img=55','2025-08-11 15:16:24'),(111,'James','Johnson','1998-03-14','OTHER','Love adventures and meeting new people.',174,'San Antonio','Netherlands','RELATIONSHIP','https://i.pravatar.cc/150?img=11','2025-03-24 15:16:24'),(112,'Sarah','Harris','1968-01-04','FEMALE','Fun, outgoing, and spontaneous.',198,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=26','2025-06-26 15:16:24'),(113,'Barbara','Johnson','1982-08-04','FEMALE','Love adventures and meeting new people.',188,'Los Angeles','Netherlands','FRIENDSHIP','https://i.pravatar.cc/150?img=65','2025-04-27 15:16:24'),(114,'David','Thomas','2001-11-06','MALE','Enjoys reading, hiking, and good music.',150,'Houston','Canada','CASUAL','https://i.pravatar.cc/150?img=57','2025-12-25 15:16:24'),(115,'Jessica','Thomas','1978-04-25','FEMALE','Looking for meaningful connections.',165,'San Jose','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=35','2025-10-22 15:16:24'),(116,'Jennifer','Brown','1996-05-15','FEMALE','Fun, outgoing, and spontaneous.',174,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=69','2025-06-26 15:16:24'),(117,'David','Martin','2000-07-25','MALE','Tech enthusiast and coffee lover.',173,'San Jose','Sweden','CASUAL','https://i.pravatar.cc/150?img=66','2025-06-08 15:16:24'),(118,'Sarah','Taylor','1998-11-14','OTHER','Looking for meaningful connections.',161,'Houston','Spain','CASUAL','https://i.pravatar.cc/150?img=46','2025-12-08 15:16:24'),(119,'Jessica','White','1999-12-14','OTHER','Fun, outgoing, and spontaneous.',186,'Chicago','Australia','RELATIONSHIP','https://i.pravatar.cc/150?img=4','2025-12-09 15:16:24'),(120,'Linda','Taylor','2007-06-05','FEMALE','Always curious and learning new things.',175,'Los Angeles','Sweden','FRIENDSHIP','https://i.pravatar.cc/150?img=1','2025-10-02 15:16:24'),(121,'Charles','Anderson','1980-07-01','OTHER','Enjoys reading, hiking, and good music.',162,'Philadelphia','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=39','2025-07-04 15:16:24'),(122,'David','Thomas','1983-10-01','OTHER','Fun, outgoing, and spontaneous.',187,'Houston','UK','CASUAL','https://i.pravatar.cc/150?img=17','2025-10-07 15:16:24'),(123,'John','Johnson','1977-08-18','OTHER','Love adventures and meeting new people.',158,'Los Angeles','Canada','RELATIONSHIP','https://i.pravatar.cc/150?img=5','2025-07-23 15:16:24'),(124,'Elizabeth','Brown','1993-04-23','FEMALE','Enjoys reading, hiking, and good music.',174,'Los Angeles','Italy','CASUAL','https://i.pravatar.cc/150?img=20','2025-06-29 15:16:24'),(125,'Jennifer','Johnson','1986-04-18','OTHER','Looking for meaningful connections.',188,'Dallas','Italy','FRIENDSHIP','https://i.pravatar.cc/150?img=70','2026-01-21 15:16:24'),(126,'David','White','2003-08-24','OTHER','Looking for meaningful connections.',157,'Los Angeles','France','FRIENDSHIP','https://i.pravatar.cc/150?img=32','2025-10-04 15:16:25'),(127,'Karen','Taylor','1976-07-09','OTHER','Love adventures and meeting new people.',165,'Los Angeles','UK','FRIENDSHIP','https://i.pravatar.cc/150?img=61','2025-10-08 15:16:25'),(128,'Jessica','Brown','1998-11-08','FEMALE','Love adventures and meeting new people.',196,'Philadelphia','Italy','RELATIONSHIP','https://i.pravatar.cc/150?img=44','2025-06-28 15:16:25'),(129,'William','Jackson','1983-05-25','MALE','Tech enthusiast and coffee lover.',171,'Houston','Spain','FRIENDSHIP','https://i.pravatar.cc/150?img=63','2025-10-15 15:16:25'),(130,'Jennifer','Smith','1992-09-07','OTHER','Tech enthusiast and coffee lover.',195,'San Antonio','Canada','FRIENDSHIP','https://i.pravatar.cc/150?img=58','2025-09-02 15:16:25'),(131,'Michael','Jackson','1973-12-14','MALE','Always curious and learning new things.',181,'San Antonio','France','CASUAL','https://i.pravatar.cc/150?img=31','2025-12-13 15:16:25'),(132,'James','Thomas','1989-03-05','MALE','Love adventures and meeting new people.',156,'San Diego','Spain','FRIENDSHIP','https://i.pravatar.cc/150?img=52','2026-01-10 15:16:25'),(133,'dv','vd','2026-03-14',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-03-03 17:38:35'),(134,'d','d','2026-03-14',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-03-03 17:42:34'),(138,'p','p','2026-03-08',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-03-03 17:45:56'),(140,'k','k','2026-03-20',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-03-03 17:51:15'),(141,'g','g','2026-03-19',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-03-03 17:52:40'),(142,'o','o','2026-03-13',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-03-03 17:56:04'),(143,'w','w','2026-03-12',NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2026-03-03 18:26:54');
 /*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -360,6 +409,84 @@ LOCK TABLES `reports` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `suspended_users`
+--
+
+DROP TABLE IF EXISTS `suspended_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `suspended_users` (
+  `target_id` int NOT NULL,
+  `admin_id` int NOT NULL,
+  `reason` text NOT NULL,
+  `duration` time NOT NULL,
+  `status` enum('ACTIVE','BANNED','SUSPENDED') NOT NULL,
+  PRIMARY KEY (`target_id`,`admin_id`),
+  KEY `admin_id` (`admin_id`),
+  CONSTRAINT `suspended_users_ibfk_1` FOREIGN KEY (`target_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `suspended_users_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `suspended_users`
+--
+
+LOCK TABLES `suspended_users` WRITE;
+/*!40000 ALTER TABLE `suspended_users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suspended_users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `trips`
+--
+
+DROP TABLE IF EXISTS `trips`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `trips` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `location` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `trips`
+--
+
+LOCK TABLES `trips` WRITE;
+/*!40000 ALTER TABLE `trips` DISABLE KEYS */;
+/*!40000 ALTER TABLE `trips` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_destinations`
+--
+
+DROP TABLE IF EXISTS `user_destinations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_destinations` (
+  `user_id` int NOT NULL,
+  `destination_id` int NOT NULL,
+  PRIMARY KEY (`user_id`,`destination_id`),
+  KEY `destination_id` (`destination_id`),
+  CONSTRAINT `user_destinations_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_destinations_ibfk_2` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_destinations`
+--
+
+LOCK TABLES `user_destinations` WRITE;
+/*!40000 ALTER TABLE `user_destinations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_destinations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user_interests`
 --
 
@@ -388,6 +515,32 @@ LOCK TABLES `user_interests` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_trips`
+--
+
+DROP TABLE IF EXISTS `user_trips`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_trips` (
+  `user_id` int NOT NULL,
+  `trips_id` int NOT NULL,
+  PRIMARY KEY (`user_id`,`trips_id`),
+  KEY `trips_id` (`trips_id`),
+  CONSTRAINT `user_trips_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `user_trips_ibfk_2` FOREIGN KEY (`trips_id`) REFERENCES `trips` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_trips`
+--
+
+LOCK TABLES `user_trips` WRITE;
+/*!40000 ALTER TABLE `user_trips` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_trips` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `users`
 --
 
@@ -404,7 +557,7 @@ CREATE TABLE `users` (
   `role` enum('USER','ADMIN') DEFAULT 'USER',
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=144 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -413,7 +566,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (83,'elizabeth.m699@gmail.com','$2y$10$kV1mFwH/ZN7EH6JdhSBHqe0JysdQcJhC1PLvsP31Ebw7/zYIQhWza','2025-10-06 15:16:22','ACTIVE',NULL,'USER'),(84,'jennifer.m324@gmail.com','$2y$10$142Q5qN7AAbQZdDyTccV7ugNKHNfJ9KM5GeFvhXI2hn9FdhjM0rUy','2025-08-08 15:16:22','ACTIVE',NULL,'USER'),(85,'michael.a877@gmail.com','$2y$10$6hWxpLQdXldGCoO070JoaO8t8KhRNDgqq4TTd8v1V9aqg6QvJ5yNC','2026-02-13 15:16:23','ACTIVE',NULL,'USER'),(86,'thomas.w371@yahoo.com','$2y$10$YopQ452tWN6tgwiVKFw0lOIKJtjp53PlTRqVVe9QOXfI3wP5wd..O','2025-11-04 15:16:23','ACTIVE',NULL,'USER'),(87,'richard.t213@hotmail.com','$2y$10$r1XZohAtjolYAb/7nBrl5eev9CO1Dyr.Uneng8CYAV4jK/tWXdY/O','2026-01-31 15:16:23','ACTIVE',NULL,'USER'),(88,'james.w635@gmail.com','$2y$10$.qN3t4uBfqngHiS1w/DVm.uEpS.ig.Y3Y38Ql64TiTR9FC/0sjbd.','2025-08-19 15:16:23','ACTIVE',NULL,'USER'),(89,'charles.h294@gmail.com','$2y$10$9tj/fDvaq4Yh/iR/wKsi6ePE8LsC49uY6fRCGnfV6jE6nXHJGtMMK','2026-01-24 15:16:23','ACTIVE',NULL,'USER'),(90,'barbara.t167@yahoo.com','$2y$10$2xqoSBhSmshldxtIeQzU5uUKznCDFWU3Thwi9.R9pDsPIcqcG6P.W','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(91,'sarah.h524@outlook.com','$2y$10$mWEmmy2qpba9cm59LWH3/uRuMGYeCzKG2hqYIMmvFOUpUEldCHfaS','2025-08-08 15:16:23','ACTIVE',NULL,'USER'),(92,'elizabeth.j136@yahoo.com','$2y$10$pT78S.D5UlIBU74npQPK3uMhTvnK1oMxhi/DeYdGVQ8ed8juUptGu','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(93,'robert.h138@yahoo.com','$2y$10$UWa7UH8d5v7BSt/yrdyBf.hb3skJ5xyXA0U77Kd/wAUoUz104bYAe','2025-03-17 15:16:23','ACTIVE',NULL,'USER'),(94,'david.a545@yahoo.com','$2y$10$ACSqXmFcYQirY60ySKxnwe9FWfoqvaMVKzx8Bgm3tli7pu.VcEaT.','2026-02-03 15:16:23','ACTIVE',NULL,'USER'),(95,'karen.w286@outlook.com','$2y$10$m9h/C9/pYEU0ExRSWuaut.8M.XaBKtOl2lZrCY/uDDGpksSSBTLyO','2025-07-23 15:16:23','ACTIVE',NULL,'USER'),(96,'joseph.m964@hotmail.com','$2y$10$A8sE6gzIL65g52wA3vFwPuEOtn8oZCdiS6SN5jvN8a4pOxQK02E5m','2025-07-26 15:16:23','ACTIVE',NULL,'USER'),(97,'mary.j608@yahoo.com','$2y$10$DXWsqtynzurZ5tjNfYU4xuAobax/UIcTxUH2LD4TI5zCizQJsdgqq','2025-03-14 15:16:23','ACTIVE',NULL,'USER'),(98,'thomas.j508@gmail.com','$2y$10$30Vp3/TdAyfdlhakw7riJuHC.PcUHmuhni5SXE/URjT5rFTjKue3S','2025-12-15 15:16:23','ACTIVE',NULL,'USER'),(99,'richard.t797@yahoo.com','$2y$10$CalgS5/XNZANb3EB2RlNy.AroeQQ/9MPuelLEVipBQXE/xDlV97Le','2025-10-18 15:16:23','ACTIVE',NULL,'USER'),(100,'james.j805@gmail.com','$2y$10$6zPMiD5WFAs1lCVhuJ807.doNCNEOgf.ezzOHdlVVF4Gw5b2ErJ0a','2025-04-05 15:16:23','ACTIVE',NULL,'USER'),(101,'jessica.j866@hotmail.com','$2y$10$14x9jbr63yy6hlOhDR5HWOEFTzgTOXHzrqYMH5AAG02GZX9LWaBaq','2025-11-01 15:16:23','ACTIVE',NULL,'USER'),(102,'james.a511@outlook.com','$2y$10$AHEpMxVBx.o251jtYKZUUuaRvSreQnz6IvE.5/o8pf4.rJ0QZQTcy','2025-09-15 15:16:23','ACTIVE',NULL,'USER'),(103,'patricia.t760@outlook.com','$2y$10$dAkbWqDodDloxIooyDVOuegls5XthL2.eiNIOUaVzFlddBeYCCDpW','2025-07-30 15:16:23','ACTIVE',NULL,'USER'),(104,'sarah.t169@yahoo.com','$2y$10$j8BaHo/30AGq4YZRJ0ea1.z3Rw7cM1P6XN4LYFHFb2XAfeebzRY5.','2025-04-07 15:16:23','ACTIVE',NULL,'USER'),(105,'susan.h61@hotmail.com','$2y$10$5BJNYPYO9eAVXUImJhgQp.k6JVv7/dmTDlzjZyWOx2Cae3t5gm/Ja','2025-05-10 15:16:24','ACTIVE',NULL,'USER'),(106,'mary.a59@yahoo.com','$2y$10$KfueYczAjIFho.nmoKwVBuuJQ/pBpi4iD098f9NWD6DfU6A1K.Auu','2025-04-02 15:16:24','ACTIVE',NULL,'USER'),(107,'elizabeth.m301@gmail.com','$2y$10$Zil4o5wFSQMY9yHAXOVcu.BPe.8DwvSMDpx8Ii2lxoDRiPKi6I7l6','2026-02-08 15:16:24','ACTIVE',NULL,'USER'),(108,'thomas.w996@outlook.com','$2y$10$l3m9RdJqZW8XOu67H1IQveuWpvZLCNSzLpy5sHOl.W0IDjuPbToEC','2025-12-13 15:16:24','ACTIVE',NULL,'USER'),(109,'elizabeth.s40@outlook.com','$2y$10$TdcaW554CO1rDbPC6ko9QuIJ/x9QEplh7S/EFgEiho/CSeotK1Evq','2025-02-25 15:16:24','ACTIVE',NULL,'USER'),(110,'john.j935@hotmail.com','$2y$10$r8Jok1seNZLjyFPPBs0vDeJ/PwpzUH1FrzWH5MSVNYwLZJG/EStc2','2025-08-11 15:16:24','ACTIVE',NULL,'USER'),(111,'james.j336@gmail.com','$2y$10$sbC8VjjRHV0.IluyhSkMWuo.LbATOek3.a7o10sRX5HkfV2vCRG.i','2025-03-24 15:16:24','ACTIVE',NULL,'USER'),(112,'sarah.h885@yahoo.com','$2y$10$ozFCiAB6mwUy1qoDfQyBfOfWwDngNqkUvmCDuGtNSWRQL6TgigolC','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(113,'barbara.j37@gmail.com','$2y$10$uYafVePupl8SR6xRM7HsdO3tu8GcnAtWXi38vPN/FKDxAaOOJ79KK','2025-04-27 15:16:24','ACTIVE',NULL,'USER'),(114,'david.t42@yahoo.com','$2y$10$XzxC/roplqshnA.1XnU1SeZZ/BE2AVZ5HGIeE6VcWJHRZhIBUhYSi','2025-12-25 15:16:24','ACTIVE',NULL,'USER'),(115,'jessica.t200@yahoo.com','$2y$10$hs0J.yM2dnLwzYlAAchHbedwVkxrpPQQg3DidDxHp1q/xFgByK8SS','2025-10-22 15:16:24','ACTIVE',NULL,'USER'),(116,'jennifer.b48@hotmail.com','$2y$10$DLWQVHXcOjQvrdJx0KRUbOxafMzIP/NfPrwJaFAuwkMo/NO/4o6HW','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(117,'david.m510@outlook.com','$2y$10$YA4spBZSkA3NLvCAE7ckVO87tgdiE299sAxKyI1LW3WkEU3ohnNI.','2025-06-08 15:16:24','ACTIVE',NULL,'USER'),(118,'sarah.t676@hotmail.com','$2y$10$xgIr3oU7wFpSlIcCuY9yZuOE0U7sqWHuCqS/CDvBM0y8yIWR5jcqq','2025-12-08 15:16:24','ACTIVE',NULL,'USER'),(119,'jessica.w370@hotmail.com','$2y$10$81EzoY6F6nmuAjgkxdSFP.RzItzkW2HQQLYT1vrqJlyd1yHl5ou2C','2025-12-09 15:16:24','ACTIVE',NULL,'USER'),(120,'linda.t969@outlook.com','$2y$10$.PIn3t0yrOwwf7HQo7lmq.swSoT0.kQDsCLGs1BFzsB.9cogLtPl.','2025-10-02 15:16:24','ACTIVE',NULL,'USER'),(121,'charles.a888@outlook.com','$2y$10$HfbRx16BQGKuHNbdZP7.eOOB07U6l58e9oC9yqAknzU8EqdAG1BmK','2025-07-04 15:16:24','ACTIVE',NULL,'USER'),(122,'david.t705@hotmail.com','$2y$10$sw5oTGAKNFqyZNgxyEjDxOkm.ioKJ7Cg1vupNEqudl1O2b6Jb5okq','2025-10-07 15:16:24','ACTIVE',NULL,'USER'),(123,'john.j819@gmail.com','$2y$10$HD.OMNav2yyC/9rzhB.oiezmJe1CbHgVvrrT130HaVIZrScQCZ.l.','2025-07-23 15:16:24','ACTIVE',NULL,'USER'),(124,'elizabeth.b721@outlook.com','$2y$10$aWJVyjd34TXTePrvtDEk5OmHi7/BcECycrjTJo1jOiupFUCx0m3y6','2025-06-29 15:16:24','ACTIVE',NULL,'USER'),(125,'jennifer.j606@yahoo.com','$2y$10$1v4HTxbOiy2OsBr8oO5SZOrjemrPUj5ofpKjsITtWMuW62QxZIIzK','2026-01-21 15:16:24','ACTIVE',NULL,'USER'),(126,'david.w156@hotmail.com','$2y$10$bKR85kTsJXi4HxCLCFpuUeR0Z7BsRSpDdk9EoByKkhjejJTwX.7F6','2025-10-04 15:16:25','ACTIVE',NULL,'USER'),(127,'karen.t387@gmail.com','$2y$10$4gw5JKCzsBsQZTfF86.qqOYzd5lMGN7dNyeIGklNQ3TDoo7XLaF1C','2025-10-08 15:16:25','ACTIVE',NULL,'USER'),(128,'jessica.b590@hotmail.com','$2y$10$3dvR9FKa2mZ9m9G9afzUK.fAMdTymSVtU9Z1S7/Ghv8arjYADaQ1G','2025-06-28 15:16:25','ACTIVE',NULL,'USER'),(129,'william.j912@outlook.com','$2y$10$yzZLpjMUTW.u7KYF.nTT0ujVFbiTNyIeRYnef2ei5/q4Pq2wtxUI6','2025-10-15 15:16:25','ACTIVE',NULL,'USER'),(130,'jennifer.s348@gmail.com','$2y$10$U3tEx3qy.RPsQbwC7kkOa.90w5.91Sgxq7yxC.7EI7ZlCorght/5i','2025-09-02 15:16:25','ACTIVE',NULL,'USER'),(131,'michael.j713@gmail.com','$2y$10$sUUx9PEIFunUev9UAce85.MMtMTNOCeevn008L.qPHuOTbcRRD2rO','2025-12-13 15:16:25','ACTIVE',NULL,'USER'),(132,'james.t595@gmail.com','$2y$10$0ZJMUoRZzevRSnZ939QLCezLFaehhjrdV.FdNJ3Kdi.hkZYSfsLj.','2026-01-10 15:16:25','ACTIVE',NULL,'USER');
+INSERT INTO `users` VALUES (83,'elizabeth.m699@gmail.com','$2y$10$kV1mFwH/ZN7EH6JdhSBHqe0JysdQcJhC1PLvsP31Ebw7/zYIQhWza','2025-10-06 15:16:22','ACTIVE',NULL,'USER'),(84,'jennifer.m324@gmail.com','$2y$10$142Q5qN7AAbQZdDyTccV7ugNKHNfJ9KM5GeFvhXI2hn9FdhjM0rUy','2025-08-08 15:16:22','ACTIVE',NULL,'USER'),(85,'michael.a877@gmail.com','$2y$10$6hWxpLQdXldGCoO070JoaO8t8KhRNDgqq4TTd8v1V9aqg6QvJ5yNC','2026-02-13 15:16:23','ACTIVE',NULL,'USER'),(86,'thomas.w371@yahoo.com','$2y$10$YopQ452tWN6tgwiVKFw0lOIKJtjp53PlTRqVVe9QOXfI3wP5wd..O','2025-11-04 15:16:23','ACTIVE',NULL,'USER'),(87,'richard.t213@hotmail.com','$2y$10$r1XZohAtjolYAb/7nBrl5eev9CO1Dyr.Uneng8CYAV4jK/tWXdY/O','2026-01-31 15:16:23','ACTIVE',NULL,'USER'),(88,'james.w635@gmail.com','$2y$10$.qN3t4uBfqngHiS1w/DVm.uEpS.ig.Y3Y38Ql64TiTR9FC/0sjbd.','2025-08-19 15:16:23','ACTIVE',NULL,'USER'),(89,'charles.h294@gmail.com','$2y$10$9tj/fDvaq4Yh/iR/wKsi6ePE8LsC49uY6fRCGnfV6jE6nXHJGtMMK','2026-01-24 15:16:23','ACTIVE',NULL,'USER'),(90,'barbara.t167@yahoo.com','$2y$10$2xqoSBhSmshldxtIeQzU5uUKznCDFWU3Thwi9.R9pDsPIcqcG6P.W','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(91,'sarah.h524@outlook.com','$2y$10$mWEmmy2qpba9cm59LWH3/uRuMGYeCzKG2hqYIMmvFOUpUEldCHfaS','2025-08-08 15:16:23','ACTIVE',NULL,'USER'),(92,'elizabeth.j136@yahoo.com','$2y$10$pT78S.D5UlIBU74npQPK3uMhTvnK1oMxhi/DeYdGVQ8ed8juUptGu','2025-03-29 15:16:23','ACTIVE',NULL,'USER'),(93,'robert.h138@yahoo.com','$2y$10$UWa7UH8d5v7BSt/yrdyBf.hb3skJ5xyXA0U77Kd/wAUoUz104bYAe','2025-03-17 15:16:23','ACTIVE',NULL,'USER'),(94,'david.a545@yahoo.com','$2y$10$ACSqXmFcYQirY60ySKxnwe9FWfoqvaMVKzx8Bgm3tli7pu.VcEaT.','2026-02-03 15:16:23','ACTIVE',NULL,'USER'),(95,'karen.w286@outlook.com','$2y$10$m9h/C9/pYEU0ExRSWuaut.8M.XaBKtOl2lZrCY/uDDGpksSSBTLyO','2025-07-23 15:16:23','ACTIVE',NULL,'USER'),(96,'joseph.m964@hotmail.com','$2y$10$A8sE6gzIL65g52wA3vFwPuEOtn8oZCdiS6SN5jvN8a4pOxQK02E5m','2025-07-26 15:16:23','ACTIVE',NULL,'USER'),(97,'mary.j608@yahoo.com','$2y$10$DXWsqtynzurZ5tjNfYU4xuAobax/UIcTxUH2LD4TI5zCizQJsdgqq','2025-03-14 15:16:23','ACTIVE',NULL,'USER'),(98,'thomas.j508@gmail.com','$2y$10$30Vp3/TdAyfdlhakw7riJuHC.PcUHmuhni5SXE/URjT5rFTjKue3S','2025-12-15 15:16:23','ACTIVE',NULL,'USER'),(99,'richard.t797@yahoo.com','$2y$10$CalgS5/XNZANb3EB2RlNy.AroeQQ/9MPuelLEVipBQXE/xDlV97Le','2025-10-18 15:16:23','ACTIVE',NULL,'USER'),(100,'james.j805@gmail.com','$2y$10$6zPMiD5WFAs1lCVhuJ807.doNCNEOgf.ezzOHdlVVF4Gw5b2ErJ0a','2025-04-05 15:16:23','ACTIVE',NULL,'USER'),(101,'jessica.j866@hotmail.com','$2y$10$14x9jbr63yy6hlOhDR5HWOEFTzgTOXHzrqYMH5AAG02GZX9LWaBaq','2025-11-01 15:16:23','ACTIVE',NULL,'USER'),(102,'james.a511@outlook.com','$2y$10$AHEpMxVBx.o251jtYKZUUuaRvSreQnz6IvE.5/o8pf4.rJ0QZQTcy','2025-09-15 15:16:23','ACTIVE',NULL,'USER'),(103,'patricia.t760@outlook.com','$2y$10$dAkbWqDodDloxIooyDVOuegls5XthL2.eiNIOUaVzFlddBeYCCDpW','2025-07-30 15:16:23','ACTIVE',NULL,'USER'),(104,'sarah.t169@yahoo.com','$2y$10$j8BaHo/30AGq4YZRJ0ea1.z3Rw7cM1P6XN4LYFHFb2XAfeebzRY5.','2025-04-07 15:16:23','ACTIVE',NULL,'USER'),(105,'susan.h61@hotmail.com','$2y$10$5BJNYPYO9eAVXUImJhgQp.k6JVv7/dmTDlzjZyWOx2Cae3t5gm/Ja','2025-05-10 15:16:24','ACTIVE',NULL,'USER'),(106,'mary.a59@yahoo.com','$2y$10$KfueYczAjIFho.nmoKwVBuuJQ/pBpi4iD098f9NWD6DfU6A1K.Auu','2025-04-02 15:16:24','ACTIVE',NULL,'USER'),(107,'elizabeth.m301@gmail.com','$2y$10$Zil4o5wFSQMY9yHAXOVcu.BPe.8DwvSMDpx8Ii2lxoDRiPKi6I7l6','2026-02-08 15:16:24','ACTIVE',NULL,'USER'),(108,'thomas.w996@outlook.com','$2y$10$l3m9RdJqZW8XOu67H1IQveuWpvZLCNSzLpy5sHOl.W0IDjuPbToEC','2025-12-13 15:16:24','ACTIVE',NULL,'USER'),(109,'elizabeth.s40@outlook.com','$2y$10$TdcaW554CO1rDbPC6ko9QuIJ/x9QEplh7S/EFgEiho/CSeotK1Evq','2025-02-25 15:16:24','ACTIVE',NULL,'USER'),(110,'john.j935@hotmail.com','$2y$10$r8Jok1seNZLjyFPPBs0vDeJ/PwpzUH1FrzWH5MSVNYwLZJG/EStc2','2025-08-11 15:16:24','ACTIVE',NULL,'USER'),(111,'james.j336@gmail.com','$2y$10$sbC8VjjRHV0.IluyhSkMWuo.LbATOek3.a7o10sRX5HkfV2vCRG.i','2025-03-24 15:16:24','ACTIVE',NULL,'USER'),(112,'sarah.h885@yahoo.com','$2y$10$ozFCiAB6mwUy1qoDfQyBfOfWwDngNqkUvmCDuGtNSWRQL6TgigolC','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(113,'barbara.j37@gmail.com','$2y$10$uYafVePupl8SR6xRM7HsdO3tu8GcnAtWXi38vPN/FKDxAaOOJ79KK','2025-04-27 15:16:24','ACTIVE',NULL,'USER'),(114,'david.t42@yahoo.com','$2y$10$XzxC/roplqshnA.1XnU1SeZZ/BE2AVZ5HGIeE6VcWJHRZhIBUhYSi','2025-12-25 15:16:24','ACTIVE',NULL,'USER'),(115,'jessica.t200@yahoo.com','$2y$10$hs0J.yM2dnLwzYlAAchHbedwVkxrpPQQg3DidDxHp1q/xFgByK8SS','2025-10-22 15:16:24','ACTIVE',NULL,'USER'),(116,'jennifer.b48@hotmail.com','$2y$10$DLWQVHXcOjQvrdJx0KRUbOxafMzIP/NfPrwJaFAuwkMo/NO/4o6HW','2025-06-26 15:16:24','ACTIVE',NULL,'USER'),(117,'david.m510@outlook.com','$2y$10$YA4spBZSkA3NLvCAE7ckVO87tgdiE299sAxKyI1LW3WkEU3ohnNI.','2025-06-08 15:16:24','ACTIVE',NULL,'USER'),(118,'sarah.t676@hotmail.com','$2y$10$xgIr3oU7wFpSlIcCuY9yZuOE0U7sqWHuCqS/CDvBM0y8yIWR5jcqq','2025-12-08 15:16:24','ACTIVE',NULL,'USER'),(119,'jessica.w370@hotmail.com','$2y$10$81EzoY6F6nmuAjgkxdSFP.RzItzkW2HQQLYT1vrqJlyd1yHl5ou2C','2025-12-09 15:16:24','ACTIVE',NULL,'USER'),(120,'linda.t969@outlook.com','$2y$10$.PIn3t0yrOwwf7HQo7lmq.swSoT0.kQDsCLGs1BFzsB.9cogLtPl.','2025-10-02 15:16:24','ACTIVE',NULL,'USER'),(121,'charles.a888@outlook.com','$2y$10$HfbRx16BQGKuHNbdZP7.eOOB07U6l58e9oC9yqAknzU8EqdAG1BmK','2025-07-04 15:16:24','ACTIVE',NULL,'USER'),(122,'david.t705@hotmail.com','$2y$10$sw5oTGAKNFqyZNgxyEjDxOkm.ioKJ7Cg1vupNEqudl1O2b6Jb5okq','2025-10-07 15:16:24','ACTIVE',NULL,'USER'),(123,'john.j819@gmail.com','$2y$10$HD.OMNav2yyC/9rzhB.oiezmJe1CbHgVvrrT130HaVIZrScQCZ.l.','2025-07-23 15:16:24','ACTIVE',NULL,'USER'),(124,'elizabeth.b721@outlook.com','$2y$10$aWJVyjd34TXTePrvtDEk5OmHi7/BcECycrjTJo1jOiupFUCx0m3y6','2025-06-29 15:16:24','ACTIVE',NULL,'USER'),(125,'jennifer.j606@yahoo.com','$2y$10$1v4HTxbOiy2OsBr8oO5SZOrjemrPUj5ofpKjsITtWMuW62QxZIIzK','2026-01-21 15:16:24','ACTIVE',NULL,'USER'),(126,'david.w156@hotmail.com','$2y$10$bKR85kTsJXi4HxCLCFpuUeR0Z7BsRSpDdk9EoByKkhjejJTwX.7F6','2025-10-04 15:16:25','ACTIVE',NULL,'USER'),(127,'karen.t387@gmail.com','$2y$10$4gw5JKCzsBsQZTfF86.qqOYzd5lMGN7dNyeIGklNQ3TDoo7XLaF1C','2025-10-08 15:16:25','ACTIVE',NULL,'USER'),(128,'jessica.b590@hotmail.com','$2y$10$3dvR9FKa2mZ9m9G9afzUK.fAMdTymSVtU9Z1S7/Ghv8arjYADaQ1G','2025-06-28 15:16:25','ACTIVE',NULL,'USER'),(129,'william.j912@outlook.com','$2y$10$yzZLpjMUTW.u7KYF.nTT0ujVFbiTNyIeRYnef2ei5/q4Pq2wtxUI6','2025-10-15 15:16:25','ACTIVE',NULL,'USER'),(130,'jennifer.s348@gmail.com','$2y$10$U3tEx3qy.RPsQbwC7kkOa.90w5.91Sgxq7yxC.7EI7ZlCorght/5i','2025-09-02 15:16:25','ACTIVE',NULL,'USER'),(131,'michael.j713@gmail.com','$2y$10$sUUx9PEIFunUev9UAce85.MMtMTNOCeevn008L.qPHuOTbcRRD2rO','2025-12-13 15:16:25','ACTIVE',NULL,'USER'),(132,'james.t595@gmail.com','$2y$10$0ZJMUoRZzevRSnZ939QLCezLFaehhjrdV.FdNJ3Kdi.hkZYSfsLj.','2026-01-10 15:16:25','ACTIVE',NULL,'USER'),(133,'scfc','$2y$10$QZubZuyWMw4qlug8D/qIlO0P0W1SDGo16Jo.A7SSUHmRn/33IZsGG','2026-03-03 17:38:35','ACTIVE',NULL,'USER'),(134,'d','$2y$10$cAeLANtOnVqIDOwk/pVUnuZTWQ6R5CnGvePQ/QOZgJWq6BNjzKp2G','2026-03-03 17:42:34','ACTIVE',NULL,'USER'),(138,'p','$2y$10$9MVR40xPBdMmTVapb3bXp.Hm4DMKyG.riw6xWHzBGY0HAD6GQJFDO','2026-03-03 17:45:56','ACTIVE',NULL,'USER'),(140,'k','$2y$10$Lh.vAyXkG9cH4SxHUqn5KuoWh8AcnLZiKwoHxuvVMQ.VQB9/FlH5y','2026-03-03 17:51:15','ACTIVE',NULL,'USER'),(141,'g','$2y$10$9VztiYQ/t5MnsH9vAGV7dON9gp6uGw0eUZ4dqecbZw.91ipegJX6a','2026-03-03 17:52:40','ACTIVE',NULL,'USER'),(142,'o','$2y$10$5ZjAKyGuw2HmD4EHk8FBn.vYOQjKZJeyZRtV3O0X1j/ONPKJLGyOy','2026-03-03 17:56:04','ACTIVE',NULL,'USER'),(143,'w','$2y$10$ifY08AJUl6sZuJ8TNfOQR.Rzr1eUTwv5tknGuKdsHgexSrbIhXdfe','2026-03-03 18:26:54','ACTIVE',NULL,'USER');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -426,4 +579,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-28 19:13:43
+-- Dump completed on 2026-03-05 13:27:03
