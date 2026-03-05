@@ -1,8 +1,9 @@
-FROM php:8.2-apache
+# Dockerfile
+FROM php:8.2-cli
 
-# Install PDO MySQL extension
-RUN docker-php-ext-install pdo pdo_mysql
+# Copy your app
+COPY . /app
+WORKDIR /app
 
-# Enable Apache mod_rewrite (optional if you use pretty URLs)
-RUN a2enmod rewrite
-
+# Run PHP built-in server on Fly.io PORT
+CMD php -S 0.0.0.0:${PORT:-8080} -t .
