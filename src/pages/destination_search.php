@@ -1,5 +1,5 @@
 <?php
-	$pageTitle = "Roamance - Destination Search";
+	$pageTitle = "Roamance - Atlas";
 	$pageCSS = "/assets/css/destination_search.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
@@ -11,6 +11,21 @@
 
     <div class="mapView col-12">
         <div id="map" style="height: 500px; width: 100%;"></div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+                <h2 class="stamps col-6">Stamps</h2>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="card">
+                <h2 class="Currencies">Currencies</h2>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -52,4 +67,3 @@ function initMap() {
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2QU_U5Ck0fQvEFTE2RGDSEQAm1ITlcZU&libraries=places&callback=initMap" async defer></script>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

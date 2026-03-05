@@ -25,6 +25,26 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="/pages/contact.php">Contact</a>
+	    </li>
+		
+		<li class="nav-item">
+			<a class="nav-link" href="/pages/testfile.php">Test File</a>
+		</li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/destination_search.php">Atlas</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/profile_view.php">Profile</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/home.php">Home</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/post_a_trip.php">Post A Trip</a>
             </li>
 
             <li class="nav-item">
@@ -32,11 +52,17 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/pages/destination_search.php">Destination Search</a>
+                <a class="nav-link" href="/pages/inbox.php">Inbox</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/admin_panel.php">Admin</a>
             </li>
 
             <?php if (isset($_SESSION['user_id'])): ?>
-                
+		<li class="nav-item">
+                	<a class="nav-link" href="/pages/discovery_feed.php">Discovery Feed</a>
+            	</li>	    
                 <li class="nav-item profile-wrapper">
                     <a href="#" class="profile-circle" id="profileToggle">
                         <img src="/assets/images/default_profile.jpg"
@@ -65,6 +91,8 @@
 	</ul>
     </nav>
 </header>
+
+<div class="header-spacer"></div>
 
 <!-- Dropdown Script -->
 <script>
