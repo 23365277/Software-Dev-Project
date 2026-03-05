@@ -7,3 +7,6 @@ WORKDIR /app
 
 # Run PHP built-in server on Fly.io PORT
 CMD php -S 0.0.0.0:${PORT:-8080} -t .
+
+# Example for PHP + MySQL
+RUN docker-php-ext-install pdo pdo_mysql
