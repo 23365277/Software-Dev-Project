@@ -361,42 +361,47 @@ body {
     	padding: 0.5rem;
 }
 
-.stamp {
-    	flex: 0 0 auto;
-    	border: 2px solid #ccc;
-    	border-radius: 6px;
-    	padding: 0.3rem 0.5rem;
-    	background: #fff;
-    	text-align: center;
-    	width: 80px;
-    	font-size: 0.8rem;
-    	transition: all 0.3s ease;
-    	transform-origin: center center; /* so rotations don't push outside */
-}
-
 .stamp:hover {
 	box-shadow: 0 0 0 2px rgba(255,0,0,0.6);
     	background-color: rgba(255,0,0,0.05);
 }
 
-.desc {
-	max-height: 0;
-	opacity: 0;
-	overflow: hidden;
-	margin-top: 0;
-	transition: max-height 0.3 ease, opacity 0.3 ease, margin-top 0.3 ease;
+.stamp.has-desc {
+	max-height: 80px;
+}
+.stamp {
+    flex: 0 0 auto;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    background: #fff;
+    text-align: center;
+    width: 100px;
+    font-size: 0.8rem;
+    transition: width 0.3s ease, max-height 0.3s ease;
+    overflow: visible; /* allow desc to show outside if needed */
+    max-height: 80px; /* base height */
+    position: relative; /* for desc absolute positioning if desired */
 }
 
 .stamp.has-desc:hover {
-	width: 120px;
-
+    width: 120px;
+    max-height: 190px; /* expands smoothly */
 }
 
-.stamp.has-desc:hover
 .desc {
-	max-height: 50px;
-	opacity: 1;
-	margin-top: 4px;
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.stamp.has-desc:hover .desc {
+    max-height: 60px; /* height of description on hover */
+    opacity: 1;
+    margin-top: 4px;
 }
 
 .stamp .icon {

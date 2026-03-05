@@ -10,13 +10,13 @@ $stamps = [
     ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "Back blown out in paris"],
     ["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "Peener sucked by japanese femboy"],
     ["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "Punded some tortas"],
-//    ["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
-//    ["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
-//    ["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],
-//    ["country" => "Germany", "icon" => "🇩🇪", "date" => "2024-07-04"],
-//    ["country" => "Spain", "icon" => "🇪🇸", "date" => "2023-11-15"],
-//    ["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
-//    ["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
+   ["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
+   ["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
+    ["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],
+   ["country" => "Germany", "icon" => "🇩🇪", "date" => "2024-07-04"],
+   ["country" => "Spain", "icon" => "🇪🇸", "date" => "2023-11-15"],
+    ["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
+    ["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
 ];
 $galleryImages = [
     "/assets/images/img1.jpg",
