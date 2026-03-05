@@ -74,7 +74,7 @@ function sendMessage($sender_id, $receiver_id, $message){
 
 function blockUser($user_id) {
 	global $pdo;
-
+	
 	$loggedInUser = $_SESSION['user_id'];
 
 	if($user_id == $loggedInUser) {
@@ -103,7 +103,45 @@ function blockUser($user_id) {
 			return ['success' => true];
 		}
 
-		return ['success' => false, 'error' => 'Invalid user.'];
+	return ['success' => false, 'error' => 'Invalid user.'];
+	} catch (PDOException $e) {
+		return ['success' => false, 'error' => $e->getMessage()];
+	}
+}
+
+function reportUser($reported_id, $reason) {
+	global $pdo;
+
+	$reporter_id = $_SESSION['user_id'];
+
+	if ($reporter_id == $reported_id) {
+		return ['success' => false, 'error' => "You cannot report yourself."];
+	}
+
+	try {	
+		if($reporter_id && $reported_id) {
+			$stmnt = $pdo->prepare("
+				INSERT INTO reports
+				(reporter_id, reported_id, reason, created_at)
+				SELECT
+				:reporter_id, :reported_id, :reason, NOW()
+				WHERE NOT EXISTS (
+					SELECT 1 FROM reports
+					WHERE reporter_id = :reporter_id
+					AND reported_id = :reported_id
+				)
+			");
+
+			$stmnt->execute([
+				':reporter_id' => $reporter_id,
+				':reported_id' => $reported_id,
+				':reason' => $reason
+			]);
+
+			return ['success' => true];
+		}
+		
+		return ['success' => false, 'error' => "Invalid User."];
 	} catch (PDOException $e) {
 		return ['success' => false, 'error' => $e->getMessage()];
 	}
