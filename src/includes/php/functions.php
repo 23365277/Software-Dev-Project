@@ -71,3 +71,40 @@ function sendMessage($sender_id, $receiver_id, $message){
 		return ['success' => false, 'error' => $e->getMessage()];
 	}
 }
+
+function blockUser($user_id) {
+	global $pdo;
+
+	$loggedInUser = $_SESSION['user_id'];
+
+	if($user_id == $loggedInUser) {
+		return ['success' => false, 'error' => "You cannot block yourself."];
+	}
+
+	try{
+		if($user_id && $loggedInUser) {
+			$stmnt = $pdo->prepare(
+				"INSERT INTO blocks 
+				(blocker_id, blocked_id, blocked_at) 
+				SELECT 
+				:blocker_id, :blocked_id, NOW()
+				WHERE NOT EXISTS (
+					SELECT 1 FROM blocks
+					WHERE blocker_id = :blocker_id
+					AND blocked_id = :blocked_id
+				)
+			");
+			
+			$stmnt->execute([
+				':blocker_id' => $loggedInUser,
+				':blocked_id' => $user_id
+			]);
+	
+			return ['success' => true];
+		}
+
+		return ['success' => false, 'error' => 'Invalid user.'];
+	} catch (PDOException $e) {
+		return ['success' => false, 'error' => $e->getMessage()];
+	}
+}
