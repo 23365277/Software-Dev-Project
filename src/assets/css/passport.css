@@ -375,9 +375,28 @@ body {
 }
 
 .stamp:hover {
-    box-shadow: 0 0 0 2px rgba(255,0,0,0.6);
-    background-color: rgba(255,0,0,0.05);
+	box-shadow: 0 0 0 2px rgba(255,0,0,0.6);
+    	background-color: rgba(255,0,0,0.05);
+}
 
+.desc {
+	max-height: 0;
+	opacity: 0;
+	overflow: hidden;
+	margin-top: 0;
+	transition: max-height 0.3 ease, opacity 0.3 ease, margin-top 0.3 ease;
+}
+
+.stamp.has-desc:hover {
+	width: 120px;
+
+}
+
+.stamp.has-desc:hover
+.desc {
+	max-height: 50px;
+	opacity: 1;
+	margin-top: 4px;
 }
 
 .stamp .icon {

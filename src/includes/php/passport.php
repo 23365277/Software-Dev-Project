@@ -7,9 +7,9 @@ $country = "Ireland";
 $age = 24;
 $bio = "Traveler and adventure lover.";
 $stamps = [
-    ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12"],
-    ["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08"],
-    ["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25"],
+    ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "Back blown out in paris"],
+    ["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "Peener sucked by japanese femboy"],
+    ["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "Punded some tortas"],
 //    ["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
 //    ["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
 //    ["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],
@@ -94,11 +94,16 @@ $galleryImages = [
 				<div class="stamps-container">
     					<div class="stamps">
       						<?php foreach($stamps as $stamp): ?>
-        					<div class="stamp">
+						<div class="stamp <?= !empty($stamp['desc']) ? 'has-desc' : '' ?>">
           						<span class="icon"><?= $stamp['icon'] ?></span>
           						<span class="country"><?= $stamp['country'] ?></span>
-          						<span class="date"><?= $stamp['date'] ?></span>
-        					</div>
+							<span class="date"><?= $stamp['date'] ?></span>
+							
+							<? if(!empty($stamp['desc'])): ?>
+								<span class="desc"><?= $stamp['desc'] ?></span>
+							<? endif; ?>
+							
+							</div>
       						<?php endforeach; ?>
 					</div>
 				</div>
