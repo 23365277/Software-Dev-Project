@@ -155,3 +155,16 @@
 .auth-form button:hover {
     background-color: #3e8e41;
 }
+
+.auth-form select {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: white;
+    color: #333;
+    appearance: none;
+    cursor: pointer;
+}
+

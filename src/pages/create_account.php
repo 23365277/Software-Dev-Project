@@ -11,7 +11,7 @@
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
         $first_name = $_POST['first_name'] ?? '';
-        $last_name = $_POST['last_name'] ?? ''; 
+        $last_name = $_POST['last_name'] ?? '';
         $date_of_birth = $_POST['date_of_birth'] ?? '';
         registerNewUser($email, $password, $first_name, $last_name, $date_of_birth);
     }
@@ -24,7 +24,7 @@
     <div class="row justify-content-center" >
 
         <div class="col-3">
-            <form class="auth-form">
+            <form class="auth-form" method="POST" action="">
                 <div id="step1">
                     <h2 class="signup-Title">Create Account</h2>
                     <input type="text" name="email" placeholder="Email" required>
@@ -36,8 +36,23 @@
                 </div>
                 <div id="step2" style="display: none;">
                     <h2 class="signup-Title">Interest Form</h2>
-                    <input type="date" name="date_of_birth" placeholder="Date of Birth" required>
-                    <button type="submit" class="btn-signup">Sign-up</button>
+                    <input type="text" name="interest_1" placeholder="Interest 1">
+                    <input type="text" name="interest_2" placeholder="Interest 2">
+                    <input type="text" name="interest_3" placeholder="Interest 3">
+                    <input type="text" name="interest_4" placeholder="Interest 4">
+                    <input type="text" name="interest_5" placeholder="Interest 5">
+                    <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>
+                </div>
+                <div id="step3" style="display: none;">
+                    <h2 class="signup-Title">Preferences Form</h2>
+                    <input type="text" name="preferredGender" placeholder="Preferred Gender">
+                    <input type="text" name="preferredAge" placeholder="Preferred Age">
+                    <select name="lookingFor" placeholder="looking For">
+                        <option value="" disabled selected hidden>Looking For</option>
+                        <option value="Casual">Casual</option>
+                        <option value="Relationship">Relationship</option>
+                    </select>
+                    <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>
                 </div>
             </form>
         </div>
@@ -50,5 +65,3 @@
 <script src="/includes/js/create_account.js"></script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
-
-<!-- method="POST" action="" -->
