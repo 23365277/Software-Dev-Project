@@ -59,6 +59,10 @@
                 <a class="nav-link" href="/pages/admin_panel.php">Admin</a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="/pages/matches_likes.php">Matches/Likes</a>
+            </li>
+
             <?php if (isset($_SESSION['user_id'])): ?>
 		<li class="nav-item">
                 	<a class="nav-link" href="/pages/discovery_feed.php">Discovery Feed</a>
