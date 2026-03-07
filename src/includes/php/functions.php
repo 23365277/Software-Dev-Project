@@ -39,30 +39,44 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
     //     ':date_of_birth' => $date_of_birth
     // ]);
 
-	preferences($userId, $first_name, $last_name, $date_of_birth, $gender, $age, $looking_for);
+	profile($userId, $first_name, $last_name, $date_of_birth);
+	preferences($userId, $gender, $age);
 
     return $userId;
 }
 
-function preferences($userId, $first_name, $last_name, $date_of_birth, $gender, $age, $looking_for ){
+function preferences($userId, $gender, $age){
 	global $pdo;
 
 	$stmt1 = $pdo -> prepare("
-		INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, gender, age, looking_for)
+		INSERT INTO preferences (id, gender, age)
 		VALUES
-		(:user_id, :first_name, :last_name, :date_of_birth, :gender, :age, :looking_for)
+		(:user_id, :gender, :age)
 		");
 	
 	$stmt1 -> execute([
 		':user_id' => $userId,
-		':first_name' => $first_name,
-		':last_name' => $last_name,
-		':date_of_birth' => $date_of_birth,
 		':gender' => $gender,
-		':age' => $age,
-		':looking_for' => $looking_for
+		':age' => $age
 	]);
 
+}
+
+function profile($userId, $first_name, $last_name, $date_of_birth){
+	global $pdo;
+
+	$stmt2 = $pdo->prepare("
+	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth,  created_at)
+	VALUES
+	(:user_id, :first_name, :last_name, :date_of_birth, NOW())"
+    );
+    
+    $stmt2->execute([
+        ':user_id' => $userId,
+        ':first_name' => $first_name,
+        ':last_name' => $last_name,
+        ':date_of_birth' => $date_of_birth
+    ]);
 }
 
 function verifyLogin($email, $password) {
