@@ -9,7 +9,8 @@ function getUserByEmail($email) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth) {
+function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender,
+						 $age, $looking_for) {
     global $pdo;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -25,20 +26,43 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
 
     $userId = $pdo->lastInsertId();
 
-    $stmt2 = $pdo->prepare("
-	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, created_at) 
-	VALUES
-	(:user_id, :first_name, :last_name, :date_of_birth, NOW())"
-    );
+    // $stmt2 = $pdo->prepare("
+	// INSERT INTO profiles (user_id, first_name, last_name, date_of_birth,  created_at)
+	// VALUES
+	// (:user_id, :first_name, :last_name, :date_of_birth, NOW())"
+    // );
     
-    $stmt2->execute([
-        ':user_id' => $userId,
-        ':first_name' => $first_name,
-        ':last_name' => $last_name,
-        ':date_of_birth' => $date_of_birth
-    ]);
+    // $stmt2->execute([
+    //     ':user_id' => $userId,
+    //     ':first_name' => $first_name,
+    //     ':last_name' => $last_name,
+    //     ':date_of_birth' => $date_of_birth
+    // ]);
+
+	preferences($userId, $first_name, $last_name, $date_of_birth, $gender, $age, $looking_for);
 
     return $userId;
+}
+
+function preferences($userId, $first_name, $last_name, $date_of_birth, $gender, $age, $looking_for ){
+	global $pdo;
+
+	$stmt1 = $pdo -> prepare("
+		INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, gender, age, looking_for)
+		VALUES
+		(:user_id, :first_name, :last_name, :date_of_birth, :gender, :age, :looking_for)
+		");
+	
+	$stmt1 -> execute([
+		':user_id' => $userId,
+		':first_name' => $first_name,
+		':last_name' => $last_name,
+		':date_of_birth' => $date_of_birth,
+		':gender' => $gender,
+		':age' => $age,
+		':looking_for' => $looking_for
+	]);
+
 }
 
 function verifyLogin($email, $password) {

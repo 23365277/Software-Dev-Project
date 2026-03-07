@@ -13,7 +13,10 @@
         $first_name = $_POST['first_name'] ?? '';
         $last_name = $_POST['last_name'] ?? '';
         $date_of_birth = $_POST['date_of_birth'] ?? '';
-        registerNewUser($email, $password, $first_name, $last_name, $date_of_birth);
+        $gender = $_POST['preferredGender'] ?? '';
+        $age = $_POST['preferredAge'] ?? '';
+        $looking_for = $_POST['lookingFor'] ?? '';
+        registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $age, $looking_for);
     }
 ?>
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
@@ -24,7 +27,7 @@
     <div class="row justify-content-center" >
 
         <div class="col-3">
-            <form class="auth-form" method="POST" action="">
+            <form class="auth-form" method="POST" action="" novalidate>
                 <div id="step1">
                     <h2 class="signup-Title">Create Account</h2>
                     <input type="text" name="email" placeholder="Email" required>
@@ -45,14 +48,19 @@
                 </div>
                 <div id="step3" style="display: none;">
                     <h2 class="signup-Title">Preferences Form</h2>
-                    <input type="text" name="preferredGender" placeholder="Preferred Gender">
-                    <input type="text" name="preferredAge" placeholder="Preferred Age">
+                    <select name="preferredGender" placeholder="Preferred Gender">
+                        <option value="" disabled selected hidden>Preferred Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="number" name="preferredAge" placeholder="Preferred Age">
                     <select name="lookingFor" placeholder="looking For">
                         <option value="" disabled selected hidden>Looking For</option>
                         <option value="Casual">Casual</option>
                         <option value="Relationship">Relationship</option>
                     </select>
-                    <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>
+                    <button type="submit" class="btn-signup">Create Account</button>
                 </div>
             </form>
         </div>
