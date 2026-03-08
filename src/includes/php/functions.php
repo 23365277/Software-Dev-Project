@@ -26,19 +26,6 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
 
     $userId = $pdo->lastInsertId();
 
-    // $stmt2 = $pdo->prepare("
-	// INSERT INTO profiles (user_id, first_name, last_name, date_of_birth,  created_at)
-	// VALUES
-	// (:user_id, :first_name, :last_name, :date_of_birth, NOW())"
-    // );
-    
-    // $stmt2->execute([
-    //     ':user_id' => $userId,
-    //     ':first_name' => $first_name,
-    //     ':last_name' => $last_name,
-    //     ':date_of_birth' => $date_of_birth
-    // ]);
-
 	profile($userId, $first_name, $last_name, $date_of_birth);
 	preferences($userId, $gender, $age);
 
