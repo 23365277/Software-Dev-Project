@@ -66,22 +66,22 @@ function profile($userId, $first_name, $last_name, $date_of_birth){
     ]);
 }
 
-function interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5){
-	global $pdo;
+// function interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5){
+// 	global $pdo;
 
-	$interests = [$interest1, $interest2, $interest3, $interest4, $interest5];
+// 	$interests = [$interest1, $interest2, $interest3, $interest4, $interest5];
 
-	foreach($interests as $interest){
+// 	foreach($interests as $interest){
 
-		
 
-		$stmt = $pdo => prepare("
-			INSERT INTO interests($interest)
-			VALUES
-			(:name)
-		");
-	}
-}
+
+// 		$stmt = $pdo -> prepare("
+// 			INSERT INTO interests($interest)
+// 			VALUES
+// 			(:name)
+// 		");
+// 	}
+// }
 
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
