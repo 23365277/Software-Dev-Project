@@ -7,9 +7,9 @@ $country = "Ireland";
 $age = 24;
 $bio = "Traveler and adventure lover.";
 $stamps = [
-    ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "Back blown out in paris"],
-    ["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "Peener sucked by japanese femboy"],
-    ["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "Punded some tortas"],
+    ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "0"],
+    ["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "6"],
+    ["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "1"],
    ["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
    ["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
     ["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],

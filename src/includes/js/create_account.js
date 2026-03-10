@@ -2,7 +2,6 @@ let currStep = 1;
 
 function nextStep() {
 
-    // Optional validation before moving forward
     // const email = document.querySelector('[name="email"]').value;
     // const password = document.querySelector('[name="password"]').value;
     // const first_name = document.querySelector('[name="first_name"]').value;
@@ -14,12 +13,10 @@ function nextStep() {
     //     return;
     // }
 
-    // Hide step 1
     document.getElementById("step" + currStep).style.display = "none";
 
     currStep++;
 
-    // Show step 2
     document.getElementById("step" + currStep).style.display = "block";
 
 
