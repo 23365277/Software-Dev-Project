@@ -38,6 +38,20 @@
                     <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>
                 </div>
                 <div id="step2" style="display: none;">
+                    <h2 class="signup-Title">Bit About You</h2>
+                    <select name="Gender" placeholder="Gender">
+                        <option value="" disabled selected hidden>Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <textarea type="text" name="bio" placeholder="bio"></textarea>
+                    <input type="number" name="height" placeholder="Height cm">
+                    <input type="text" name="country" placeholder="Country">
+                    <input type="text" name="city" placeholder="City">
+                    <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>
+                </div>
+                <div id="step3" style="display: none;">
                     <h2 class="signup-Title">Interest Form</h2>
                     <input type="text" name="interest_1" placeholder="Interest 1">
                     <input type="text" name="interest_2" placeholder="Interest 2">
@@ -46,7 +60,7 @@
                     <input type="text" name="interest_5" placeholder="Interest 5">
                     <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>
                 </div>
-                <div id="step3" style="display: none;">
+                <div id="step4" style="display: none;">
                     <h2 class="signup-Title">Preferences Form</h2>
                     <select name="preferredGender" placeholder="Preferred Gender">
                         <option value="" disabled selected hidden>Preferred Gender</option>
