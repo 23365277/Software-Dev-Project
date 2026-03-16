@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for src-twilight-shadow-1957 on 2026-03-05T18:21:09Z
+# fly.toml app configuration file generated for roamance on 2026-03-11T21:54:09Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'src-twilight-shadow-1957'
+app = 'roamance'
 primary_region = 'lhr'
 
 [build]
@@ -18,6 +18,5 @@ primary_region = 'lhr'
 
 [[vm]]
   memory = '1gb'
-  cpu_kind = 'shared'
   cpus = 1
   memory_mb = 1024

@@ -1,9 +1,10 @@
-# Dockerfile
-FROM php:8.2-cli
+FROM php:8.2-apache
 
-# Copy your app
-COPY . /app
-WORKDIR /app
+# Install mysqli and pdo_mysql extensions
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Run PHP built-in server on Fly.io PORT
-CMD php -S 0.0.0.0:${PORT:-8080} -t .
+# Copy your PHP app
+COPY . /var/www/html/
+
+# Optional: set proper permissions
+RUN chown -R www-data:www-data /var/www/html
