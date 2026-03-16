@@ -2,6 +2,15 @@
 	$pageTitle = "Roamance - Atlas";
 	$pageCSS = "/assets/css/destination_search.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
+    $visitedCountries = [];
+    if (isset($_SESSION['user_id'])) {
+        $stmt = $pdo->prepare("SELECT t.location FROM user_trips ut JOIN trips t ON ut.trips_id = t.id WHERE ut.user_id = :user_id");
+        $stmt->execute([':user_id' => $_SESSION['user_id']]);
+        $visitedCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
 ?>
 
 <div class="container py-4">
@@ -32,12 +41,27 @@
 <script>
 let map;
 let marker;
+const visitedCountries = <?php echo json_encode($visitedCountries); ?>;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 53.3498, lng: -6.2603 },
         zoom: 8
     });
+
+    map.data.setStyle((feature) => {
+        const country = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
+        const visited = visitedCountries.includes(country);
+        return {
+            fillColor: visited ? "green" : "gray",
+            fillOpacity: visited ? 0.7 : 0.25,
+            strokeColor: "black",
+            strokeWeight: 1,
+            clickable: true
+        };
+    });
+
+    map.data.loadGeoJson('/assets/data/countries.geojson');
 
     const input = document.getElementById('searchInput');
     const searchBox = new google.maps.places.SearchBox(input);

@@ -594,7 +594,7 @@ CREATE TABLE `user_trips` (
 
 LOCK TABLES `user_trips` WRITE;
 /*!40000 ALTER TABLE `user_trips` DISABLE KEYS */;
-INSERT INTO `user_trips` VALUES (83,1),(83,79),(83,12);
+INSERT INTO `user_trips` VALUES (83,1),(83,79),(83,12),(83,59);
 /*!40000 ALTER TABLE `user_trips` ENABLE KEYS */;
 UNLOCK TABLES;
 
