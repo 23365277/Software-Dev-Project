@@ -1,7 +1,14 @@
 <?php
 	$pageTitle = "Roamance - Admin Panel";
 	$pageCSS = "/assets/css/admin_panel.css";
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+?>
+
+<?php
+    $graphData = getUsersForGraph();
+    $dates = $graphData['dates'];
+    $counts = $graphData['counts'];
 ?>
 
 <div class="container mt-4">
@@ -10,7 +17,8 @@
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
-                <h5 class="card-title">Total Users</h5>
+                <h5 class="card-title">Total Users: <?php echo getTotalUsers(); ?></h5>
+                <p class="card-text fs-1"><canvas id="userChart" width="400" height="300"></canvas></p>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
@@ -45,3 +53,47 @@
         <h5 class="card-title">Recent Activity</h5>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const labels = <?php echo json_encode($dates); ?>;
+    const data = <?php echo json_encode($counts); ?>;
+</script>
+
+<script>
+new Chart(document.getElementById('userChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Users per Day',
+            data: data,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Users'
+                }
+            }
+        }
+    }
+});
+</script>

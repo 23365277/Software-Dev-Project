@@ -188,3 +188,79 @@ function reportUser($reported_id, $reason) {
 		return ['success' => false, 'error' => $e->getMessage()];
 	}
 }
+
+function getTotalUsers() {
+	global $pdo;
+	$stmt = $pdo->query("SELECT COUNT(*) AS total FROM users");
+	return (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+}
+
+function getAllUsers() {
+	global $pdo;
+	$stmt = $pdo->query("SELECT id, email FROM users");
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getUsersForGraph() {
+    global $pdo;
+	$days = 30;
+
+    $stmt = $pdo->prepare(
+        "SELECT COUNT(*) AS total_before
+		FROM users
+		WHERE created_at < CURDATE() - INTERVAL $days DAY"
+    );
+	
+	$stmt->execute();
+    $totalBefore = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total_before'];
+
+	$stmt = $pdo->prepare(
+		"SELECT DATE(created_at) AS day, COUNT(*) AS count
+		FROM users
+		WHERE created_at >= CURDATE() - INTERVAL $days DAY
+		GROUP BY day
+		ORDER BY day ASC"
+	);
+
+	$stmt->execute();
+	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Map DB results
+    $countsByDay = [];
+    foreach ($data as $row) {
+		// echo "In foreach" . "<br>";
+        $countsByDay[$row['day']] = (int) $row['count'];
+		// echo "Row['count']: " . (int) $row['count'] . "<br>";
+    }
+
+	// echo "After foreach" . "<br>";
+
+    $dates = [];
+    $counts = [];
+
+    $runningTotal = $totalBefore;
+    $start = new DateTime("-" . ($days - 1) . " days");
+    $end = new DateTime();
+
+    while ($start <= $end) {
+        $day = $start->format('Y-m-d');
+		$dailyCount = $countsByDay[$day] ?? 0;
+		$runningTotal += $dailyCount;
+
+		echo "Counts by day: " . ($countsByDay[$day] ?? 0) . "<br>";
+		
+		
+		// echo "Running Total: $runningTotal" ."<br>";
+
+        $dates[] = $start->format('M d');
+        $counts[] = $runningTotal;
+
+        $start->modify('+1 day');
+    }
+
+    return [
+        'dates' => $dates,
+        'counts' => $counts
+    ];
+}
+
