@@ -66,7 +66,7 @@
                             foreach ($newUsers as $user):
                         ?>
                         <div class="newUserEntry">
-                            <?php echo "<div class='listNewUser'>" . htmlspecialchars($user['email']) . "<br>" . "Joined: " . date("M d, Y", strtotime($user['created_at'])) . "</div>"; ?>
+                            <?php echo "<div class='listNewUser'>" . htmlspecialchars($user['email']) . "<br>" . "Joined: " . date("M d, Y", strtotime($user['created_at'])) . "<br>" . "ID: " . htmlspecialchars($user['id']) . "</div>"; ?>
                         </div>
                         <?php endforeach; ?></p>
                     </div>
