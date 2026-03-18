@@ -4,6 +4,8 @@ if(session_status() == PHP_SESSION_NONE){
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 <!-- src/includes/head.php -->
 <head>
     <meta charset="UTF-8">

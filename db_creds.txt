@@ -1,5 +1,0 @@
-Host: yamanote.proxy.rlwy.net
-Port: 16307
-Database: railway
-User: root
-Password: IFHuHQdpYWGBjjRbSRCJNBqLgbQnLXsz 
