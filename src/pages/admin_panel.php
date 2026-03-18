@@ -6,9 +6,13 @@
 ?>
 
 <?php
-    $graphData = getUsersForGraph();
-    $dates = $graphData['dates'];
-    $counts = $graphData['counts'];
+    $userGraphData = getUsersForGraph();
+    $userDates = $userGraphData['userDates'];
+    $userCounts = $userGraphData['userCounts'];
+    
+    $matchGraphData = getMatchesForGraph();
+    $matchDates = $matchGraphData['matchDates'];
+    $matchCounts = $matchGraphData['matchCounts'];
 ?>
 
 <div class="container mt-4">
@@ -23,7 +27,8 @@
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
-                <h5 class="card-title">Total Matches</h5>
+                <h5 class="card-title">Total Matches: <?php echo getTotalMatches(); ?></h5>
+                <p class="card-text fs-1"><canvas id="matchChart" width="400" height="300"></canvas></p>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
@@ -57,18 +62,20 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    const labels = <?php echo json_encode($dates); ?>;
-    const data = <?php echo json_encode($counts); ?>;
+    const userLabels = <?php echo json_encode($userDates); ?>;
+    const userCount = <?php echo json_encode($userCounts); ?>;
+    const matchCount = <?php echo json_encode($matchCounts); ?>;
+    const matchLabels = <?php echo json_encode($matchDates); ?>;
 </script>
 
 <script>
 new Chart(document.getElementById('userChart'), {
     type: 'bar',
     data: {
-        labels: labels,
+        labels: userLabels,
         datasets: [{
             label: 'Users per Day',
-            data: data,
+            data: userCount,
             tension: 0.3
         }]
     },
@@ -91,6 +98,41 @@ new Chart(document.getElementById('userChart'), {
                 title: {
                     display: true,
                     text: 'Users'
+                }
+            }
+        }
+    }
+});
+
+new Chart(document.getElementById('matchChart'), {
+    type: 'line',
+    data: {
+        labels: matchLabels,
+        datasets: [{
+            label: 'Matches per Day',
+            data: matchCount, // Replace with actual match data
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Matches'
                 }
             }
         }
