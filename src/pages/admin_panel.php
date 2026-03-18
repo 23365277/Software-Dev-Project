@@ -13,6 +13,8 @@
     $matchGraphData = getMatchesForGraph();
     $matchDates = $matchGraphData['matchDates'];
     $matchCounts = $matchGraphData['matchCounts'];
+
+
 ?>
 
 <div class="container mt-4">
@@ -34,11 +36,41 @@
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
                 <h5 class="card-title">Reports</h5>
+                <div class="scrollableContainer">
+                    <p><?php
+                        $reports = getRecentReports();
+                        foreach ($reports as $report):
+                    ?>
+                    <div class="reportEntry">
+                        <?php echo "<div class='listReport'>" .
+                            "Report ID: " . htmlspecialchars($report['id']) . "<br>" .
+                            "Reporter ID: " . htmlspecialchars($report['reporter_id']) . "<br>" .
+                            "Reported ID: " . htmlspecialchars($report['reported_user_id']) . "<br>" .
+                            "Reported Email: " . htmlspecialchars($report['reported_email']) . "<br>" .
+                            "Reason: " . htmlspecialchars($report['reason']) . "<br>" .
+                            "Date: " . date("M d, Y", strtotime($report['created_at'])) .
+                        "</div>"; ?>
+                    </div>
+                    <?php endforeach; ?></p>
+                </div>
             </div>
         </div>
+
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
-                <h5 class="card-title">New Sign-Ups</h5>
+                <div class="cardSignUps">
+                    <h5 class="card-title">New Sign-Ups</h5>
+                    <div class="scrollableContainer">
+                        <p><?php
+                            $newUsers = getNewestUsers();
+                            foreach ($newUsers as $user):
+                        ?>
+                        <div class="newUserEntry">
+                            <?php echo "<div class='listNewUser'>" . htmlspecialchars($user['email']) . "<br>" . "Joined: " . date("M d, Y", strtotime($user['created_at'])) . "</div>"; ?>
+                        </div>
+                        <?php endforeach; ?></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -64,8 +96,11 @@
 <script>
     const userLabels = <?php echo json_encode($userDates); ?>;
     const userCount = <?php echo json_encode($userCounts); ?>;
+
     const matchCount = <?php echo json_encode($matchCounts); ?>;
     const matchLabels = <?php echo json_encode($matchDates); ?>;
+
+    const recentUsers = <?php echo json_encode(getNewestUsers()); ?>;
 </script>
 
 <script>

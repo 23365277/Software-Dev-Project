@@ -324,3 +324,28 @@ function getMatchesForGraph() {
 	];
 }
 
+function getNewestUsers($limit = 5) {
+	global $pdo;
+	$stmt = $pdo->prepare("SELECT id, email, created_at FROM users ORDER BY created_at DESC LIMIT $limit");
+	$stmt->execute();
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getRecentReports($limit = 5) {
+	global $pdo;
+	$stmt = $pdo->prepare("
+		SELECT
+			r.report_id AS id,
+			r.reporter_id,
+			r.reported_id AS reported_user_id,
+			r.reason,
+			r.created_at,
+			u.email AS reported_email
+		FROM reports r
+		JOIN users u ON r.reported_id = u.id
+		ORDER BY r.created_at DESC
+		LIMIT $limit
+	");
+	$stmt->execute();
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
