@@ -9,7 +9,7 @@
     $userGraphData = getUsersForGraph();
     $userDates = $userGraphData['userDates'];
     $userCounts = $userGraphData['userCounts'];
-    
+
     $matchGraphData = getMatchesForGraph();
     $matchDates = $matchGraphData['matchDates'];
     $matchCounts = $matchGraphData['matchCounts'];
@@ -105,7 +105,7 @@ new Chart(document.getElementById('userChart'), {
 });
 
 new Chart(document.getElementById('matchChart'), {
-    type: 'line',
+    type: 'bar',
     data: {
         labels: matchLabels,
         datasets: [{
