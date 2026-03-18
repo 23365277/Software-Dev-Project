@@ -452,3 +452,21 @@ body {
     width: 140px;
     height: 140px;
 }
+
+.stamp_overlay {
+    position: absolute;
+    opacity: 0;
+    top: 35%;
+    left: 60%;
+    pointer-events: none;
+    z-index: 10;
+    transition: opacity 0.2s ease;
+}
+
+.stamp_overlay.visible {
+    opacity: 1;
+}
+
+.stamp_overlay img {
+    width: 250px;
+}

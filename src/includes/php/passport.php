@@ -38,6 +38,12 @@ $galleryImages = [
 <div class="passport-wrapper">
 	<div class="cover"></div>
 		<div class="passport">
+			<div id="approvedStamp", class="stamp_overlay approved">
+				<img src="/assets/images/approved_stamp.svg" alt="Approved Stamp">
+			</div>
+			<div id="rejectedStamp", class="stamp_overlay rejected">
+				<img src="/assets/images/denied_stamp.svg" alt="Rejected Stamp">
+			</div>
 			<div class="passport-left">
     			<p class="gallery-title">MY TRAVELS</p>
     			<div class="title-line"></div>
