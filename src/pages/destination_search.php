@@ -3,7 +3,6 @@
 	$pageCSS = "/assets/css/destination_search.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
     $visitedCountries = [];
     if (isset($_SESSION['user_id'])) {
         $stmt = $pdo->prepare("SELECT t.location FROM user_trips ut JOIN trips t ON ut.trips_id = t.id WHERE ut.user_id = :user_id");
