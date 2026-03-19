@@ -6,7 +6,7 @@
 ?>
 
 <div class="container-liquid d-flex-column min-vh-75">
-<?php
+<!-- <?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -17,7 +17,7 @@
         $Pgender = $_POST['preferredGender'] ?? '';
         $age = $_POST['preferredAge'] ?? '';
         $looking_for = $_POST['lookingFor'] ?? '';
-        $bio = $_POST['looking_for'] ?? '';
+        $bio = $_POST['bio'] ?? '';
         $height_cm = $_POST['height_cm'] ?? '';
         $country = $_POST['country'] ?? '';
         $city = $_POST['city'] ?? '';
@@ -26,9 +26,10 @@
         $interest3 = $_POST['interest3'] ?? '';
         $interest4 = $_POST['interest4'] ?? '';
         $interest5 = $_POST['interest5'] ?? '';
-        registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender, $age, $looking_for, $interest1, $interest2, $interest3, $interest4, $interest5);
+        registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
+                        $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
     }
-?>
+?> -->
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
@@ -37,7 +38,7 @@
     <div class="row justify-content-center" >
 
         <div class="col-3">
-            <form class="auth-form" method="POST" action="" novalidate>
+            <form class="auth-form" method="POST" action="login.php" novalidate>
                 <div id="step1">
                     <h2 class="signup-Title">Create Account</h2>
                     <input type="text" name="email" placeholder="Email" required>
@@ -56,7 +57,7 @@
                         <option value="Other">Other</option>
                     </select>
                     <textarea type="text" name="bio" placeholder="bio"></textarea>
-                    <input type="number" name="height" placeholder="Height cm">
+                    <input type="number" name="height_cm" placeholder="Height cm">
                     <input type="text" name="country" placeholder="Country">
                     <input type="text" name="city" placeholder="City">
                     <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>

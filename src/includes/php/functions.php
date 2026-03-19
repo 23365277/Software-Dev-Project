@@ -10,7 +10,7 @@ function getUserByEmail($email) {
 }
 
 function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
-						 $age, $looking_for, $interest1, $interest2, $interest3, $interest4, $interest5) {
+						 $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5) {
     global $pdo;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);

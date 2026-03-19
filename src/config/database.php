@@ -1,5 +1,5 @@
 <?php
-$host = 'KaisPi';  
+$host = '100.90.100.22';  
 $db   = 'roamance_db';
 $user = 'user';
 $pass = 'password123';
