@@ -13,10 +13,20 @@
         $first_name = $_POST['first_name'] ?? '';
         $last_name = $_POST['last_name'] ?? '';
         $date_of_birth = $_POST['date_of_birth'] ?? '';
-        $gender = $_POST['preferredGender'] ?? '';
+        $gender = $_POST['gender'] ?? '';
+        $Pgender = $_POST['preferredGender'] ?? '';
         $age = $_POST['preferredAge'] ?? '';
         $looking_for = $_POST['lookingFor'] ?? '';
-        registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $age, $looking_for);
+        $bio = $_POST['looking_for'] ?? '';
+        $height_cm = $_POST['height_cm'] ?? '';
+        $country = $_POST['country'] ?? '';
+        $city = $_POST['city'] ?? '';
+        $interest1 = $_POST['interest1'] ?? '';
+        $interest2 = $_POST['interest2'] ?? '';
+        $interest3 = $_POST['interest3'] ?? '';
+        $interest4 = $_POST['interest4'] ?? '';
+        $interest5 = $_POST['interest5'] ?? '';
+        registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender, $age, $looking_for, $interest1, $interest2, $interest3, $interest4, $interest5);
     }
 ?>
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
@@ -39,7 +49,7 @@
                 </div>
                 <div id="step2" style="display: none;">
                     <h2 class="signup-Title">Bit About You</h2>
-                    <select name="Gender" placeholder="Gender">
+                    <select name="PGender" placeholder="Gender">
                         <option value="" disabled selected hidden>Gender</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -53,11 +63,11 @@
                 </div>
                 <div id="step3" style="display: none;">
                     <h2 class="signup-Title">Interest Form</h2>
-                    <input type="text" name="interest_1" placeholder="Interest 1">
-                    <input type="text" name="interest_2" placeholder="Interest 2">
-                    <input type="text" name="interest_3" placeholder="Interest 3">
-                    <input type="text" name="interest_4" placeholder="Interest 4">
-                    <input type="text" name="interest_5" placeholder="Interest 5">
+                    <input type="text" name="interest1" placeholder="Interest 1">
+                    <input type="text" name="interest2" placeholder="Interest 2">
+                    <input type="text" name="interest3" placeholder="Interest 3">
+                    <input type="text" name="interest4" placeholder="Interest 4">
+                    <input type="text" name="interest5" placeholder="Interest 5">
                     <button type="button" onclick=nextStep() class="btn-signup">Next Step</button>
                 </div>
                 <div id="step4" style="display: none;">

@@ -9,8 +9,8 @@ function getUserByEmail($email) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender,
-						 $age, $looking_for) {
+function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
+						 $age, $looking_for, $interest1, $interest2, $interest3, $interest4, $interest5) {
     global $pdo;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -26,13 +26,14 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
 
     $userId = $pdo->lastInsertId();
 
-	profile($userId, $first_name, $last_name, $date_of_birth);
-	preferences($userId, $gender, $age);
+	profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $height_cm, $bio);
+	preferences($userId, $Pgender, $age);
+	interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5);
 
     return $userId;
 }
 
-function preferences($userId, $gender, $age){
+function preferences($userId, $Pgender, $age){
 	global $pdo;
 
 	$stmt1 = $pdo -> prepare("
@@ -43,45 +44,76 @@ function preferences($userId, $gender, $age){
 	
 	$stmt1 -> execute([
 		':user_id' => $userId,
-		':gender' => $gender,
+		':gender' => $Pgender,
 		':age' => $age
 	]);
 
 }
 
-function profile($userId, $first_name, $last_name, $date_of_birth){
+function profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $height_cm, $bio){
 	global $pdo;
 
 	$stmt2 = $pdo->prepare("
-	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth,  created_at)
+	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, gender, bio, height_cm, city, country, looking_for, created_at)
 	VALUES
-	(:user_id, :first_name, :last_name, :date_of_birth, NOW())"
+	(:user_id, :first_name, :last_name, :date_of_birth, :gender, :bio, :height_cm, :city, :country, :looking_for, NOW())"
     );
     
     $stmt2->execute([
         ':user_id' => $userId,
         ':first_name' => $first_name,
         ':last_name' => $last_name,
-        ':date_of_birth' => $date_of_birth
+        ':date_of_birth' => $date_of_birth,
+		':gender' => $gender,
+		':bio' => $bio,
+		':height_cm' => $height_cm,
+		':city' => $city,
+		':country' => $country,
+		':looking_for' => $looking_for
     ]);
 }
 
-// function interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5){
-// 	global $pdo;
+function interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5){
+	global $pdo;
 
-// 	$interests = [$interest1, $interest2, $interest3, $interest4, $interest5];
+	$interests = [$interest1, $interest2, $interest3, $interest4, $interest5];
 
-// 	foreach($interests as $interest){
+	foreach($interests as $interest){
 
+		if(empty($interest)) continue;
 
+		$stmt1 = $pdo -> prepare(
+			"SELECT id FROM interests WHERE name = ?"
+		);
+		$stmt1 -> execute([$interest]);
+		$interest_id = $stmt1 -> fetchColumn();
 
-// 		$stmt = $pdo -> prepare("
-// 			INSERT INTO interests($interest)
-// 			VALUES
-// 			(:name)
-// 		");
-// 	}
-// }
+		if(!$interest_id){
+
+			$stmt2 = $pdo -> prepare("
+				INSERT INTO interests(name)
+				VALUES
+				(:name)
+			");
+
+			$stmt2 -> execute([
+				':name' => $interest
+			]);
+
+			$interest_id = $pdo -> lastInsertId();
+		}
+
+		$stmt3 = $pdo -> prepare("
+			INSERT INTO user_interests(user_id, interest_id)
+			VALUES
+			(:user_id, :interest_id)
+		");
+		$stmt3 -> execute([
+			':user_id' => $userId,
+			':interest_id' => $interest_id
+		]);
+	}
+}
 
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
