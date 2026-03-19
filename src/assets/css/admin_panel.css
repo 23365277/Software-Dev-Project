@@ -1,0 +1,29 @@
+.newUserEntry {
+    background-color: #fff;          /* White background for card */
+    border: 1px solid #ddd;          /* Light border */
+    border-radius: 8px;              /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    padding: 12px 16px;              /* Internal padding */
+    margin-bottom: 12px;             /* Space between cards */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cardSignUps {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.scrollableContainer {
+    max-height: 230px;              /* Set a max height for the container */
+    overflow-y: auto;               /* Enable vertical scrolling */
+    padding-right: 8px;             /* Add some padding to prevent content from being hidden behind the scrollbar */
+}
+
+.reportEntry {
+    background-color: #fff;          /* White background for card */
+    border: 1px solid #ddd;          /* Light border */
+    border-radius: 8px;              /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    padding: 12px 16px;              /* Internal padding */
+    margin-bottom: 12px;             /* Space between cards */
+}

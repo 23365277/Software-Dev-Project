@@ -1,7 +1,20 @@
 <?php
 	$pageTitle = "Roamance - Admin Panel";
 	$pageCSS = "/assets/css/admin_panel.css";
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+?>
+
+<?php
+    $userGraphData = getUsersForGraph();
+    $userDates = $userGraphData['userDates'];
+    $userCounts = $userGraphData['userCounts'];
+
+    $matchGraphData = getMatchesForGraph();
+    $matchDates = $matchGraphData['matchDates'];
+    $matchCounts = $matchGraphData['matchCounts'];
+
+
 ?>
 
 <div class="container mt-4">
@@ -10,22 +23,54 @@
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
-                <h5 class="card-title">Total Users</h5>
+                <h5 class="card-title">Total Users: <?php echo getTotalUsers(); ?></h5>
+                <p class="card-text fs-1"><canvas id="userChart" width="400" height="300"></canvas></p>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
-                <h5 class="card-title">Total Matches</h5>
+                <h5 class="card-title">Total Matches: <?php echo getTotalMatches(); ?></h5>
+                <p class="card-text fs-1"><canvas id="matchChart" width="400" height="300"></canvas></p>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
                 <h5 class="card-title">Reports</h5>
+                <div class="scrollableContainer">
+                    <p><?php
+                        $reports = getRecentReports();
+                        foreach ($reports as $report):
+                    ?>
+                    <div class="reportEntry">
+                        <?php echo "<div class='listReport'>" .
+                            "Report ID: " . htmlspecialchars($report['id']) . "<br>" .
+                            "Reporter ID: " . htmlspecialchars($report['reporter_id']) . "<br>" .
+                            "Reported ID: " . htmlspecialchars($report['reported_user_id']) . "<br>" .
+                            "Reported Email: " . htmlspecialchars($report['reported_email']) . "<br>" .
+                            "Reason: " . htmlspecialchars($report['reason']) . "<br>" .
+                            "Date: " . date("M d, Y", strtotime($report['created_at'])) .
+                        "</div>"; ?>
+                    </div>
+                    <?php endforeach; ?></p>
+                </div>
             </div>
         </div>
+
         <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
             <div class="card" style="min-height: 200px;">
-                <h5 class="card-title">New Sign-Ups</h5>
+                <div class="cardSignUps">
+                    <h5 class="card-title">New Sign-Ups</h5>
+                    <div class="scrollableContainer">
+                        <p><?php
+                            $newUsers = getNewestUsers();
+                            foreach ($newUsers as $user):
+                        ?>
+                        <div class="newUserEntry">
+                            <?php echo "<div class='listNewUser'>" . htmlspecialchars($user['email']) . "<br>" . "Joined: " . date("M d, Y", strtotime($user['created_at'])) . "<br>" . "ID: " . htmlspecialchars($user['id']) . "</div>"; ?>
+                        </div>
+                        <?php endforeach; ?></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -45,3 +90,87 @@
         <h5 class="card-title">Recent Activity</h5>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const userLabels = <?php echo json_encode($userDates); ?>;
+    const userCount = <?php echo json_encode($userCounts); ?>;
+
+    const matchCount = <?php echo json_encode($matchCounts); ?>;
+    const matchLabels = <?php echo json_encode($matchDates); ?>;
+
+    const recentUsers = <?php echo json_encode(getNewestUsers()); ?>;
+</script>
+
+<script>
+new Chart(document.getElementById('userChart'), {
+    type: 'bar',
+    data: {
+        labels: userLabels,
+        datasets: [{
+            label: 'Users per Day',
+            data: userCount,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Users'
+                }
+            }
+        }
+    }
+});
+
+new Chart(document.getElementById('matchChart'), {
+    type: 'bar',
+    data: {
+        labels: matchLabels,
+        datasets: [{
+            label: 'Matches per Day',
+            data: matchCount, // Replace with actual match data
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Date'
+                }
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Matches'
+                }
+            }
+        }
+    }
+});
+</script>

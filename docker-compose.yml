@@ -8,23 +8,32 @@ services:
     volumes:
       - ./src:/var/www/html
     depends_on:
-      - db
+      - tailscale-nginx
     restart: unless-stopped
 
-  db:
-    image: mysql:8.0
-    container_name: roamance_db
+  tailscale-nginx:
+    image: tailscale/tailscale:latest
+    hostname: tailscale-nginx
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: roamance
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
-    ports:
-      - "3306:3306"
+      - TS_AUTHKEY=tskey-auth-k2ZCJwdeGH11CNTRL-GawYZgfCPESGpXz2pK6gDSAY4yGCoYf1
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_AUTH_ONCE=true
     volumes:
-      - db_data:/var/lib/mysql
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./tailscale-nginx/state:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
     restart: unless-stopped
+
+  nginx:
+    image: nginx
+    depends_on:
+      - tailscale-nginx
+    network_mode: service:tailscale-nginx
+    volumes:
+      - ./src:/usr/share/nginx/html
 
 volumes:
   db_data:

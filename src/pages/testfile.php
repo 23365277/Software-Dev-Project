@@ -10,7 +10,10 @@
 <body>
 
 <div class="btn">
-	<input type="button" id="stampBtn" value="Click me">
+	<input type="button" id="likeBtn" value="Like">
+</div>
+<div class="btn">
+	<input type="button" id="dislikeBtn" value="Dislike">
 </div>
 
 <!-- GSAP CDN -->
@@ -18,7 +21,8 @@
 
 <script>
 const stamp = document.querySelector(".stamper");
-const button = document.getElementById("stampBtn");
+const likeBtn = document.getElementById("likeBtn");
+const dislikeBtn = document.getElementById("dislikeBtn");
 
 
 
@@ -29,25 +33,40 @@ const originalRotation = gsap.getProperty(stamp, "rotation");
 
 document.addEventListener("DOMContentLoaded", () => {
 
-button.addEventListener("click", () => {
-	button.disabled = true;
-        gsap.to(stamp, {
-            	x: -330,       // target X inside passport
-		y: 180,
-	    	rotation: 0.4,
-            	duration: 1,
-		ease: "power3.out",
-		onComplete: press
-        });
-    });
+	likeBtn.addEventListener("click", () => {
+		 	likeBtn.disabled = true;
+		gsap.to(stamp, {
+			x: -330,
+			y: 180,
+			rotation: 0.4,
+			duration: 1,
+			ease: "power3.out",
+			onComplete: () => press("approvedStamp")
+		});
+	});
+
+	dislikeBtn.addEventListener("click", () => {
+		dislikeBtn.disabled = true;
+		gsap.to(stamp, {
+			x: -330,
+			y: 180,
+			rotation: -0.4,
+			duration: 1,
+			ease: "power3.out",
+			onComplete: () => press("rejectedStamp")
+		});
+	});
 });
 
-function press(){
+function press(stampId){
 	gsap.to(stamp, {
 		y: 190,
 		duration: 0.4,
 		ease: "power3.out",
-		onComplete: unpress
+		onComplete: () => {
+			document.getElementById(stampId).classList.add("visible");
+			unpress();
+		}
 	});
 }
 

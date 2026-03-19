@@ -220,3 +220,164 @@ function reportUser($reported_id, $reason) {
 		return ['success' => false, 'error' => $e->getMessage()];
 	}
 }
+
+function getTotalUsers() {
+	global $pdo;
+	$stmt = $pdo->query("SELECT COUNT(*) AS total FROM users");
+	return (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+}
+
+function getTotalMatches() {
+	global $pdo;
+	$stmt = $pdo->query("SELECT COUNT(*) AS total FROM matches");
+	return (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+}
+
+function getAllUsers() {
+	global $pdo;
+	$stmt = $pdo->query("SELECT id, email FROM users");
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getUsersForGraph() {
+    global $pdo;
+	$days = 30;
+
+    $stmt = $pdo->prepare(
+        "SELECT COUNT(*) AS total_before
+		FROM users
+		WHERE created_at < CURDATE() - INTERVAL $days DAY"
+    );
+	
+	$stmt->execute();
+    $totalBefore = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total_before'];
+
+	$stmt = $pdo->prepare(
+		"SELECT DATE(created_at) AS day, COUNT(*) AS count
+		FROM users
+		WHERE created_at >= CURDATE() - INTERVAL $days DAY
+		GROUP BY day
+		ORDER BY day ASC"
+	);
+
+	$stmt->execute();
+	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Map DB results
+    $countsByDay = [];
+    foreach ($data as $row) {
+		// echo "In foreach" . "<br>";
+        $countsByDay[$row['day']] = (int) $row['count'];
+		// echo "Row['count']: " . (int) $row['count'] . "<br>";
+    }
+
+	// echo "After foreach" . "<br>";
+
+    $dates = [];
+    $counts = [];
+
+    $runningTotal = $totalBefore;
+    $start = new DateTime("-" . ($days - 1) . " days");
+    $end = new DateTime();
+
+    while ($start <= $end) {
+        $day = $start->format('Y-m-d');
+		$dailyCount = $countsByDay[$day] ?? 0;
+		$runningTotal += $dailyCount;
+
+		// echo "Counts by day: " . ($countsByDay[$day] ?? 0) . "<br>";
+		
+		
+		// echo "Running Total: $runningTotal" ."<br>";
+
+        $dates[] = $start->format('M d');
+        $counts[] = $runningTotal;
+
+        $start->modify('+1 day');
+    }
+
+    return [
+        'userDates' => $dates,
+        'userCounts' => $counts
+    ];
+}
+
+function getMatchesForGraph() {
+	global $pdo;
+	$days = 30;
+
+	$stmt = $pdo->prepare(
+		"SELECT COUNT(*) AS total_before
+		FROM matches
+		WHERE matched_at < CURDATE() - INTERVAL $days DAY"
+	);
+	
+	$stmt->execute();
+	$totalBefore = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total_before'];
+
+	$stmt = $pdo->prepare(
+		"SELECT DATE(matched_at) AS day, COUNT(*) AS count
+		FROM matches
+		WHERE matched_at >= CURDATE() - INTERVAL $days DAY
+		GROUP BY day
+		ORDER BY day ASC"
+	);
+
+	$stmt->execute();
+	$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	// Map DB results
+	$countsByDay = [];
+	foreach ($data as $row) {
+		$countsByDay[$row['day']] = (int) $row['count'];
+	}
+
+	$dates = [];
+	$counts = [];
+
+	$runningTotal = $totalBefore;
+	$start = new DateTime("-" . ($days - 1) . " days");
+	$end = new DateTime();
+
+	while ($start <= $end) {
+		$day = $start->format('Y-m-d');
+		$dailyCount = $countsByDay[$day] ?? 0;
+		$runningTotal += $dailyCount;
+
+		$dates[] = $start->format('M d');
+		$counts[] = $runningTotal;
+
+		$start->modify('+1 day');
+	}
+
+	return [
+		'matchDates' => $dates,
+		'matchCounts' => $counts
+	];
+}
+
+function getNewestUsers($limit = 5) {
+	global $pdo;
+	$stmt = $pdo->prepare("SELECT id, email, created_at FROM users ORDER BY created_at DESC LIMIT $limit");
+	$stmt->execute();
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getRecentReports($limit = 5) {
+	global $pdo;
+	$stmt = $pdo->prepare("
+		SELECT
+			r.report_id AS id,
+			r.reporter_id,
+			r.reported_id AS reported_user_id,
+			r.reason,
+			r.created_at,
+			u.email AS reported_email
+		FROM reports r
+		JOIN users u ON r.reported_id = u.id
+		ORDER BY r.created_at DESC
+		LIMIT $limit
+	");
+	$stmt->execute();
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}

@@ -4,7 +4,7 @@ body {
   	background: #f8f9fb;
   	margin: 0;
   	padding-top: 0px;
-
+  	overflow-x: hidden;
 }
 
 .passport-wrapper {
@@ -90,8 +90,47 @@ body {
 	);
 }
 
+.carousel {
+    position: relative;
+    width: 420px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-.passport-left img {
+.carousel-window {
+    width: 420px;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 12px;
+    border: #1e3a5f solid 4px;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.4s ease-in-out;
+}
+
+.carousel-track img {
+    width: 420px;
+    height: 400px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.arrow {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.passport-left > img {
   width: 90%;
   height: auto;
   border-radius: 8px;
@@ -99,18 +138,7 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-.passport-left button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
-  border: none;
-  font-size: 2rem;
-  padding: 0.5rem;
-  cursor: pointer;
-  border-radius: 50%;
-  user-select: none;
-}
+
 
 .gallery-wrapper {
     width: 100%;
@@ -241,7 +269,7 @@ body {
 }
 
 .name-field {
-	font-family: "Pilayfair Display", serif;
+	font-family: "Playfair Display", serif;
 	font-size: 17.6px;
 	font-weight: 600;
 	letter-spacing: 0.05rem;
@@ -423,4 +451,22 @@ body {
     transform: rotate(-20deg); /* rotate 15 degrees clockwise */
     width: 140px;
     height: 140px;
+}
+
+.stamp_overlay {
+    position: absolute;
+    opacity: 0;
+    top: 35%;
+    left: 60%;
+    pointer-events: none;
+    z-index: 10;
+    transition: opacity 0.2s ease;
+}
+
+.stamp_overlay.visible {
+    opacity: 1;
+}
+
+.stamp_overlay img {
+    width: 250px;
 }

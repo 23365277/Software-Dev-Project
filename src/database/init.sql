@@ -553,6 +553,7 @@ CREATE TABLE `user_interests` (
   `interest_id` int NOT NULL,
   PRIMARY KEY (`user_id`,`interest_id`),
   UNIQUE KEY `user_id` (`user_id`,`interest_id`),
+  UNIQUE KEY `user_id` (`user_id`,`interest_id`),
   KEY `interest_id` (`interest_id`),
   CONSTRAINT `fk_ui_interest` FOREIGN KEY (`interest_id`) REFERENCES `interests` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ui_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
@@ -593,6 +594,7 @@ CREATE TABLE `user_trips` (
 
 LOCK TABLES `user_trips` WRITE;
 /*!40000 ALTER TABLE `user_trips` DISABLE KEYS */;
+INSERT INTO `user_trips` VALUES (83,1),(83,79),(83,12),(83,59);
 /*!40000 ALTER TABLE `user_trips` ENABLE KEYS */;
 UNLOCK TABLES;
 

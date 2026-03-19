@@ -4,6 +4,8 @@ if(session_status() == PHP_SESSION_NONE){
 }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
 <!-- src/includes/head.php -->
 <head>
     <meta charset="UTF-8">
@@ -11,6 +13,7 @@ if(session_status() == PHP_SESSION_NONE){
 
     <?php
 	include_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/header.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
 	?>
 
     <title><?php echo isset($pageTitle) ? $pageTitle : "Roamance"; ?></title>

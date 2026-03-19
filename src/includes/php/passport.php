@@ -1,11 +1,15 @@
 <?php
 // Example PHP variables (replace with your DB/user data)
-$profileImage = "/assets/images/imgElizabeth.jpeg";
-$firstName = "Elizabeth";
-$lastName = "Murphy";
-$country = "Ireland";
-$age = 24;
-$bio = "Traveler and adventure lover.";
+$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio FROM profiles ORDER BY RAND() LIMIT 1");
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$profileImage = $user['profile_picture'];
+$firstName = $user['first_name'];
+$lastName = $user['last_name'];
+$country = $user['country'];
+$today = new DateTime();
+$age = $today->diff(new DateTime($user['date_of_birth']))->y;
+$bio = $user['bio'];
 $stamps = [
     ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "0"],
     ["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "6"],
@@ -31,26 +35,35 @@ $galleryImages = [
 <body>
 <link rel="stylesheet" href="/assets/css/passport.css">
 
-
-
 <div class="passport-wrapper">
 	<div class="cover"></div>
 		<div class="passport">
+			<div id="approvedStamp", class="stamp_overlay approved">
+				<img src="/assets/images/approved_stamp.svg" alt="Approved Stamp">
+			</div>
+			<div id="rejectedStamp", class="stamp_overlay rejected">
+				<img src="/assets/images/denied_stamp.svg" alt="Rejected Stamp">
+			</div>
 			<div class="passport-left">
-    				<p class="gallery-title">MY TRAVELS</p>
-    				<div class="title-line"></div>
-
-    				<div class="gallery-wrapper">
-        				<img id="gallery-image" src="<?= $galleryImages[0] ?>" alt="Travel Photo">
-        				<button id="prev">&#10094;</button>
-        				<button id="next">&#10095;</button>
-    				</div>
+    			<p class="gallery-title">MY TRAVELS</p>
+    			<div class="title-line"></div>
+				<div class="carousel">
+					<button class="arrow left" onclick="moveSlide(-1)">&#10094;</button>
+					<div class="carousel-window">
+						<div class="carousel-track" id="carouselTrack">
+							<?php foreach($galleryImages as $img): ?>
+								<img src="<?= $img ?>" alt="Travel Photo">
+							<?php endforeach; ?>
+						</div>
+					</div>
+					<button class="arrow right" onclick="moveSlide(1)">&#10095;</button>
+				</div>
 			</div>
 
 			<div class="passport-right">
 				<div class="info">
 					<div class="profile-header">
-						<img src="<?= $profileImage ?>" alt="<?= $name ?>" class="profile-img">	
+						<img src="<?= $profileImage ?>" alt="<?= $firstName . ' ' . $lastName ?>" class="profile-img">	
 						<div class="user-info">
 							<div class="tpass-header">
 								<img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
@@ -94,14 +107,14 @@ $galleryImages = [
 				<div class="stamps-container">
     					<div class="stamps">
       						<?php foreach($stamps as $stamp): ?>
-						<div class="stamp <?= !empty($stamp['desc']) ? 'has-desc' : '' ?>">
+						<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
           						<span class="icon"><?= $stamp['icon'] ?></span>
           						<span class="country"><?= $stamp['country'] ?></span>
 							<span class="date"><?= $stamp['date'] ?></span>
 							
-							<? if(!empty($stamp['desc'])): ?>
+							<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
 								<span class="desc"><?= $stamp['desc'] ?></span>
-							<? endif; ?>
+							<?php endif; ?>
 							
 							</div>
       						<?php endforeach; ?>
@@ -112,15 +125,11 @@ $galleryImages = [
 	<div class="cover top-cover">
 		<img src="/assets/images/favicon_light.ico" alt="emb">
 	</div>
-	</div>
-	</div>
-	<img class="stamper" src="/assets/images/Stamp.png" alt="Stamp Pic">
 </div>
+<img class="stamper" src="/assets/images/Stamp.png" alt="Stamp Pic">
 
 
-	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script src="/includes/js/passport.js"></script>
 
@@ -134,3 +143,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
+</body>
