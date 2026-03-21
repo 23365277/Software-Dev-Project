@@ -27,17 +27,15 @@ $galleryImages = [
 
 ?>
 
-
-<body>
 <link rel="stylesheet" href="/assets/css/passport.css">
 
 <div class="passport-wrapper">
 	<div class="cover"></div>
 		<div class="passport">
-			<div id="approvedStamp", class="stamp_overlay approved">
+			<div id="approvedStamp" class="stamp_overlay approved">
 				<img src="/assets/images/approved_stamp.svg" alt="Approved Stamp">
 			</div>
-			<div id="rejectedStamp", class="stamp_overlay rejected">
+			<div id="rejectedStamp" class="stamp_overlay rejected">
 				<img src="/assets/images/denied_stamp.svg" alt="Rejected Stamp">
 			</div>
 			<div class="passport-left">
@@ -122,10 +120,7 @@ $galleryImages = [
 		<img src="/assets/images/favicon_light.ico" alt="emb">
 	</div>
 </div>
-<img class="stamper" src="/assets/images/Stamp.png" alt="Stamp Pic">
 
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script src="/includes/js/passport.js"></script>
 
@@ -139,4 +134,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 </script>
-</body>

@@ -1,14 +1,6 @@
-/* General Page */
-body {
-  	font-family: Arial, sans-serif;
-  	background: #f8f9fb;
-  	margin: 0;
-  	padding-top: 0px;
-  	overflow-x: hidden;
-}
 
 .passport-wrapper {
-	margin-left: 2rem;
+    margin: 40px;
 	position: relative;
 	display: inline-block;  /* shrink-wrap to passport size */
 }
@@ -447,18 +439,11 @@ body {
   display: block;
 }
 
-.stamper {
-    transform: rotate(-20deg); /* rotate 15 degrees clockwise */
-    width: 140px;
-    height: 140px;
-}
-
 .stamp_overlay {
     position: absolute;
     opacity: 0;
-    top: 35%;
-    left: 60%;
-    pointer-events: none;
+    top: 280px;
+    left: 400px;
     z-index: 10;
     transition: opacity 0.2s ease;
 }
