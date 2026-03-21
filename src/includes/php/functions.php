@@ -356,7 +356,7 @@ function getMatchesForGraph() {
 	];
 }
 
-function getNewestUsers($limit = 5) {
+function getNewestUsers($limit = 50) {
 	global $pdo;
 	$stmt = $pdo->prepare("SELECT id, email, created_at FROM users ORDER BY created_at DESC LIMIT $limit");
 	$stmt->execute();

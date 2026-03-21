@@ -9,11 +9,12 @@
 }
 
 .cardSignUps {
-    margin-left: 4px;
+    
     margin-right: 4px;
 }
 
 .scrollableContainer {
+    padding: 4px;
     max-height: 230px;              /* Set a max height for the container */
     overflow-y: auto;               /* Enable vertical scrolling */
     padding-right: 8px;             /* Add some padding to prevent content from being hidden behind the scrollbar */
