@@ -1,14 +1,11 @@
 <?php
-// Example PHP variables (replace with your DB/user data)
-$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio FROM profiles ORDER BY RAND() LIMIT 1");
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+$user = getNextPassport($pdo);
 $profileImage = $user['profile_picture'];
 $firstName = $user['first_name'];
 $lastName = $user['last_name'];
 $country = $user['country'];
 $today = new DateTime();
-$age = $today->diff(new DateTime($user['date_of_birth']))->y;
+$age = $user['age'];
 $bio = $user['bio'];
 $stamps = [
     ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "0"],
@@ -28,7 +25,6 @@ $galleryImages = [
     "/assets/images/img3.jpg"
 ];
 
-	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php"
 ?>
 
 

@@ -91,6 +91,28 @@ function returnXY() {
 		}	
 	});
 }
+
+function loadNextPassport() {
+	fetch("/actions/get_next_passport.php")
+		.then(res => res.json())
+		.then(user => {
+			document.querySelector(".profile-img").src = user.profile_picture;
+			document.querySelector(".profile-img").alt = user.first_name + " " + user.last_name;
+			document.querySelectorAll(".name-field")[0].textContent = user.last_name;
+			document.querySelectorAll(".name-field")[1].textContent = user.first_name;
+			document.querySelector(".details-right .other-field:nth-child(2)").textContent = user.country;
+			document.querySelector(".details-right .other-field:nth-child(4)").textContent = user.age + " years";
+			document.querySelector(".bio .body-text").textContent = user.bio;
+
+			document.getElementById("approvedStamp").classList.remove("visible");
+			document.getElementById("rejectedStamp").classList.remove("visible");
+			likeBtn.disabled = false;
+			dislikeBtn.disabled = false;
+
+			gsap.set(".passport-wrapper", { x: 0, y: -1400 });
+			gsap.to(".passport-wrapper", { y: 0, duration: 1, ease: "power2.out", onComplete: peelCover });
+		});
+}
 </script>
 </body>
 </html>

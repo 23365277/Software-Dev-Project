@@ -381,3 +381,15 @@ function getRecentReports($limit = 5) {
 	$stmt->execute();
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getNextPassport(PDO $pdo) {
+	$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio FROM profiles ORDER BY RAND() LIMIT 1");
+	$stmt->execute();
+
+	$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+	$today = new DateTime();
+	$user['age'] = $today->diff(new DateTime($user['date_of_birth']))->y;
+
+	return $user;
+}
