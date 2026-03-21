@@ -6,7 +6,7 @@
 ?>
 
 <div class="container-liquid d-flex-column min-vh-75">
-<!-- <?php
+<?php
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -29,7 +29,7 @@
         registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
                         $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
     }
-?> -->
+?>
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>

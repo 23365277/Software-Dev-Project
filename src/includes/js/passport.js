@@ -1,13 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    gsap.set(".passport-wrapper", { y: -1400 });
-    gsap.to(".passport-wrapper", {
-        y: 0,
-        duration: 1,
-        ease: "power2.out",
-        onComplete: peelCover
-    });
-
-    function peelCover() {
+    window.peelCover = function() {
         gsap.to(".top-cover", {
             rotationX: -120,
             duration: 0.8,
@@ -15,6 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
             ease: "power2.inOut"
         });
     }
+
+    gsap.set(".passport-wrapper", { y: -1400 });
+    gsap.to(".passport-wrapper", {
+        y: 0,
+        duration: 1,
+        ease: "power2.out",
+        onComplete: peelCover
+    });
 
     window.closeCover = function() {
         gsap.to(".top-cover", {
@@ -29,8 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.offScreen = function() {
         gsap.to(".passport-wrapper", {
             x: -1400,
-            duration: 1,
-            ease: "power2.out"
+            duration: 0.5,
+            ease: "power2.in",
+            onComplete: loadNextPassport
         });
     }
 
