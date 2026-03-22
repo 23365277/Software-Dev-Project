@@ -27,30 +27,26 @@ const dislikeBtn = document.getElementById("dislikeBtn");
 
 document.addEventListener("DOMContentLoaded", () => {
 
-	likeBtn.addEventListener("click", () => {
-		 	likeBtn.disabled = true;
-		gsap.to(stamp, {
-			x: 60,
-			y: -450,
-			rotation: 0,
-			duration: 1,
-			ease: "power3.out",
-			onComplete: () => press("approvedStamp")
-		});
-	});
-
-	dislikeBtn.addEventListener("click", () => {
-		dislikeBtn.disabled = true;
-		gsap.to(stamp, {
-			x: 60,
-			y: -450,
-			rotation: 0,
-			duration: 1,
-			ease: "power3.out",
-			onComplete: () => press("rejectedStamp")
-		});
-	});
+	likeBtn.addEventListener("click", () => decision("like"));
+	dislikeBtn.addEventListener("click", () => decision("dislike"));
 });
+		 	
+function decision(action){
+	likeBtn.disabled = true;
+	dislikeBtn.disabled = true;
+	
+	const stampId = action === "like" ? "approvedStamp" : "rejectedStamp";
+	window.passportDirection = action === "like" ? -1400 : 1400;
+	
+	gsap.to(stamp, {
+    x: 60,
+    y: -450,
+    rotation: 0,
+    duration: 1,
+    ease: "power3.out",
+    onComplete: () => press(stampId)
+	});
+}
 
 function press(stampId){
 	gsap.to(stamp, {

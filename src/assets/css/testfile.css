@@ -2,6 +2,10 @@ body.passport-page {
     margin: 0;
     min-height: 100vh;
     font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    background:
+    radial-gradient(circle, rgba(240, 163, 21, 0.563), transparent 70%), 
+    linear-gradient(#ccdceb, #a3c1d4, #7598d0);
 }
 
 .passport-container {

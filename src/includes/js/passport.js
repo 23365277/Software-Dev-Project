@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    window.passportDirection = -1400;
+
     window.peelCover = function() {
         gsap.to(".top-cover", {
             rotationX: -120,
@@ -28,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.offScreen = function() {
         gsap.to(".passport-wrapper", {
-            x: -1400,
+            x: window.passportDirection,
             duration: 0.5,
             ease: "power2.in",
             onComplete: loadNextPassport
