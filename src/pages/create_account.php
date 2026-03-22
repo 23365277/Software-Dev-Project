@@ -96,7 +96,7 @@
 </div> -->
 <div class="row justify-content-center" >
 <div class="col-3">
-<form id="regForm" class="auth-form" method="POST" action="login.php" novalidate>
+<form id="regForm" class="auth-form" method="POST" action="" novalidate>
   <!-- Step 1 -->
   <div class="tab">
   <h2 class="signup-Title">Create Account</h2>
@@ -153,6 +153,7 @@
     <div style="float:right;">
       <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
       <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+      <button type="submit" id="submitBtn" style="display:none">Create Account</button>
     </div>
   </div>
 

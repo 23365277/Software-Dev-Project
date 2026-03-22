@@ -30,7 +30,14 @@ function showTab(n) {
     x[n].style.display = "block";
 
     document.getElementById("prevBtn").style.display = n === 0 ? "none" : "inline";
-    document.getElementById("nextBtn").innerHTML = (n === x.length - 1) ? "Submit" : "Next";
+    // document.getElementById("nextBtn").innerHTML = (n === x.length - 1) ? "Submit" : "Next";
+    if (n === x.length - 1) {
+        document.getElementById("nextBtn").style.display = "none"; // hide Next
+        document.getElementById("submitBtn").style.display = "inline"; // show Submit
+    } else {
+        document.getElementById("nextBtn").style.display = "inline"; // show Next
+        document.getElementById("submitBtn").style.display = "none"; // hide Submit
+    }
 
     // update step indicators
     const steps = document.getElementsByClassName("step");
@@ -44,8 +51,7 @@ function nextPrev(n) {
     currentTab += n;
 
     if (currentTab >= x.length) {
-        document.getElementById("regForm").submit();
-        return false;
+        return;
     }
     showTab(currentTab);
 }
