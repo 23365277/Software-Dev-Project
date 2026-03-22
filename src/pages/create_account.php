@@ -2,7 +2,7 @@
 	$pageTitle = "Roamance - Create Account";
 	$pageCSS = "/assets/css/create_account.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
-    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    // include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 ?>
 
 <div class="container-liquid d-flex-column min-vh-75">
@@ -35,7 +35,7 @@
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
 
-    <div class="row justify-content-center" >
+    <!-- <div class="row justify-content-center" >
 
         <div class="col-3">
             <form class="auth-form" method="POST" action="login.php" novalidate>
@@ -93,6 +93,78 @@
     </div>
 
     
+</div> -->
+<div class="row justify-content-center" >
+<div class="col-3">
+<form id="regForm" class="auth-form" method="POST" action="login.php" novalidate>
+  <!-- Step 1 -->
+  <div class="tab">
+  <h2 class="signup-Title">Create Account</h2>
+    <input type="text" name="email" placeholder="Email" required>
+    <input type="text" name="password" placeholder="Password" required>
+    <input type="text" name="first_name" placeholder="First Name" required>
+    <input type="text" name="last_name" placeholder="Last Name" required>
+    <input type="date" name="date_of_birth" placeholder="Date of Birth" required>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="tab">
+  <h2 class="signup-Title">Bit About You</h2>
+    <select name="PGender" placeholder="Gender">
+        <option value="" disabled selected hidden>Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
+    <textarea type="text" name="bio" placeholder="bio"></textarea>
+    <input type="number" name="height_cm" placeholder="Height cm">
+    <input type="text" name="country" placeholder="Country">
+    <input type="text" name="city" placeholder="City">
+  </div>
+
+  <!-- Step 3 -->
+  <div class="tab">
+  <h2 class="signup-Title">Interest Form</h2>
+    <input type="text" name="interest1" placeholder="Interest 1">
+    <input type="text" name="interest2" placeholder="Interest 2">
+    <input type="text" name="interest3" placeholder="Interest 3">
+    <input type="text" name="interest4" placeholder="Interest 4">
+    <input type="text" name="interest5" placeholder="Interest 5">
+  </div>
+
+  <div class="tab">
+  <h2 class="signup-Title">Preferences Form</h2>
+    <select name="preferredGender" placeholder="Preferred Gender">
+        <option value="" disabled selected hidden>Preferred Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
+    <input type="number" name="preferredAge" placeholder="Preferred Age">
+    <select name="lookingFor" placeholder="looking For">
+        <option value="" disabled selected hidden>Looking For</option>
+        <option value="Casual">Casual</option>
+        <option value="Relationship">Relationship</option>
+    </select>
+  </div>
+
+  <!-- Navigation buttons -->
+  <div style="overflow:auto;">
+    <div style="float:right;">
+      <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+      <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+    </div>
+  </div>
+
+  <!-- Step indicators -->
+  <div style="text-align:center;margin-top:20px;">
+    <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span>
+    <span class="step"></span>
+  </div>
+</form>
+</div>
 </div>
 
 <script src="/includes/js/create_account.js"></script>
