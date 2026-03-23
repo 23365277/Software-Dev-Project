@@ -30,7 +30,7 @@
 
     <!-- Slide-out drawer -->
     <nav class="drawer" id="drawer">
-        <button class="drawer-close" id="drawerClose">&times;</button>
+        
 
         <ul class="drawer-nav">
 
@@ -82,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
     var hbtn        = document.getElementById("hbtn");
     var drawer      = document.getElementById("drawer");
     var overlay     = document.getElementById("navOverlay");
-    var drawerClose = document.getElementById("drawerClose");
 
     function openDrawer() {
         drawer.classList.add("open");
@@ -100,7 +99,6 @@ document.addEventListener("DOMContentLoaded", function () {
         drawer.classList.contains("open") ? closeDrawer() : openDrawer();
     });
 
-    drawerClose.addEventListener("click", closeDrawer);
     overlay.addEventListener("click", closeDrawer);
 
     document.addEventListener("keydown", function (e) {

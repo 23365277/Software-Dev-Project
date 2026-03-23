@@ -185,3 +185,17 @@
 #chatbox-send:hover {
     background: #5a67d8;
 }
+
+#home-messages-panel {
+    display: flex;
+    flex-direction: column;
+    height: 420px;
+    background: #fff;
+    border-radius: 10px;
+    border: 2px solid #667eea;
+    box-shadow: 0 4px 24px rgba(102, 126, 234, 0.13);
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    color: black;
+}
+
