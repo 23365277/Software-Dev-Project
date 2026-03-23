@@ -11,6 +11,7 @@
         <a href="/pages/about.php">About</a>
         <a href="/pages/contact.php">Contact</a>
         <a href="/pages/create_account.php" class="btn-signup">Sign Up</a>
+        
     </nav>
     <?php endif; ?>
 
