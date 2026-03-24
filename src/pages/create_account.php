@@ -1,12 +1,9 @@
 <?php
-	$pageTitle = "Roamance - Create Account";
-	$pageCSS = "/assets/css/create_account.css";
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
-    // include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
-?>
 
-<div class="container-liquid d-flex-column min-vh-75">
-<?php
+    session_start();
+
+    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
@@ -26,10 +23,24 @@
         $interest3 = $_POST['interest3'] ?? '';
         $interest4 = $_POST['interest4'] ?? '';
         $interest5 = $_POST['interest5'] ?? '';
-        registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
+        $userId = registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
                         $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
+
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['email'] = $email;
+    
+        header("Location: /pages/home.php");
+        exit();
     }
+    
+
+	$pageTitle = "Roamance - Create Account";
+	$pageCSS = "/assets/css/create_account.css";
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
+
+<div class="container-liquid d-flex-column min-vh-75">
+
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
     <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
