@@ -27,9 +27,12 @@
                         $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
 
         $_SESSION['user_id'] = $userId;
+        if(isset($_SESSION['user_id'])){
+          header("Location: /pages/home.php");
+        }
         $_SESSION['email'] = $email;
     
-        header("Location: /pages/home.php");
+        
         exit();
     }
     

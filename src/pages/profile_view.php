@@ -1,4 +1,5 @@
 <?php
+    session_start();
 	$pageTitle = "Roamance - Profile View";
 	$pageCSS = "/assets/css/profile_view.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
@@ -26,6 +27,7 @@
             <p class="text-muted" id="interestsDisplay">Interests: </p>
         </div>
         <hr>
+    </div>
         <div class="gallery col-12">
             <h3>Gallery</h3>
             <div class="row">
@@ -48,5 +50,9 @@
                     <img src="/assets/images/gallery-pic6.jpg" class="img-fluid rounded" alt="Gallery Image 6">
                 </div>
             </div>
-    </div>
+        </div>
+        <?php
+        echo "<p> welcome " . $_SESSION["email"] . "</p>";
+        ?>
+        
 </div>

@@ -15,6 +15,7 @@
 
 		$user_id = verifyLogin($email, $password);
 		if($user_id){
+			$_SESSION["email"] = $email;
 			header('Location: /pages/home.php');
 			exit();
 		} else {
