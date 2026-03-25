@@ -1,6 +1,6 @@
 <?php $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>
 
-<header>
+<header id="mainHeader">
     <a href="<?= isset($_SESSION['user_id']) ? '/pages/home.php' : '/pages/login.php' ?>">
         <img class="logo" src="/assets/images/Roamance v7.png" alt="Roamance Logo">
     </a>
@@ -117,4 +117,19 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+let lastScrollTop = 0;
+    const header = document.getElementById("mainHeader");
+
+    window.addEventListener("scroll", function () {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (currentScroll > lastScrollTop && currentScroll > 50) {
+            header.classList.add("hide");
+        } else {
+            header.classList.remove("hide");
+        }
+
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    });
 </script>

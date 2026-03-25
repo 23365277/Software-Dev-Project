@@ -17,6 +17,11 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: transform 0.3s ease;
+}
+
+header.hide{
+    transform: translateY(-100%);
 }
 
 header .logo {
