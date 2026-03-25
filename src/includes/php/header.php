@@ -11,6 +11,7 @@
         <a href="/pages/about.php">About</a>
         <a href="/pages/contact.php">Contact</a>
         <a href="/pages/create_account.php" class="btn-signup">Sign Up</a>
+        
     </nav>
     <?php endif; ?>
 
@@ -57,7 +58,7 @@
                         <span class="acc-arrow" id="accArrow">&#9660;</span>
                     </button>
                     <ul class="profile-sub" id="profileSub">
-                        <li><a href="/pages/profile.php">✏️ Edit Profile</a></li>
+                        <li><a href="/pages/profile_view.php">✏️ Edit Profile</a></li>
                         <li><a href="/pages/settings.php">⚙️ Settings</a></li>
                         <li><a href="/actions/logout.php">🚪 Logout</a></li>
                     </ul>
