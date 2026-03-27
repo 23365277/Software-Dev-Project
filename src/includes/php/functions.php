@@ -397,9 +397,20 @@ function getRecentReports($limit = 5) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getNextPassport(PDO $pdo) {
-	$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio FROM profiles ORDER BY RAND() LIMIT 1");
-	$stmt->execute();
+function getNextPassport(PDO $pdo, $userId) {
+	$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio 
+	FROM profiles p 
+	WHERE p.user_id != :userId 
+	AND p.user_id NOT IN ( 
+		SELECT l.receiver_id 
+		FROM likes l 
+		WHERE l.sender_id = :userId) 
+	AND p.user_id NOT IN ( 
+		SELECT b.blocked_id 
+		FROM blocks b 
+		WHERE b.blocker_id = :userId) 
+	ORDER BY RAND() LIMIT 1");
+	$stmt->execute(['userId' => $userId]);
 
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 

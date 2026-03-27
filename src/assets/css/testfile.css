@@ -11,45 +11,39 @@ body.passport-page {
 .passport-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     position: relative;
 }
 
-.action-stamper{
-    transform: rotate(-20deg);
-    width: 100px;
-    height: 100px;
-}
-
-
 .action-bar {
     margin-top: 38px;
-    display: flex;
-    justify-content: center;
     width: 100%;
+    justify-content: center;
 }
 
 .action-btns {
-    position: fixed;
-    bottom: 110px;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    transform: translateX(-50%);
-    left: 50%;
+    margin: 0;
+}
+
+.action-stamper {
+    transform: rotate(-20deg);
+    width: clamp(70px, 2.2vw, 100px);
+    height: clamp(70px, 2.2vw, 100px);
+    flex-shrink: 0;
 }
 
 .action-btn {
-    width: 200px;
-    height: 80px;
+    min-height: 52px;
+    height: clamp(52px, 8vw, 80px);
     border-radius: 12px;
-    font-size: 22px;
+    font-size: clamp(14px, 2.2vw, 22px);
     font-weight: 600;
     border: none;
     cursor: pointer;
     letter-spacing: 0.5px;
     transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 0.75rem;
 }
 
 .action-btn.like {
@@ -63,14 +57,14 @@ body.passport-page {
 }
 
 .action-btn.like:hover {
-    transform: scale(1.08) translateY(-2px);
+    transform: scale(1.04) translateY(-2px);
     background: linear-gradient(135deg, #50d850, #3ace3a);
     box-shadow: 0 8px 20px rgba(58, 206, 58, 0.45);
     color: white;
 }
 
 .action-btn.dislike:hover {
-    transform: scale(1.08) translateY(-2px);
+    transform: scale(1.04) translateY(-2px);
     background: linear-gradient(135deg, #ff6b6b, #ff4d4d);
     box-shadow: 0 8px 20px rgba(255, 77, 77, 0.45);
     color: white;
