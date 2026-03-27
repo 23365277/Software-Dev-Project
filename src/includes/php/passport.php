@@ -1,5 +1,6 @@
 <?php
-$user = getNextPassport($pdo);
+$userId = $_SESSION["user_id"];
+$user = getNextPassport($pdo, $userId);
 $profileImage = $user['profile_picture'];
 $firstName = $user['first_name'];
 $lastName = $user['last_name'];
