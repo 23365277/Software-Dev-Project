@@ -1,5 +1,13 @@
 <?php
     session_start();
+
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    $profile = getProfileInfo();
+
+    if ($profile) {
+        $_SESSION['profile'] = $profile;
+    }
+
 	$pageTitle = "Roamance - Profile View";
 	$pageCSS = "/assets/css/profile_view.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
@@ -52,7 +60,8 @@
             </div>
         </div>
         <?php
-        echo "<p> welcome " . $_SESSION["email"] . "</p>";
+        // echo "<p> welcome " . $_SESSION["email"] . "</p>";
+        print_r($_SESSION['profile']);
         ?>
         
 </div>

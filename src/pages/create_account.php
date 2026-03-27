@@ -26,7 +26,7 @@
         $userId = registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
                         $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
 
-        $_SESSION['user_id'] = $userId;
+        $_SESSION["user_id"] = $userId;
         if(isset($_SESSION['user_id'])){
           header("Location: /pages/home.php");
         }

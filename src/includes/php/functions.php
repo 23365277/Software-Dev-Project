@@ -115,6 +115,21 @@ function interests($userId, $interest1, $interest2, $interest3, $interest4, $int
 	}
 }
 
+function getProfileInfo(){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+		return false;
+	}
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("SELECT * FROM profiles WHERE user_id = ?");
+	$stmt->execute([$userId]);
+
+	return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
