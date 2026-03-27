@@ -1,6 +1,7 @@
 <?php
 	$pageCSS = "/assets/css/testfile.css";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
+	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -11,13 +12,13 @@
 		<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
 		<div class="container col-9 action-bar">
 			<div class="row justify-content-center align-items-center g-3 action-btns">
-				<div class="col-3 col-sm-4">
+				<div class="col-4 col-lg-3">
 					<button class="btn action-btn like w-100" id="likeBtn">Like</button>
 				</div>
 				<div class="col-auto text-center">
 					<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
 				</div>
-				<div class="col-3 col-sm-4">
+				<div class="col-4 col-lg-3">
 					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
 				</div>
 			</div>

@@ -27,8 +27,8 @@ body.passport-page {
 
 .action-stamper {
     transform: rotate(-20deg);
-    width: 100px;
-    height: 100px;
+    width: clamp(70px, 2.2vw, 100px);
+    height: clamp(70px, 2.2vw, 100px);
     flex-shrink: 0;
 }
 
@@ -57,14 +57,14 @@ body.passport-page {
 }
 
 .action-btn.like:hover {
-    transform: scale(1.08) translateY(-2px);
+    transform: scale(1.04) translateY(-2px);
     background: linear-gradient(135deg, #50d850, #3ace3a);
     box-shadow: 0 8px 20px rgba(58, 206, 58, 0.45);
     color: white;
 }
 
 .action-btn.dislike:hover {
-    transform: scale(1.08) translateY(-2px);
+    transform: scale(1.04) translateY(-2px);
     background: linear-gradient(135deg, #ff6b6b, #ff4d4d);
     box-shadow: 0 8px 20px rgba(255, 77, 77, 0.45);
     color: white;

@@ -538,10 +538,4 @@
     .BioDest {
         grid-template-columns: 1fr;
     }
-
-    .action-btn {
-        width: 140px;
-        height: 60px;
-        font-size: 18px;
-    }
 }
