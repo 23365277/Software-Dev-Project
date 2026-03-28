@@ -3,10 +3,17 @@
 
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
     $profile = getProfileInfo();
+    $preferences = getPreferenceInfo();
+    $interests = getUserInterests();
 
-    if ($profile) {
+    if ($profile && $preferences && $interests) {
         $_SESSION['profile'] = $profile;
+        $_SESSION['preferences'] = $preferences;
+        $_SESSION['interests'] = $interests;
     }
+
+        $interestNames = array_column($interests ?? [], 'name');
+        $interestString = !empty($interestNames) ? implode(', ', $interestNames) : 'No interests added';
 
 	$pageTitle = "Roamance - Profile View";
 	$pageCSS = "/assets/css/profile_view.css";
@@ -18,9 +25,111 @@
     <input type="file" id="bannerInput" accept="image/*" style="display: none;">
 </div>
 
-<div class="back-container col-12">
+<div class="container profile-wrapper">
+
+    <div class="profile-card shadow">
+        <div class="profile-header">
+            <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2>
+            <p class="text-muted">
+                <?= htmlspecialchars(($profile['city'] ?? '') . ', ' . ($profile['country'] ?? '')) ?>
+            </p>
+        </div>
+
+        <p class="profile-bio">
+            <?= htmlspecialchars($profile['bio'] ?? 'No bio yet') ?>
+        </p>
+    </div>
+
+    <div class="row profile-info mt-4">
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <strong>DOB</strong>
+                <p><?= htmlspecialchars($profile['date_of_birth'] ?? '') ?></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <strong>Gender</strong>
+                <p><?= htmlspecialchars($profile['gender'] ?? '') ?></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <strong>Height</strong>
+                <p><?= htmlspecialchars(($profile['height_cm'] ?? '') . ' cm') ?></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <strong>Looking For</strong>
+                <p><?= htmlspecialchars($profile['looking_for'] ?? '') ?></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <strong>Preferred Age</strong>
+                <p><?= htmlspecialchars($preferences['age'] ?? '') ?></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="info-box">
+                <strong>Preferred Gender</strong>
+                <p><?= htmlspecialchars($preferences['gender'] ?? '') ?></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <h4>Interests</h4>
+        <div class="interests">
+            <?php if (!empty($interests)): ?>
+                <?php foreach ($interests as $interest): ?>
+                    <span class="interest-tag">
+                        <?= htmlspecialchars($interest['name']) ?>
+                    </span>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No interests added</p>
+            <?php endif; ?>
+        </div>
+    </div>
+
+</div>
+
+<div class="gallery col-12">
+    <h3>Gallery</h3>
     <div class="row">
-        <!-- <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <img src="/assets/images/gallery-pic.jpg" class="img-fluid rounded" alt="Gallery Image 1">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <img src="/assets/images/gallery-pic.jpg" class="img-fluid rounded" alt="Gallery Image 2">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">`
+            <img src="/assets/images/gallery-pic3.jpg" class="img-fluid rounded" alt="Gallery Image 3">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <img src="/assets/images/gallery-pic4.jpg" class="img-fluid rounded" alt="Gallery Image 4">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <img src="/assets/images/gallery-pic5.jpg" class="img-fluid rounded" alt="Gallery Image 5">
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <img src="/assets/images/gallery-pic6.jpg" class="img-fluid rounded" alt="Gallery Image 6">
+        </div>
+    </div>
+        </div>
+        
+</div>
+
+<!-- <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
             <div class="profile-pic">
                 <img src="/assets/images/profile-pic.jpg" class="rounded-circle" style="width: 200px; height: 200px;" id="profileImg" alt="Profile Image">
             </div>
@@ -28,56 +137,3 @@
                 <button class="btn btn-outline-primary" id="editBtn">Edit Profile</button>
             </div>
         </div> -->
-    
-        <div class="info col-lg-1 col-md-6 col-sm-12 mb-4 offset-lg-6">
-            <h2>Name:</h2> <p> <?php echo $profile['first_name'] . " " . $profile['last_name'] ?? ''; ?></p>
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12 mb-4 offset-lg-1">
-            <h2>Location:</h2> <p> <?php echo $profile['city'] . ", " . $profile['country'] ?? ''; ?></p>
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12 mb-4 offset-lg-1">
-            <h2>DOB:</h2> <p> <?php echo $profile['date_of_birth']?? ''; ?></p>
-        </div>
-        <div class="info col-lg-1 col-md-6 col-sm-12 mb-4 offset-lg-6">
-            <h2>Name:</h2> <p> <?php echo $profile['first_name'] . " " . $profile['last_name'] ?? ''; ?></p>
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12 mb-4 offset-lg-1">
-            <h2>Location:</h2> <p> <?php echo $profile['city'] . ", " . $profile['country'] ?? ''; ?></p>
-        </div>
-        <div class="col-lg-1 col-md-6 col-sm-12 mb-4 offset-lg-1">
-            <h2>DOB:</h2> <p> <?php echo $profile['date_of_birth']?? ''; ?></p>
-        </div>
-        <hr>
-    </div>
-        <div class="gallery col-12">
-            <h3>Gallery</h3>
-            <div class="row">
-                <div class="col-lg-1 col-md-6 col-sm-12 mb-4 offset-lg-8">
-                    <!-- <img src="/assets/images/gallery-pic.jpg" class="img-fluid rounded" alt="Gallery Image 1"> -->
-                    <h2>Name:</h2> <p> <?php echo $profile['first_name'] . " " . $profile['last_name'] ?? ''; ?></p>
-                </div>
-                <div class="col-lg-1 col-md-6 col-sm-12 mb-4">
-                    <!-- <img src="/assets/images/gallery-pic.jpg" class="img-fluid rounded" alt="Gallery Image 2"> -->
-                    <h2>Location:</h2> <p> <?php echo $profile['city'] . " " . $profile['country'] ?? ''; ?></p>
-                </div>
-                <div class="col-lg-1 col-md-6 col-sm-12 mb-4">
-                    <!-- <img src="/assets/images/gallery-pic3.jpg" class="img-fluid rounded" alt="Gallery Image 3"> -->
-                    <h2>DOB:</h2> <p> <?php echo $profile['date_of_birth']?? ''; ?></p>
-                </div>
-                <!-- <div class="col-lg-1 col-md-6 col-sm-12 mb-4">
-                    <img src="/assets/images/gallery-pic4.jpg" class="img-fluid rounded" alt="Gallery Image 4">
-                </div>
-                <div class="col-lg-1 col-md-6 col-sm-12 mb-4">
-                    <img src="/assets/images/gallery-pic5.jpg" class="img-fluid rounded" alt="Gallery Image 5">
-                </div>
-                <div class="col-lg-1 col-md-6 col-sm-12 mb-4">
-                    <img src="/assets/images/gallery-pic6.jpg" class="img-fluid rounded" alt="Gallery Image 6">
-                </div> -->
-            </div>
-        </div>
-        <?php
-        // echo "<p> welcome " . $_SESSION["email"] . "</p>";
-        print_r($_SESSION['profile']);
-        ?>
-        
-</div>

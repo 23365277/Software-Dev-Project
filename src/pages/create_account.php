@@ -65,7 +65,7 @@
 
   <div class="tab">
   <h2 class="signup-Title">Bit About You</h2>
-    <select name="PGender" placeholder="Gender">
+    <select name="gender" placeholder="Gender">
         <option value="" disabled selected hidden>Gender</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>

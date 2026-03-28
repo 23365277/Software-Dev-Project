@@ -130,6 +130,42 @@ function getProfileInfo(){
 	return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+function getPreferenceInfo(){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+		return false;
+	}
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("SELECT * FROM preferences WHERE id = ?");
+	$stmt->execute([$userId]);
+
+	return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getUserInterests() {
+    global $pdo;
+
+    if (!isset($_SESSION["user_id"])) {
+        return false;
+    }
+
+    $userId = $_SESSION["user_id"];
+
+    $stmt = $pdo->prepare("
+        SELECT interests.name
+        FROM user_interests
+        JOIN interests ON user_interests.interest_id = interests.id
+        WHERE user_interests.user_id = ?
+    ");
+
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
