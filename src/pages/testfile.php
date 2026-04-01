@@ -1,18 +1,27 @@
 <?php
 	$pageCSS = "/assets/css/testfile.css";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
+	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 ?>
 <!DOCTYPE html>
 <html>
 <body class="passport-page">
 
-<div class="passport-container">
-	<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
-	<div class="action-bar">
-		<div class="action-btns">
-				<button class="action-btn like" id="likeBtn">Like</button>
-				<img class="action-stamper" src="/assets/images/Stamp.png" alt="Stamp Pic">
-				<button class="action-btn dislike" id="dislikeBtn">Dislike</button>
+<div class="container-fluid px-0 py-4">
+	<div class="passport-container">
+		<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
+		<div class="container col-9 action-bar">
+			<div class="row justify-content-center align-items-center g-3 action-btns">
+				<div class="col-4 col-lg-3">
+					<button class="btn action-btn like w-100" id="likeBtn">Like</button>
+				</div>
+				<div class="col-auto text-center">
+					<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
+				</div>
+				<div class="col-4 col-lg-3">
+					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -27,39 +36,50 @@ const dislikeBtn = document.getElementById("dislikeBtn");
 
 document.addEventListener("DOMContentLoaded", () => {
 
-	likeBtn.addEventListener("click", () => {
-		 	likeBtn.disabled = true;
-		gsap.to(stamp, {
-			x: 60,
-			y: -450,
-			rotation: 0,
-			duration: 1,
-			ease: "power3.out",
-			onComplete: () => press("approvedStamp")
-		});
-	});
-
-	dislikeBtn.addEventListener("click", () => {
-		dislikeBtn.disabled = true;
-		gsap.to(stamp, {
-			x: 60,
-			y: -450,
-			rotation: 0,
-			duration: 1,
-			ease: "power3.out",
-			onComplete: () => press("rejectedStamp")
-		});
-	});
+	likeBtn.addEventListener("click", () => decision("like"));
+	dislikeBtn.addEventListener("click", () => decision("dislike"));
 });
+		 	
+function decision(action){
+	likeBtn.disabled = true;
+	dislikeBtn.disabled = true;
+	
+	const stampId = action === "like" ? "approvedStamp" : "rejectedStamp";
+	window.passportDirection = action === "like" ? -1400 : 1400;
+	
+	gsap.to(stamp, {
+    x: -20,
+    y: -450,
+    duration: 1,
+    ease: "power3.out",
+    onComplete: () => press(stampId)
+	});
+}
 
 function press(stampId){
+	const overlayStamp = document.getElementById(stampId);
+    const stamper = document.querySelector(".action-stamper");
+    const passport = document.querySelector(".passport");
 	gsap.to(stamp, {
 		y: "-=12",
 		duration: 0.18,
 		ease: "power3.out",
 		onComplete: () => {
-			document.getElementById(stampId).classList.add("visible");
-			unpress();
+			const stamperRect = stamper.getBoundingClientRect();
+            const passportRect = passport.getBoundingClientRect();
+
+            const centerX = stamperRect.left + stamperRect.width / 2;
+            const centerY = stamperRect.top + stamperRect.height / 2;
+
+            const xInsidePassport = centerX - passportRect.left;
+            const yInsidePassport = centerY - passportRect.top;
+
+            overlayStamp.style.left = `${xInsidePassport}px`;
+            overlayStamp.style.top = `${yInsidePassport}px`;
+            overlayStamp.style.transform = "translate(-50%, -50%)";
+
+            overlayStamp.classList.add("visible");
+            unpress();
 		}
 	});
 }

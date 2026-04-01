@@ -115,6 +115,57 @@ function interests($userId, $interest1, $interest2, $interest3, $interest4, $int
 	}
 }
 
+function getProfileInfo(){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+		return false;
+	}
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("SELECT * FROM profiles WHERE user_id = ?");
+	$stmt->execute([$userId]);
+
+	return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getPreferenceInfo(){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+		return false;
+	}
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("SELECT * FROM preferences WHERE id = ?");
+	$stmt->execute([$userId]);
+
+	return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getUserInterests() {
+    global $pdo;
+
+    if (!isset($_SESSION["user_id"])) {
+        return false;
+    }
+
+    $userId = $_SESSION["user_id"];
+
+    $stmt = $pdo->prepare("
+        SELECT interests.name
+        FROM user_interests
+        JOIN interests ON user_interests.interest_id = interests.id
+        WHERE user_interests.user_id = ?
+    ");
+
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
@@ -382,9 +433,20 @@ function getRecentReports($limit = 5) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getNextPassport(PDO $pdo) {
-	$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio FROM profiles ORDER BY RAND() LIMIT 1");
-	$stmt->execute();
+function getNextPassport(PDO $pdo, $userId) {
+	$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio 
+	FROM profiles p 
+	WHERE p.user_id != :userId 
+	AND p.user_id NOT IN ( 
+		SELECT l.receiver_id 
+		FROM likes l 
+		WHERE l.sender_id = :userId) 
+	AND p.user_id NOT IN ( 
+		SELECT b.blocked_id 
+		FROM blocks b 
+		WHERE b.blocker_id = :userId) 
+	ORDER BY RAND() LIMIT 1");
+	$stmt->execute(['userId' => $userId]);
 
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 

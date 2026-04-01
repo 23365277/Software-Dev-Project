@@ -168,3 +168,25 @@
     cursor: pointer;
 }
 
+.tab { display: none; }
+.step {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbbbbb;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.5;
+}
+.step.active { opacity: 1; background-color: #4CAF50; }
+
+/* .invalid {
+    border: 2px solid red;
+} */
+
+
+input.invalid,
+select.invalid,
+textarea.invalid {
+    border: 2px solid red !important;
+}

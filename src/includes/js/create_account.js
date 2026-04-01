@@ -1,23 +1,81 @@
-let currStep = 1;
+let currentTab = 0;
+showTab(currentTab);
 
-function nextStep() {
+function showTab(n) {
+    const x = document.getElementsByClassName("tab");
+    x[n].style.display = "block";
 
-    // const email = document.querySelector('[name="email"]').value;
-    // const password = document.querySelector('[name="password"]').value;
-    // const first_name = document.querySelector('[name="first_name"]').value;
-    // const last_name = document.querySelector('[name="last_name"]').value;
-    // const DOB = document.querySelector('[name="date_of_birth"]').value;
+    document.getElementById("prevBtn").style.display = n === 0 ? "none" : "inline";
+    if (n === x.length - 1) {
+        document.getElementById("nextBtn").style.display = "none"; // hide Next
+        document.getElementById("submitBtn").style.display = "inline"; // show Submit
+    } else {
+        document.getElementById("nextBtn").style.display = "inline"; // show Next
+        document.getElementById("submitBtn").style.display = "none"; // hide Submit
+    }
 
-    // if (!email || !password) {
-    //     alert("Please fill all required fields.");
-    //     return;
-    // }
+    // update step indicators
+    const steps = document.getElementsByClassName("step");
+    for (let i = 0; i < steps.length; i++) steps[i].className = steps[i].className.replace(" active", "");
+    steps[n].className += " active";
+}
 
-    document.getElementById("step" + currStep).style.display = "none";
+function nextPrev(n) {
+    const x = document.getElementsByClassName("tab");
 
-    currStep++;
+    if (n === 1 && !validateForm()) return false;
 
-    document.getElementById("step" + currStep).style.display = "block";
+    x[currentTab].style.display = "none";
+    
+    currentTab += n;
 
+    if (currentTab >= x.length) {
+        return;
+    }
+    showTab(currentTab);
+}
 
+function validateForm() {
+    let valid = true;
+    const x = document.getElementsByClassName("tab");
+    const inputs = x[currentTab].querySelectorAll("input, select, textarea");
+
+    inputs.forEach(input => {
+        if (input.hasAttribute("required") && input.value.trim() === "") {
+            input.classList.add("invalid");
+            valid = false;
+        } else {
+            input.classList.remove("invalid");
+        }
+    });
+
+    if (!valid) {
+        alert("Please fill all required fields.");
+    }
+
+    return valid;
+}
+
+function validateAllTabs() {
+    let valid = true;
+    const tabs = document.getElementsByClassName("tab");
+
+    for (let i = 0; i < tabs.length; i++) {
+        const inputs = tabs[i].querySelectorAll("input, select, textarea");
+
+        inputs.forEach(input => {
+            if (input.hasAttribute("required") && input.value.trim() === "") {
+                input.classList.add("invalid");
+                valid = false;
+            } else {
+                input.classList.remove("invalid");
+            }
+        });
+    }
+
+    if (!valid) {
+        alert("Please fill all required fields before submitting.");
+    }
+
+    return valid;
 }

@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    window.passportDirection = -1400;
+
     window.peelCover = function() {
         gsap.to(".top-cover", {
             rotationX: -120,
@@ -28,29 +30,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.offScreen = function() {
         gsap.to(".passport-wrapper", {
-            x: -1400,
+            x: window.passportDirection,
             duration: 0.5,
             ease: "power2.in",
             onComplete: loadNextPassport
         });
     }
 
+    const track = document.getElementById("carouselTrack");
+    const windowEl = document.querySelector(".carousel-window");
+    const slides = track.querySelectorAll("img");
+
     let currentIndex = 0;
 
-    window.moveSlide = function(direction) {
-        const track = document.getElementById("carouselTrack");
-        const slides = track.querySelectorAll("img");
-        const totalSlides = slides.length;
+    function updateCarousel() {
+        const slideWidth = slides[0].clientWidth;
+        track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+    }
 
+    window.moveSlide = function(direction) {
         currentIndex += direction;
 
-        if (currentIndex < 0){
-            currentIndex = totalSlides - 1;
-        }
-        if (currentIndex >= totalSlides){ 
-            currentIndex = 0; 
-        }
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex >= slides.length) currentIndex = slides.length - 1;
 
-        track.style.transform = `translateX(-${currentIndex * 420}px)`;
-    }
+        updateCarousel();
+    };
+
+    window.addEventListener("resize", updateCarousel);
+    updateCarousel();
 });
