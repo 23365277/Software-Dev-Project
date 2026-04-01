@@ -180,3 +180,13 @@
 }
 .step.active { opacity: 1; background-color: #4CAF50; }
 
+/* .invalid {
+    border: 2px solid red;
+} */
+
+
+input.invalid,
+select.invalid,
+textarea.invalid {
+    border: 2px solid red !important;
+}

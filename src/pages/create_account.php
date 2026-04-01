@@ -29,11 +29,12 @@
         $_SESSION["user_id"] = $userId;
         if(isset($_SESSION['user_id'])){
           header("Location: /pages/home.php");
+          exit();
         }
-        $_SESSION['email'] = $email;
+        // $_SESSION['email'] = $email;
     
         
-        exit();
+        // exit();
     }
     
 
@@ -52,7 +53,7 @@
     
 <div class="row justify-content-center" >
 <div class="col-3">
-<form id="regForm" class="auth-form" method="POST" action="" novalidate>
+<form id="regForm" class="auth-form" method="POST" action="" onsubmit="return validateAllTabs()" novalidate>
   
   <div class="tab">
   <h2 class="signup-Title">Create Account</h2>
@@ -65,16 +66,16 @@
 
   <div class="tab">
   <h2 class="signup-Title">Bit About You</h2>
-    <select name="gender" placeholder="Gender">
+    <select name="gender" placeholder="Gender" required>
         <option value="" disabled selected hidden>Gender</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <textarea type="text" name="bio" placeholder="bio"></textarea>
-    <input type="number" name="height_cm" placeholder="Height cm">
-    <input type="text" name="country" placeholder="Country">
-    <input type="text" name="city" placeholder="City">
+    <textarea type="text" name="bio" placeholder="bio" required></textarea>
+    <input type="number" name="height_cm" placeholder="Height cm" required>
+    <input type="text" name="country" placeholder="Country" required>
+    <input type="text" name="city" placeholder="City" required>
   </div>
 
   <div class="tab">
@@ -88,14 +89,14 @@
 
   <div class="tab">
   <h2 class="signup-Title">Preferences Form</h2>
-    <select name="preferredGender" placeholder="Preferred Gender">
+    <select name="preferredGender" placeholder="Preferred Gender" required>
         <option value="" disabled selected hidden>Preferred Gender</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <input type="number" name="preferredAge" placeholder="Preferred Age">
-    <select name="lookingFor" placeholder="looking For">
+    <input type="number" name="preferredAge" placeholder="Preferred Age" required>
+    <select name="lookingFor" placeholder="looking For" required>
         <option value="" disabled selected hidden>Looking For</option>
         <option value="Casual">Casual</option>
         <option value="Relationship">Relationship</option>
