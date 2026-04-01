@@ -16,7 +16,7 @@
             <h1>Get in Touch</h1>
             <p>Have questions about Roamance? We'd love to hear from you!</p>
             <p>Reach out to our team and we'll respond as soon as possible.</p>
-            <p style="margin-top: 30px;"><a href="signup.php">← Back to Home</a></p>
+            <p style="margin-top: 30px;"><a href="login.php">← Back to Home</a></p>
         </div>
         <div class="auth-box mt-4">
             <h2>Contact Form</h2>
