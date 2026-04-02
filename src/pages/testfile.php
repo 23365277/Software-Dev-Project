@@ -43,18 +43,35 @@ document.addEventListener("DOMContentLoaded", () => {
 function decision(action){
 	likeBtn.disabled = true;
 	dislikeBtn.disabled = true;
+
+	fetch("/actions/passport_decision.php", {
+		method: "POST",
+		body: new URLSearchParams({
+			action: action,
+			receiver_id: currentProfileId
+		})
+	})
+	.then(res => res.json())
+	.then(data => {
+		if (!data.success) {
+			likeBtn.disabled = false;
+			dislikeBtn.disabled = false;
+			return;
+	}
 	
 	const stampId = action === "like" ? "approvedStamp" : "rejectedStamp";
 	window.passportDirection = action === "like" ? -1400 : 1400;
 	
-	gsap.to(stamp, {
-    x: -20,
-    y: -450,
-    duration: 1,
-    ease: "power3.out",
-    onComplete: () => press(stampId)
+		gsap.to(stamp, {
+		x: -20,
+		y: -450,
+		duration: 1,
+		ease: "power3.out",
+		onComplete: () => press(stampId)
+		});
 	});
 }
+
 
 function press(stampId){
 	const overlayStamp = document.getElementById(stampId);
@@ -110,6 +127,7 @@ function loadNextPassport() {
 	fetch("/actions/get_next_passport.php")
 		.then(res => res.json())
 		.then(user => {
+			currentProfileId = user.user_id;
 			document.querySelector(".profile-img").src = user.profile_picture;
 			document.querySelector(".profile-img").alt = user.first_name + " " + user.last_name;
 			document.querySelectorAll(".name-field")[0].textContent = user.last_name;

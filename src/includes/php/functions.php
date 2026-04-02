@@ -434,7 +434,7 @@ function getRecentReports($limit = 5) {
 }
 
 function getNextPassport(PDO $pdo, $userId) {
-	$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio 
+	$stmt = $pdo->prepare("SELECT user_id, profile_picture, first_name, last_name, country, date_of_birth, bio 
 	FROM profiles p 
 	WHERE p.user_id != :userId 
 	AND p.user_id NOT IN ( 

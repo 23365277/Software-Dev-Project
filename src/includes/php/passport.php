@@ -1,11 +1,11 @@
 <?php
 $userId = $_SESSION["user_id"];
 $user = getNextPassport($pdo, $userId);
+$currentProfileId = $user['user_id'];
 $profileImage = $user['profile_picture'];
 $firstName = $user['first_name'];
 $lastName = $user['last_name'];
 $country = $user['country'];
-$today = new DateTime();
 $age = $user['age'];
 $bio = $user['bio'];
 $stamps = [
@@ -129,6 +129,10 @@ $galleryImages = [
 
 
 <script src="/includes/js/passport.js"></script>
+
+<script>
+let currentProfileId = <?= json_encode($currentProfileId) ?>; 
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
