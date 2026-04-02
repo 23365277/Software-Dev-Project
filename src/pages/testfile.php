@@ -136,6 +136,16 @@ function loadNextPassport() {
 			document.querySelector(".details-right .other-field:nth-child(4)").textContent = user.age + " years";
 			document.querySelector(".bio .body-text").textContent = user.bio;
 
+			const carouselTrack = document.getElementById("carouselTrack");
+			carouselTrack.innerHTML = "";
+
+			user.gallerImages.forEach(img=> {
+				const image = document.createElement("img");
+				image.src = img;
+				image.alt = "Travel Photo";
+				carouselTrack.appendChild(image);
+			})
+
 			document.getElementById("approvedStamp").classList.remove("visible");
 			document.getElementById("rejectedStamp").classList.remove("visible");
 			likeBtn.disabled = false;

@@ -447,11 +447,18 @@ function getNextPassport(PDO $pdo, $userId) {
 		WHERE b.blocker_id = :userId) 
 	ORDER BY RAND() LIMIT 1");
 	$stmt->execute(['userId' => $userId]);
-
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	$today = new DateTime();
 	$user['age'] = $today->diff(new DateTime($user['date_of_birth']))->y;
+
+	$photoStmt = $pdo->prepare("SELECT image_url 
+	FROM photos 
+	WHERE user_id = :userId
+	ORDER BY uploaded_at DESC 
+	LIMIT 6");
+	$photoStmt->execute(['userId' => $user['user_id']]);
+	$user['photos'] = $photoStmt->fetchAll(PDO::FETCH_COLUMN);
 
 	return $user;
 }
