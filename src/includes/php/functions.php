@@ -458,7 +458,7 @@ function getNextPassport(PDO $pdo, $userId) {
 	ORDER BY uploaded_at DESC 
 	LIMIT 6");
 	$photoStmt->execute(['userId' => $user['user_id']]);
-	$user['photos'] = $photoStmt->fetchAll(PDO::FETCH_COLUMN);
+	$user['galleryImages'] = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
 	return $user;
 }

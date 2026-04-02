@@ -20,7 +20,7 @@ $stamps = [
     ["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
     ["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
 ];
-$galleryImages = $user['photos'];
+$galleryImages = $user['galleryImages'];
 
 ?>
 

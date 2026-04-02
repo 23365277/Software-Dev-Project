@@ -139,12 +139,16 @@ function loadNextPassport() {
 			const carouselTrack = document.getElementById("carouselTrack");
 			carouselTrack.innerHTML = "";
 
-			user.gallerImages.forEach(img=> {
+			const galleryImages = user.galleryImages || [];
+			galleryImages.forEach(img=> {
 				const image = document.createElement("img");
 				image.src = img;
 				image.alt = "Travel Photo";
 				carouselTrack.appendChild(image);
-			})
+			});
+
+			window.currentIndex = 0;
+			updateCarousel();
 
 			document.getElementById("approvedStamp").classList.remove("visible");
 			document.getElementById("rejectedStamp").classList.remove("visible");
