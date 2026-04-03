@@ -462,3 +462,35 @@ function getNextPassport(PDO $pdo, $userId) {
 
 	return $user;
 }
+
+function getMatches(PDO $pdo, $userId): array {
+	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio
+		FROM matches m
+		JOIN profiles p 
+			ON p.user_id = CASE 
+				WHEN m.user1_id = :userId THEN m.user2_id 
+				ELSE m.user1_id 
+			END
+		WHERE m.user1_id = :userId OR m.user2_id = :userId");
+	$stmt->execute(['userId' => $userId]);
+	$today = new DateTime();
+	$matches = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($matches as &$profile) {
+		$profile['age'] = $today->diff(new DateTime($profile['date_of_birth']))->y;
+	}
+	return $matches;
+}
+
+function getLikes(PDO $pdo, $userId): array {
+	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio
+		FROM likes l
+		JOIN profiles p ON p.user_id = l.receiver_id
+		WHERE l.sender_id = :userId");
+	$stmt->execute(['userId' => $userId]);
+	$today = new DateTime();
+	$likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($likes as &$profile) {
+		$profile['age'] = $today->diff(new DateTime($profile['date_of_birth']))->y;
+	}
+	return $likes;
+}

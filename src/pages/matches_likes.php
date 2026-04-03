@@ -1,10 +1,18 @@
 <?php
+    session_start();
+
+    $pageCSS = "/assets/css/matches_like.css";
 	$pageTitle = "Roamance - Matches/Likes";
-	$pageCSS = "/assets/css/matches_likes.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
+
+    $userId = $_SESSION['user_id'];
+    $matches = getMatches($pdo, $userId);
+    $likes = getLikes($pdo, $userId);
 ?>
 
-<div class="container mt-4">
+<div class="container py-4 matches-likes-page">
     <h1>Your Connections</h1>
     <h5>Your matches and likes are displayed here</h5>
     
@@ -17,43 +25,50 @@
         </div>
     </div>
 
-    <div class="row my-4 mx-4 ">
-        <div class="card col-lg-4 col-md-4 col-sm-4">
-            <h5>Matches</h5>
-        </div>
-        <div class="card col-lg-4 col-md-4 col-sm-4">
-            <h5>Likes</h5>
-        </div>
-        <div class="card col-lg-4 col-md-4 col-sm-4">
-            <h5>Liked</h5>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="connections-tabs">
+                <button class="tab-btn active" data-tab="matches">Matches</button>
+                <button class="tab-btn" data-tab="likes">Likes</button>
+            </div>
         </div>
     </div>
 
     <div class="row mt-4">
-        <div class="card col-lg-6 col-md-6 col-sm-12" style="min-height: 300px;">
-            <div class="row g-0">
-                <div class="col-lg-4 col-md-4 col-sm-4 p-4">
-                    <img src="/assets/images/profile-pic.jpg" style="width: 175px; height: 175px" alt="Profile Image">
+        <div class="card col-12">
+            <div id="matches" class="tab-content active">
+                <div class="passport-grid">
+                    <?php foreach($matches as $profile):
+                        include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
+                    endforeach; ?>
                 </div>
-                <div class="col-lg-8 col-md-8 col-sm-8 p-2">
-                    <div class="card" style="height: 200px">
-                        <h5>Bio</h5>
-                    </div>
+            </div>
+            <div id="likes" class="tab-content">
+                <div class="passport-grid">
+                    <?php foreach($likes as $profile):
+                        include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
+                    endforeach; ?>
                 </div>
             </div>
         </div>
-        <div class="card col-lg-6 col-md-6 col-sm-12" style="min-height: 300px;">
-            <div class="row g-0">
-                <div class="col-lg-4 col-md-4 col-sm-4 p-4">
-                    <img src="/assets/images/t.jpg" style="width: 175px; height: 175px" alt="Profile Image">
-                </div>
-                <div class="col-lg-8 col-md-8 col-sm-8 p-2">
-                    <div class="card" style="height: 200px">
-                        <h5>Bio</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
+    </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".tab-btn");
+    const tabs = document.querySelectorAll(".tab-content");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            const target = button.dataset.tab;
+
+            buttons.forEach(btn => btn.classList.remove("active"));
+            tabs.forEach(tab => tab.classList.remove("active"));
+
+            button.classList.add("active");
+            document.getElementById(target).classList.add("active");
+        });
+    });
+});
+</script>
