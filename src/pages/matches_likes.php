@@ -12,6 +12,7 @@
     $likes = getLikes($pdo, $userId);
 ?>
 
+<link rel="stylesheet" href="/assets/css/connections_passport.css">
 <div class="container py-4 matches-likes-page">
     <h1>Your Connections</h1>
     <h5>Your matches and likes are displayed here</h5>
@@ -34,8 +35,8 @@
         </div>
     </div>
 
-    <div class="row mt-4">
-        <div class="card col-12">
+    <div class="row g-2 mt-4">
+        <div class="col-12">
             <div id="matches" class="tab-content active">
                 <div class="passport-grid">
                     <?php foreach($matches as $profile):
@@ -54,6 +55,9 @@
     </div>
 </div>
 
+<script src="/includes/js/passport.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll(".tab-btn");
@@ -71,4 +75,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.querySelectorAll(".mini-passport-wrapper").forEach(wrapper => {
+        const cover = wrapper.querySelector(".mini-cover");
+
+        wrapper.addEventListener("mouseenter", () => {
+            gsap.to(cover, {
+                rotationX: 180,
+                duration: 0.6,
+                transformOrigin: "50% 0%",
+                ease: "power2.inOut"
+            });
+        });
+
+        wrapper.addEventListener("mouseleave", () => {
+            gsap.to(cover, {
+                rotationX: 0,
+                duration: 0.6,
+                transformOrigin: "50% 0%",
+                ease: "power2.inOut"
+            });
+        });
+
+    });
+
+});
+
 </script>
