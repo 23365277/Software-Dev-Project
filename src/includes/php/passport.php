@@ -81,17 +81,19 @@ $galleryImages = $user['galleryImages'];
 									</div>
 								</div>		
 							</div>
-							<div class="BioDest">
-								<?php if($bio): ?>
-										<div class="bio">
-											<p class="heading">TRAVELLER BIO</p>
-											<p class="body-text"><?= $bio ?></p>
-										</div>
-								<?php endif; ?>
-								<div class="dest">
-										<p class="heading">PLANNED TRIPS</p>
-										<p class="body-text">France • 6 Months</p>
-								</div>	
+							<div class="body">
+								<div class="BioDest">
+									<?php if($bio): ?>
+											<div class="bio">
+												<p class="heading">TRAVELLER BIO</p>
+												<p class="body-text"><?= $bio ?></p>
+											</div>
+									<?php endif; ?>
+									<div class="dest">
+											<p class="heading">PLANNED TRIPS</p>
+											<p class="body-text">France • 6 Months</p>
+									</div>	
+								</div>
 							</div>
 						</div>
 						<div class="separator">

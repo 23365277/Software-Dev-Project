@@ -23,20 +23,46 @@ $theme = $passportThemes[array_rand($passportThemes)];
         style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
         <img src="/assets/images/favicon_light.ico" alt="emb">
     </div>
-    <div class="mini-passport mx-auto p-3"
+    <div class="mini-back-cover mx-auto p-3"
         style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
         <div class="mini-passport-content p-3">
-            <div class="row g-0">
-                <div class="col-5 mini-passport-left">
-                    <div class="col-12 profile-pic">
+            <div class="info">
+                <div class="tpass-header">
+                    <img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
+                    <p id="tpass">Travel Passport</p>
+                </div>
+                <div class="user-info">
+                    <div class="profile-pic">
                         <img src="<?= $profileImage ?>" alt="<?= $firstName . ' ' . $lastName ?>">
                     </div>
+                    <div class="details">
+                        <div class="details-left">
+                            <p class="header">SURNAME</p>
+                            <p class="name-field"><?= $lastName ?></p>
+                            <p class="header">FORENAME</p>
+                            <p class="name-field"><?= $firstName ?></p>
+                        </div>
+                        <div class="details-right">
+                            <p class="header">NATIONALITY</p>
+                            <p class="name-field"><?= $country ?></p>
+                            <p class="header">AGE</p>
+                            <p class="name-field"><?= $age ?> years</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-7 mini-passport-right">
-                    <p class="name"><?= $firstName . ' ' . $lastName ?></p>
-                    <p class="country"><?= $country ?></p>
-                    <p class="age"><?= $age ?> years</p>
-                    <p class="bio"><?= $bio ?></p>
+                <div class="body">
+                    <div class="BioDest">
+                        <?php if($bio): ?>
+                                <div class="bio">
+                                    <p class="heading">TRAVELLER BIO</p>
+                                    <p class="body-text"><?= $bio ?></p>
+                                </div>
+                        <?php endif; ?>
+                        <div class="dest">
+                            <p class="heading">PLANNED TRIPS</p>
+                            <p class="body-text">France • 6 Months</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -17,7 +17,23 @@
     justify-content: center;
 }
 
-.mini-passport {
+.mini-cover::before {
+    content: "";
+    position: absolute;
+    inset: 30px;
+    border-radius: 16px;
+    border: 2px solid #d4af3799;
+}
+
+.mini-cover::after {
+   content: "";
+    position: absolute;
+    inset: 15px;
+    border-radius: 16px;
+    border: 2px dashed #ffffff26; 
+}
+
+.mini-back-cover {
     position: relative;
     width: 100%;
     height: 100%;
@@ -35,14 +51,118 @@
     z-index: 1;
 }
 
-.mini-passport-left {
-
+.mini-passport-content::before {
+    content: "";
+    position: absolute;
+    inset: 0;                  /* covers the whole box */
+    border-radius: 12px;       /* match your box corners */
+    background-image: url("/assets/images/random-shapes.svg");
+    background-size: cover;    /* cover entire box */
+    background-position: center;
+    opacity: 0.05;             /* very subtle */
+    z-index: 0;                /* behind content */
 }
 
-.profile-pic {
+.user-info {
+    display: flex;             /* horizontal layout */
+    align-items: flex-start;   /* align top of image with top of text */
+    gap: 1rem;                 /* space between image and user info */
+    width: 100%;
 }
 
-.mini-passport-right {
-
+.profile-pic img {
+    border:#1e3a5f 3px solid;
+    border-radius: 12px;
+    width: 120px;
+    height: 160px;
+    flex-shrink: 0;
+     object-fit: cover;
 }
 
+.info {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.details {
+	display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+
+.details-left,
+.details-right{
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.header {
+	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", 
+                 sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-size: clamp(14px, 2vw, 17.6px);
+	font-weight: 600;
+	letter-spacing: 0.05rem;
+	margin: 0 1rem 0 0;
+	color: #7C818D;
+}
+
+.name-field {
+	font-family: "Playfair Display", serif;
+	font-size: clamp(14px, 2vw, 17.6px);
+	font-weight: 600;
+	letter-spacing: 0.05rem;
+	margin: 0 1rem 0.5rem 0;
+	color: #242833;
+}
+
+.tpass-header { 
+	display: flex;
+	gap: 0.3rem;
+	align-items: center;
+    justify-content: center;
+    border-bottom: #1e3a5f 2px solid;
+    margin-bottom: 10px;
+}
+
+#tpassIcon {
+    width: 23px;
+    height: 23px;
+}
+
+#tpass {
+   font-family: "Playfair Display", serif;
+	font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+	font-weight: 450;
+	color: #1e3a5f;
+	margin: 0;
+	letter-spacing: 0.05rem; 
+}
+
+.body {
+    color: #545167;
+	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-style: italic;
+	font-size: 14px;
+}
+
+.BioDest {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* two equal columns */
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.BioDest .bio,
+.BioDest .dest {
+    display: flex;
+    flex-direction: column;
+}
+
+.BioDest .heading {
+    border-bottom: #1e3a5f 2px solid;
+}
