@@ -39,8 +39,7 @@
                 <li><a href="/pages/home.php"><span>🏠</span> Home</a></li>
             <?php endif; ?>
 
-            <li><a href="/pages/about.php"><span>ℹ️</span> About</a></li>
-            <li><a href="/pages/contact.php"><span>💌</span> Contact</a></li>
+            
             <li><a href="/pages/destination_search.php"><span>🗺</span> Atlas</a></li>
             <li><a href="/pages/post_a_trip.php"><span>🛫</span> Post A Trip</a></li>
             <li><a href="/pages/discovery_feed.php"><span>🔎</span> Discovery Feed</a></li>
@@ -48,6 +47,7 @@
             <li><a href="/pages/matches_likes.php"><span>💓</span> Matches / Likes</a></li>
             <li><a href="/pages/admin_panel.php"><span>🛠️</span> Admin</a></li>
             <li><a href="/pages/testfile.php"><span></span> Test File</a></li>
+            <li><a href="/pages/contact.php"><span>💌</span> Contact</a></li>
 
             <?php if (isset($_SESSION['user_id'])): ?>
                 <!-- Profile accordion -->
