@@ -25,7 +25,7 @@ $theme = $passportThemes[array_rand($passportThemes)];
     </div>
     <div class="mini-back-cover mx-auto p-3"
         style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
-        <div class="mini-passport-content p-3">
+        <div class="mini-passport-content p-2 p-lg-3">
             <div class="info">
                 <div class="tpass-header">
                     <img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
@@ -38,15 +38,23 @@ $theme = $passportThemes[array_rand($passportThemes)];
                     <div class="details">
                         <div class="details-left">
                             <p class="header">SURNAME</p>
-                            <p class="name-field"><?= $lastName ?></p>
+                            <div class="name-field">
+                                <p class="surname"><?= $lastName ?></p>
+                            </div>
                             <p class="header">FORENAME</p>
-                            <p class="name-field"><?= $firstName ?></p>
+                            <div class="name-field">
+                                <p class="forename"><?= $firstName ?></p>
+                            </div>
                         </div>
                         <div class="details-right">
                             <p class="header">NATIONALITY</p>
-                            <p class="name-field"><?= $country ?></p>
+                            <div class="name-field">
+                                <p class="country"><?= $country ?></p>
+                            </div>
                             <p class="header">AGE</p>
-                            <p class="name-field"><?= $age ?> years</p>
+                            <div class="name-field">
+                                <p class="age"><?= $age ?> years</p>
+                            </div>
                         </div>
                     </div>
                 </div>

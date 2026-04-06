@@ -104,7 +104,7 @@
 	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
                  "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", 
                  sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-	font-size: clamp(14px, 2vw, 17.6px);
+	font-size: clamp(12px, 2vw, 17.6px);
 	font-weight: 600;
 	letter-spacing: 0.05rem;
 	margin: 0 1rem 0 0;
@@ -113,7 +113,7 @@
 
 .name-field {
 	font-family: "Playfair Display", serif;
-	font-size: clamp(14px, 2vw, 17.6px);
+	font-size: clamp(12px, 2vw, 17.6px);
 	font-weight: 600;
 	letter-spacing: 0.05rem;
 	margin: 0 1rem 0.5rem 0;
@@ -147,13 +147,13 @@
     color: #545167;
 	font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	font-style: italic;
-	font-size: 14px;
+	font-size: clamp(12px, 2vw, 14px);
 }
 
 .BioDest {
     display: grid;
     grid-template-columns: 1fr 1fr; /* two equal columns */
-    gap: 2rem;
+    gap: clamp(1rem, 2vw, 2rem);
     margin-top: 1.5rem;
 }
 
@@ -166,3 +166,16 @@
 .BioDest .heading {
     border-bottom: #1e3a5f 2px solid;
 }
+
+@media (max-width: 600px) {
+    .profile-pic img {
+        width: 90px;
+        height: 120px;
+    }
+
+    .mini-passport-wrapper {
+        width: 340px;
+        max-width: 100%;
+    }
+}
+
