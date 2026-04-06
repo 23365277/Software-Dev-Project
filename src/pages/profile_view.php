@@ -29,15 +29,26 @@
 
     <div class="profile-card shadow">
         <div class="profile-header">
-            <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2>
+            <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2> <button>Edit</button>
             <p class="text-muted">
-                <?= htmlspecialchars(($profile['city'] ?? '') . ', ' . ($profile['country'] ?? '')) ?>
+                <?= htmlspecialchars(($profile['city'] ?? '') . ', ' . ($profile['country'] ?? '')) ?> <button>Edit</button>
             </p>
         </div>
 
         <p class="profile-bio">
-            <?= htmlspecialchars($profile['bio'] ?? 'No bio yet') ?>
+            <?= htmlspecialchars($profile['bio'] ?? 'No bio yet') ?> <button>Edit</button>
         </p>
+    </div>
+
+    <div class="tab" id="editBtn">
+        <form class="auth-form">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel()">X</button>
+            </div>
+            <input type=text name="value" placeholder="Edit">
+            <button type="submit">Edit</button>
+        </form>
     </div>
 
     <div class="row profile-info mt-4">
@@ -45,42 +56,42 @@
         <div class="col-md-4">
             <div class="info-box">
                 <strong>DOB</strong>
-                <p><?= htmlspecialchars($profile['date_of_birth'] ?? '') ?></p>
+                <p><?= htmlspecialchars($profile['date_of_birth'] ?? '') ?></p> <button>Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Gender</strong>
-                <p><?= htmlspecialchars($profile['gender'] ?? '') ?></p>
+                <p><?= htmlspecialchars($profile['gender'] ?? '') ?></p> <button type="button" onclick="onEdit()">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Height</strong>
-                <p><?= htmlspecialchars(($profile['height_cm'] ?? '') . ' cm') ?></p>
+                <p><?= htmlspecialchars(($profile['height_cm'] ?? '') . ' cm') ?></p> <button>Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Looking For</strong>
-                <p><?= htmlspecialchars($profile['looking_for'] ?? '') ?></p>
+                <p><?= htmlspecialchars($profile['looking_for'] ?? '') ?></p> <button>Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Preferred Age</strong>
-                <p><?= htmlspecialchars($preferences['age'] ?? '') ?></p>
+                <p><?= htmlspecialchars($preferences['age'] ?? '') ?></p> <button>Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Preferred Gender</strong>
-                <p><?= htmlspecialchars($preferences['gender'] ?? '') ?></p>
+                <p><?= htmlspecialchars($preferences['gender'] ?? '') ?></p> <button>Edit</button>
             </div>
         </div>
 
@@ -94,9 +105,9 @@
                     <span class="interest-tag">
                         <?= htmlspecialchars($interest['name']) ?>
                     </span>
-                <?php endforeach; ?>
+                <?php endforeach; ?> <button>Edit</button>
             <?php else: ?>
-                <p>No interests added</p>
+                <p>No interests added</p> <button>Edit</button>
             <?php endif; ?>
         </div>
     </div>
@@ -137,3 +148,7 @@
                 <button class="btn btn-outline-primary" id="editBtn">Edit Profile</button>
             </div>
         </div> -->
+
+<script src="/includes/js/profile_view.js"></script>
+
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
