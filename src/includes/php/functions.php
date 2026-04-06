@@ -481,6 +481,7 @@ function getMatches(PDO $pdo, $userId): array {
 	return $matches;
 }
 
+
 function getLikes(PDO $pdo, $userId): array {
 	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio
 		FROM likes l
