@@ -1,80 +1,40 @@
 <?php
-// Start session first, before any output
 session_start();
-
 require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
-
-// Safe check for $login_successful
 if (isset($login_successful) && $login_successful) {
     $_SESSION['logged_in'] = true;
-    $_SESSION['email'] = $user_email; // from DB
-    header("Location: dashboard.php"); // redirect after login
+    $_SESSION['email'] = $user_email;
+    header("Location: dashboard.php");
     exit();
 }
-
-// Page metadata
 $pageTitle = "Roamance - Home";
-$pageCSS = "/assets/css/home.css";
-
-// Include header and messaging components
+$pageCSS = "/assets/css/messaging.css";
 include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/messaging.php";
-
 ?>
-<!-- Main Page Content -->
+
 <div class="container col-12 row">
     <div class="card col-lg-4 col-md-6 col-sm-12">
         <h2 class="matches center-text">Matches and Likes</h2>
     </div>
+
     <div class="container col-lg-8 col-md-6 col-sm-12">
-        <div class="card">
-            <h2 class="center-text">Messages</h2>
 
-            <?php 
-            // Check if user is logged in before showing messages
-            if (isset($_SESSION['user_id'])): ?>
-            <div id = "home-messages-panel">
-
-                <div class = "hmp-header">
-                    <span>&#9993;</span> Inbox
+        <div id="home-messages-panel">
+            <h2>Messages</h2>
+            <div id="home-messages-body">
+                <div id="home-contacts"></div>
+                <div id="home-messages-area" class="centered-message">
+                    <span><?php echo isset($_SESSION['user_id']) ? 'Select a conversation' : 'Log in to view your messages'; ?></span>
                 </div>
-
-                <div class="hmp-body">
-
-                <div class = "hmp-contacts" id="hmp-contacts">
-                    <input type = "text"
-                           class = "mp-contact-search"
-                           id="hmp-contact-search"
-                           placeholder="Search user email"
-                           disabled> <!-- Disabled until contacts have loaded -->
-                    <button class = "hmp-contact-search-btn"
-                            id= "hmp-contact-search-btn"
-                            disabled>Search</button>
-
-                    </div>
-
-                    <div class = "hmp-messages centered-message" id="hmp-messages">
-
-                        <span>Select a contact to begin chatting</span>
-
-                    </div>
-                </div>
-
-                <div class="hmp-input-area">
-                    <input type = "text"
-                           class = "hmp-input"
-                           id = "hmp-input"
-                           placeholder="Type your message..."
-                           disabled>
-                    <button class="hmp-send" id = "hmp-send" disabled>Send</button>
-                </div>
-
+            </div>
+            <?php if(isset($_SESSION['user_id'])): ?>
+            <div id="home-input-area">
+                <input type="text" id="home-msg-input" placeholder="Type your message..." disabled>
+                <button id="home-msg-send" disabled>Send</button>
             </div>
             <?php endif; ?>
-            
-
-
         </div>
+
         <div class="container row">
             <div class="card col-lg-5 col-md-5 col-sm-12 mt-4">
                 <h2 class="center-text">Discovery Feed</h2>
@@ -86,7 +46,112 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/messaging.php";
     </div>
 </div>
 
+<?php if(isset($_SESSION["user_id"])): ?>
+<script>
+const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
+
+(function () {
+    let homeCurrentContact = null;
+
+    const homeContactsEl = document.getElementById('home-contacts');
+    const homeMessagesEl = document.getElementById('home-messages-area');
+    const homeInputEl    = document.getElementById('home-msg-input');
+    const homeSendBtn    = document.getElementById('home-msg-send');
+
+    async function homeLoadContacts() {
+        try {
+            const res = await fetch('/includes/php/get_contacts.php');
+            const contacts = await res.json();
+            homeContactsEl.innerHTML = '';
+            if (contacts.length === 0) {
+                const span = document.createElement('span');
+                span.textContent = 'No contacts yet';
+                span.style.padding = '10px';
+                span.style.fontSize = '0.85em';
+                homeContactsEl.appendChild(span);
+                return;
+            }
+            contacts.forEach(contact => {
+                const div = document.createElement('div');
+                div.classList.add('home-contact');
+                div.dataset.userid = contact.id;
+                div.textContent = contact.email;
+                div.addEventListener('click', () => homeSelectContact(contact.id, div));
+                homeContactsEl.appendChild(div);
+            });
+        } catch (err) {
+            console.error('homeLoadContacts error:', err);
+            homeContactsEl.innerHTML = '<span style="padding:10px">Error loading contacts</span>';
+        }
+    }
+
+    function homeSelectContact(contactId, contactEl) {
+        homeCurrentContact = contactId;
+        homeInputEl.disabled = false;
+        homeSendBtn.disabled = false;
+        homeContactsEl.querySelectorAll('.home-contact').forEach(c => c.classList.remove('active'));
+        contactEl.classList.add('active');
+        homeFetchMessages();
+    }
+
+    function homeFetchMessages() {
+        if (!homeCurrentContact) return;
+        fetch('/includes/php/get_message.php?other_user=' + homeCurrentContact)
+            .then(res => res.json())
+            .then(messages => {
+                homeMessagesEl.classList.remove('centered-message');
+                homeMessagesEl.innerHTML = '';
+                if (!messages.length) {
+                    homeMessagesEl.classList.add('centered-message');
+                    homeMessagesEl.innerHTML = '<span>No messages yet</span>';
+                    return;
+                }
+                messages.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.classList.add('home-msg-bubble');
+                    const isMine = String(msg.sender_id) === String(myUserId);
+                    if (isMine) div.classList.add('sent');
+                    div.textContent = (isMine ? 'You: ' : '') + msg.message;
+                    homeMessagesEl.appendChild(div);
+                });
+                homeMessagesEl.scrollTop = homeMessagesEl.scrollHeight;
+            })
+            .catch(err => console.error('homeFetchMessages error:', err));
+    }
+
+    function homeSendMessage() {
+        if (!homeCurrentContact) return;
+        const message = homeInputEl.value.trim();
+        if (!message) return;
+        fetch('/includes/php/send_message.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                message: message,
+                receiver_id: homeCurrentContact
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                homeInputEl.value = '';
+                homeFetchMessages();
+            } else {
+                console.error('Send error:', data.error);
+            }
+        })
+        .catch(err => console.error('homeSendMessage error:', err));
+    }
+
+    homeSendBtn.addEventListener('click', homeSendMessage);
+    homeInputEl.addEventListener('keypress', e => { if (e.key === 'Enter') homeSendMessage(); });
+    setInterval(homeFetchMessages, 3000);
+    homeLoadContacts();
+})();
+</script>
+<?php endif; ?>
+
 <?php
-// Include login welcome bubble at the bottom
+include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/messaging.php";
 include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/login_welcome.php';
 ?>
