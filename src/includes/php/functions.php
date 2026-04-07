@@ -166,25 +166,6 @@ function getUserInterests() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function updateProfileInfo($column, $value){
-	global $pdo;
-
-	if(!isset($_SESSION["user_id"])){
-		return false;
-	}
-
-	$userId = $_SESSION["user_id"];
-
-	$stmt = $pdo -> prepare("
-		UPDATE users SET $column = :value WHERE id = :id
-	");
-
-	$stmt -> execute([
-		':value' => $value,
-		':id' => $userId
-	]);
-}
-
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
@@ -452,6 +433,7 @@ function getRecentReports($limit = 5) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 function getNextPassport(PDO $pdo, $userId) {
 	$stmt = $pdo->prepare("SELECT user_id, profile_picture, first_name, last_name, country, date_of_birth, bio 
 	FROM profiles p 
@@ -466,11 +448,18 @@ function getNextPassport(PDO $pdo, $userId) {
 		WHERE b.blocker_id = :userId) 
 	ORDER BY RAND() LIMIT 1");	
 	$stmt->execute(['userId' => $userId]);
-
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	$today = new DateTime();
 	$user['age'] = $today->diff(new DateTime($user['date_of_birth']))->y;
+
+	$photoStmt = $pdo->prepare("SELECT image_url 
+	FROM photos 
+	WHERE user_id = :userId
+	ORDER BY uploaded_at DESC 
+	LIMIT 6");
+	$photoStmt->execute(['userId' => $user['user_id']]);
+	$user['galleryImages'] = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
 	return $user;
 }
