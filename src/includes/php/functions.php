@@ -446,7 +446,7 @@ function getNextPassport(PDO $pdo, $userId) {
 		SELECT b.blocked_id 
 		FROM blocks b 
 		WHERE b.blocker_id = :userId) 
-	ORDER BY RAND() LIMIT 1");
+	ORDER BY RAND() LIMIT 1");	
 	$stmt->execute(['userId' => $userId]);
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
