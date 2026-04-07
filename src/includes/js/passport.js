@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     window.passportDirection = -1400;
+    window.currentIndex = 0;
 
     window.peelCover = function() {
         gsap.to(".top-cover", {
@@ -37,22 +38,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const track = document.getElementById("carouselTrack");
-    const windowEl = document.querySelector(".carousel-window");
-    const slides = track.querySelectorAll("img");
+    window.updateCarousel = function() {
+        const track = document.getElementById("carouselTrack");
+        const windowEl = document.querySelector(".carousel-window");
+        const slides = track.querySelectorAll("img");
 
-    let currentIndex = 0;
+        if (!track || !windowEl) return;
+        if (slides.length === 0) return;
 
-    function updateCarousel() {
+        if (window.currentIndex < 0) window.currentIndex = 0;
+        if (window.currentIndex >= slides.length) window.currentIndex = slides.length - 1;
+
         const slideWidth = slides[0].clientWidth;
-        track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+        track.style.transform = `translateX(-${window.currentIndex * slideWidth}px)`;
     }
 
     window.moveSlide = function(direction) {
-        currentIndex += direction;
+        const track = document.getElementById("carouselTrack");
+        const slides = track.querySelectorAll("img");
+        if (slides.length === 0) return;
 
-        if (currentIndex < 0) currentIndex = 0;
-        if (currentIndex >= slides.length) currentIndex = slides.length - 1;
+        window.currentIndex += direction;
+        if (window.currentIndex < 0) window.currentIndex = 0;
+        if (window.currentIndex >= slides.length) window.currentIndex = slides.length - 1;
 
         updateCarousel();
     };

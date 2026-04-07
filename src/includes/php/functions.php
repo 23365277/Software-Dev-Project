@@ -433,8 +433,9 @@ function getRecentReports($limit = 5) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 function getNextPassport(PDO $pdo, $userId) {
-	$stmt = $pdo->prepare("SELECT profile_picture, first_name, last_name, country, date_of_birth, bio 
+	$stmt = $pdo->prepare("SELECT user_id, profile_picture, first_name, last_name, country, date_of_birth, bio 
 	FROM profiles p 
 	WHERE p.user_id != :userId 
 	AND p.user_id NOT IN ( 
@@ -445,13 +446,53 @@ function getNextPassport(PDO $pdo, $userId) {
 		SELECT b.blocked_id 
 		FROM blocks b 
 		WHERE b.blocker_id = :userId) 
-	ORDER BY RAND() LIMIT 1");
+	ORDER BY RAND() LIMIT 1");	
 	$stmt->execute(['userId' => $userId]);
-
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	$today = new DateTime();
 	$user['age'] = $today->diff(new DateTime($user['date_of_birth']))->y;
 
+	$photoStmt = $pdo->prepare("SELECT image_url 
+	FROM photos 
+	WHERE user_id = :userId
+	ORDER BY uploaded_at DESC 
+	LIMIT 6");
+	$photoStmt->execute(['userId' => $user['user_id']]);
+	$user['galleryImages'] = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+
 	return $user;
+}
+
+function getMatches(PDO $pdo, $userId): array {
+	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio
+		FROM matches m
+		JOIN profiles p 
+			ON p.user_id = CASE 
+				WHEN m.user1_id = :userId THEN m.user2_id 
+				ELSE m.user1_id 
+			END
+		WHERE m.user1_id = :userId OR m.user2_id = :userId");
+	$stmt->execute(['userId' => $userId]);
+	$today = new DateTime();
+	$matches = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($matches as &$profile) {
+		$profile['age'] = $today->diff(new DateTime($profile['date_of_birth']))->y;
+	}
+	return $matches;
+}
+
+
+function getLikes(PDO $pdo, $userId): array {
+	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio
+		FROM likes l
+		JOIN profiles p ON p.user_id = l.receiver_id
+		WHERE l.sender_id = :userId");
+	$stmt->execute(['userId' => $userId]);
+	$today = new DateTime();
+	$likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($likes as &$profile) {
+		$profile['age'] = $today->diff(new DateTime($profile['date_of_birth']))->y;
+	}
+	return $likes;
 }

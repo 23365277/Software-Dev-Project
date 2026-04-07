@@ -32,8 +32,8 @@ if(session_status() == PHP_SESSION_NONE){
 	
 
 	<!-- For Page Specific CSS-->
-	<?php if (isset($pageCSS)) : ?>
-		<link rel="stylesheet" href="<?php echo $pageCSS; ?>">
+	<?php if (isset($pageCSS)): ?>
+    <link rel="stylesheet" href="<?php echo $pageCSS; ?>">
 
-	<?php endif; ?>
+    <?php endif; ?>
 </head>

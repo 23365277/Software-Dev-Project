@@ -1,4 +1,5 @@
 <?php
+	session_start();
 	$pageCSS = "/assets/css/testfile.css";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
@@ -8,6 +9,22 @@
 <body class="passport-page">
 
 <div class="container-fluid px-0 py-4">
+	<div class="col-4 col-lg-4">
+		<div>
+			<button type="button" class="preference" id="preferenceToggle"> Head to Preferences</button>
+		</div>
+		<div class="preference-overlay " id="preferenceOverlay">
+			<div class="preference-panel" id="preferencePanel">
+				<button type="button" class="close-overlay" id="closePreferenceOverlay">&times;</button>
+
+				<h2 class="mb-4">Edit Your Preferences</h2>
+
+				<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
+
+				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
+			</div>
+		</div>
+	</div>
 	<div class="passport-container">
 		<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
 		<div class="container col-9 action-bar">
@@ -22,6 +39,7 @@
 					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
 				</div>
 			</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -30,6 +48,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+const preferenceToggle = document.getElementById("preferenceToggle");
+const preferenceOverlay = document.getElementById("preferenceOverlay");
+const closePreferenceOverlay = document.getElementById("closePreferenceOverlay");
+
+preferenceToggle.addEventListener("click", () => {
+	preferenceOverlay.classList.add("active");
+});
+
+closePreferenceOverlay.addEventListener("click", () => {
+	preferenceOverlay.classList.remove("active");
+});
+
 const stamp = document.querySelector(".action-stamper");
 const likeBtn = document.getElementById("likeBtn");
 const dislikeBtn = document.getElementById("dislikeBtn");
@@ -43,18 +73,35 @@ document.addEventListener("DOMContentLoaded", () => {
 function decision(action){
 	likeBtn.disabled = true;
 	dislikeBtn.disabled = true;
+
+	fetch("/actions/passport_decision.php", {
+		method: "POST",
+		body: new URLSearchParams({
+			action: action,
+			receiver_id: currentProfileId
+		})
+	})
+	.then(res => res.json())
+	.then(data => {
+		if (!data.success) {
+			likeBtn.disabled = false;
+			dislikeBtn.disabled = false;
+			return;
+	}
 	
 	const stampId = action === "like" ? "approvedStamp" : "rejectedStamp";
 	window.passportDirection = action === "like" ? -1400 : 1400;
 	
-	gsap.to(stamp, {
-    x: -20,
-    y: -450,
-    duration: 1,
-    ease: "power3.out",
-    onComplete: () => press(stampId)
+		gsap.to(stamp, {
+		x: -20,
+		y: -450,
+		duration: 1,
+		ease: "power3.out",
+		onComplete: () => press(stampId)
+		});
 	});
 }
+
 
 function press(stampId){
 	const overlayStamp = document.getElementById(stampId);
@@ -110,6 +157,7 @@ function loadNextPassport() {
 	fetch("/actions/get_next_passport.php")
 		.then(res => res.json())
 		.then(user => {
+			currentProfileId = user.user_id;
 			document.querySelector(".profile-img").src = user.profile_picture;
 			document.querySelector(".profile-img").alt = user.first_name + " " + user.last_name;
 			document.querySelectorAll(".name-field")[0].textContent = user.last_name;
@@ -117,6 +165,20 @@ function loadNextPassport() {
 			document.querySelector(".details-right .other-field:nth-child(2)").textContent = user.country;
 			document.querySelector(".details-right .other-field:nth-child(4)").textContent = user.age + " years";
 			document.querySelector(".bio .body-text").textContent = user.bio;
+
+			const carouselTrack = document.getElementById("carouselTrack");
+			carouselTrack.innerHTML = "";
+
+			const galleryImages = user.galleryImages || [];
+			galleryImages.forEach(img=> {
+				const image = document.createElement("img");
+				image.src = img;
+				image.alt = "Travel Photo";
+				carouselTrack.appendChild(image);
+			});
+
+			window.currentIndex = 0;
+			updateCarousel();
 
 			document.getElementById("approvedStamp").classList.remove("visible");
 			document.getElementById("rejectedStamp").classList.remove("visible");

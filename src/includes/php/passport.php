@@ -1,11 +1,11 @@
 <?php
 $userId = $_SESSION["user_id"];
 $user = getNextPassport($pdo, $userId);
+$currentProfileId = $user['user_id'];
 $profileImage = $user['profile_picture'];
 $firstName = $user['first_name'];
 $lastName = $user['last_name'];
 $country = $user['country'];
-$today = new DateTime();
 $age = $user['age'];
 $bio = $user['bio'];
 $stamps = [
@@ -20,11 +20,7 @@ $stamps = [
     ["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
     ["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
 ];
-$galleryImages = [
-    "/assets/images/img1.jpg",
-    "/assets/images/img2.jpg",
-    "/assets/images/img3.jpg"
-];
+$galleryImages = $user['galleryImages'];
 
 ?>
 
@@ -85,17 +81,19 @@ $galleryImages = [
 									</div>
 								</div>		
 							</div>
-							<div class="BioDest">
-								<?php if($bio): ?>
-										<div class="bio">
-											<p class="heading">TRAVELLER BIO</p>
-											<p class="body-text"><?= $bio ?></p>
-										</div>
-								<?php endif; ?>
-								<div class="dest">
-										<p class="heading">PLANNED TRIPS</p>
-										<p class="body-text">France • 6 Months</p>
-								</div>	
+							<div class="body">
+								<div class="BioDest">
+									<?php if($bio): ?>
+											<div class="bio">
+												<p class="heading">TRAVELLER BIO</p>
+												<p class="body-text"><?= $bio ?></p>
+											</div>
+									<?php endif; ?>
+									<div class="dest">
+											<p class="heading">PLANNED TRIPS</p>
+											<p class="body-text">France • 6 Months</p>
+									</div>	
+								</div>
 							</div>
 						</div>
 						<div class="separator">
@@ -129,6 +127,10 @@ $galleryImages = [
 
 
 <script src="/includes/js/passport.js"></script>
+
+<script>
+let currentProfileId = <?= json_encode($currentProfileId) ?>; 
+</script>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {

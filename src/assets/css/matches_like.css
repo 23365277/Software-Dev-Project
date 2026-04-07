@@ -1,0 +1,121 @@
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.passport-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 1rem;
+}
+
+.connections-tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.tab-btn {
+    padding: 0.5rem 1.2rem;
+    border: 2px solid #1e3a5f;
+    background: transparent;
+    color: #1e3a5f;
+    font-family: "Playfair Display", serif;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* Hover */
+.tab-btn:hover {
+    background: #1e3a5f;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Active tab */
+.tab-btn.active {
+    background: #25476f;
+    color: white;
+    border-color: #17304f;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.search-box {
+    height: 100%;
+}
+
+.search-box input {
+    width: 100%;
+    height: 100%;
+    min-height: 52px;
+    padding: 0 1rem;
+    border: 2px solid #d6dde8;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #1e3a5f;
+    background: white;
+    outline: none;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+}
+
+.search-box input:focus {
+    border-color: #25476f;
+    box-shadow: 0 0 0 4px rgba(37, 71, 111, 0.12);
+}
+
+.search-box input::placeholder {
+    color: #7c818d;
+}
+
+.filter {
+    width: 100%;
+    min-height: 52px;
+    border: 2px solid #1e3a5f;
+    border-radius: 12px;
+    background: white;
+    color: #1e3a5f;
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.filter:hover {
+    background: #1e3a5f;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.filter.active {
+    background: #25476f;
+    color: white;
+    border-color: #17304f;
+}
+
+.filter-panel {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: white;
+    border: 2px solid #d6dde8;
+    border-radius: 12px;
+}
+
+.filter-panel.active {
+    display: block;
+}
+
+@media (max-width: 950px) {
+    .passport-grid {
+        grid-template-columns: 1fr; /* stack in a single column on small screens */
+        justify-items: center;
+    }
+}
