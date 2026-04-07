@@ -433,6 +433,7 @@ function getRecentReports($limit = 5) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 function getNextPassport(PDO $pdo, $userId) {
 	$stmt = $pdo->prepare("SELECT user_id, profile_picture, first_name, last_name, country, date_of_birth, bio 
 	FROM profiles p 
