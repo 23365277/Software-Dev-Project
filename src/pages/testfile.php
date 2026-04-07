@@ -8,6 +8,22 @@
 <body class="passport-page">
 
 <div class="container-fluid px-0 py-4">
+	<div class="col-4 col-lg-4">
+		<div>
+			<button type="button" class="preference" id="preferenceToggle"> Head to Preferences</button>
+		</div>
+		<div class="preference-overlay " id="preferenceOverlay">
+			<div class="preference-panel" id="preferencePanel">
+				<button type="button" class="close-overlay" id="closePreferenceOverlay">&times;</button>
+
+				<h2 class="mb-4">Edit Your Preferences</h2>
+
+				<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
+
+				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
+			</div>
+		</div>
+	</div>
 	<div class="passport-container">
 		<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
 		<div class="container col-9 action-bar">
@@ -22,6 +38,7 @@
 					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
 				</div>
 			</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -30,6 +47,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+const preferenceToggle = document.getElementById("preferenceToggle");
+const preferenceOverlay = document.getElementById("preferenceOverlay");
+const closePreferenceOverlay = document.getElementById("closePreferenceOverlay");
+
+preferenceToggle.addEventListener("click", () => {
+	preferenceOverlay.classList.add("active");
+});
+
+closePreferenceOverlay.addEventListener("click", () => {
+	preferenceOverlay.classList.remove("active");
+});
+
 const stamp = document.querySelector(".action-stamper");
 const likeBtn = document.getElementById("likeBtn");
 const dislikeBtn = document.getElementById("dislikeBtn");
