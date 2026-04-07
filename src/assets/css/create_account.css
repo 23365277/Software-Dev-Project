@@ -188,5 +188,5 @@
 input.invalid,
 select.invalid,
 textarea.invalid {
-    border: 2px shadow red !important;
+    border: 2px border red !important;
 }
