@@ -434,9 +434,11 @@ function getRecentReports($limit = 5) {
 }
 
 
-function getNextPassport(PDO $pdo, $userId) {
-	$stmt = $pdo->prepare("SELECT user_id, profile_picture, first_name, last_name, country, date_of_birth, bio 
+function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
+	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio 
 	FROM profiles p 
+	LEFT JOIN user_trips ut ON ut.user_id = p.user_id
+    LEFT JOIN trips t ON t.id = ut.trips_id
 	WHERE p.user_id != :userId 
 	AND p.user_id NOT IN ( 
 		SELECT l.receiver_id 
@@ -445,10 +447,22 @@ function getNextPassport(PDO $pdo, $userId) {
 	AND p.user_id NOT IN ( 
 		SELECT b.blocked_id 
 		FROM blocks b 
-		WHERE b.blocker_id = :userId) 
-	ORDER BY RAND() LIMIT 1");	
-	$stmt->execute(['userId' => $userId]);
-	$user = $stmt->fetch(PDO::FETCH_ASSOC);
+		WHERE b.blocker_id = :userId)
+	AND (:trip_country IS NULL OR t.location = :trip_country)
+        ORDER BY RAND()
+        LIMIT 1
+    ");
+
+    $stmt->execute([
+        ':userId' => $userId,
+        ':trip_country' => $tripCountry
+    ]);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return null;
+    }
 
 	$today = new DateTime();
 	$user['age'] = $today->diff(new DateTime($user['date_of_birth']))->y;

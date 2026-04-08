@@ -3,6 +3,8 @@
 	$pageCSS = "/assets/css/testfile.css";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
+
+	$selectedCountry = $_GET['trip_country'] ?? null;
 ?>
 <!DOCTYPE html>
 <html>
@@ -22,6 +24,13 @@
 				<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
 
 				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
+
+				<?php if (!empty($selectedCountry)): ?>
+					<div class="alert alert-info mt-4" id="tripPreferenceAlert">
+						Current Trip Preference: <string><?= htmlspecialchars($selectedCountry) ?></string>
+					</div>
+				<?php endif; ?>
+					<button type="button" class="btn btn-outline-dark reset-preferences-btn" id="resetTripPreferenceBtn">Reset Trip Preference</button>
 			</div>
 		</div>
 	</div>
@@ -51,6 +60,8 @@
 const preferenceToggle = document.getElementById("preferenceToggle");
 const preferenceOverlay = document.getElementById("preferenceOverlay");
 const closePreferenceOverlay = document.getElementById("closePreferenceOverlay");
+const resetPreferencesBtn = document.getElementById("resetTripPreferenceBtn");
+const tripPreferenceAlert = document.getElementById("tripPreferenceAlert");
 
 preferenceToggle.addEventListener("click", () => {
 	preferenceOverlay.classList.add("active");
@@ -71,6 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 		 	
 function decision(action){
+	if (!currentProfileId) {
+		console.log("No current profile selected");
+		return;
+	}
+
 	likeBtn.disabled = true;
 	dislikeBtn.disabled = true;
 
@@ -87,17 +103,17 @@ function decision(action){
 			likeBtn.disabled = false;
 			dislikeBtn.disabled = false;
 			return;
-	}
-	
-	const stampId = action === "like" ? "approvedStamp" : "rejectedStamp";
-	window.passportDirection = action === "like" ? -1400 : 1400;
-	
+		}
+
+		const stampId = action === "like" ? "approvedStamp" : "rejectedStamp";
+		window.passportDirection = action === "like" ? -1400 : 1400;
+
 		gsap.to(stamp, {
-		x: -20,
-		y: -450,
-		duration: 1,
-		ease: "power3.out",
-		onComplete: () => press(stampId)
+			x: -20,
+			y: -450,
+			duration: 1,
+			ease: "power3.out",
+			onComplete: () => press(stampId)
 		});
 	});
 }
@@ -153,10 +169,46 @@ function returnXY() {
 	});
 }
 
+let selectedCountry = <?= json_encode($selectedCountry) ?>;
+
+document.getElementById("resetTripPreferenceBtn").addEventListener("click", () => {
+    selectedCountry = null;
+	
+	if (tripPreferenceAlert) {
+		tripPreferenceAlert.classList.add("hidden");
+	}
+
+    history.replaceState(null, "", "/pages/testfile.php");
+    window.closeCover();
+});
+
+function showNoProfilesOverlay() {
+	const overlay = document.getElementById("noProfileOverlay");
+	overlay.classList.remove("hidden");
+}
+
+function hideNoProfilesOverlay() {
+	const overlay = document.getElementById("noProfileOverlay");
+	overlay.classList.add("hidden");
+}
+
 function loadNextPassport() {
-	fetch("/actions/get_next_passport.php")
+	let url = "/actions/get_next_passport.php";
+
+	if (selectedCountry) {
+		url += "?trip_country=" + encodeURIComponent(selectedCountry);
+	}
+
+	fetch(url)
 		.then(res => res.json())
 		.then(user => {
+
+			if (!user.user_id) {
+					showNoProfilesOverlay();
+					return;
+				}
+
+			hideNoProfilesOverlay();
 			currentProfileId = user.user_id;
 			document.querySelector(".profile-img").src = user.profile_picture;
 			document.querySelector(".profile-img").alt = user.first_name + " " + user.last_name;
