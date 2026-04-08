@@ -50,6 +50,11 @@
                             "Reason: " . htmlspecialchars($report['reason']) . "<br>" .
                             "Date: " . date("M d, Y", strtotime($report['created_at'])) .
                         "</div>"; ?>
+
+                        <?php echo "<div class='reportActions'>" .
+                            "<a href='/admin_panel.php?resolve_report=" . htmlspecialchars($report['id']) . "' class='btn btn-success btn-sm mb-1'>Resolve</a><br>" .
+                            "<a href='/admin_panel.php?ban_reported=" . htmlspecialchars($report['reported_user_id']) . "' class='btn btn-danger btn-sm'>Ban User</a>" .
+                        "</div>"; ?>
                     </div>
                     <?php endforeach; ?></p>
                 </div>
@@ -67,6 +72,11 @@
                         ?>
                         <div class="newUserEntry">
                             <?php echo "<div class='listNewUser'>" . htmlspecialchars($user['email']) . "<br>" . "Joined: " . date("M d, Y", strtotime($user['created_at'])) . "<br>" . "ID: " . htmlspecialchars($user['id']) . "</div>"; ?>
+                            <div class='userActions'>
+                                <a href='/admin_panel.php?view_profile=<?php echo htmlspecialchars($user['id']); ?>' class='btn btn-outline-primary btn-sm' title='View Profile'>
+                                    <i class='bi bi-person-fill'></i>
+                                </a>
+                            </div>
                         </div>
                         <?php endforeach; ?></p>
                     </div>
@@ -76,13 +86,46 @@
     </div>
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12 mb-4">
-            <div class="card" style="min-height: 400px;">
+            <div class="card" style="height: 400px; display: flex; flex-direction: column;">
                 <h5 class="card-title">User Management</h5>
+                <div class="mb-2">
+                    <input type="text" id="userSearch" class="form-control" placeholder="Search by email or ID...">
+                </div>
+                <div class="scrollableContainer" style="flex: 1; overflow-y: auto; max-height: unset;">
+                    <?php foreach (getAllUsers() as $user): ?>
+                    <div class="newUserEntry">
+                        <div class="listNewUser">
+                            <?php echo htmlspecialchars($user['email']); ?><br>
+                            Joined: <?php echo date("M d, Y", strtotime($user['created_at'])); ?><br>
+                            ID: <?php echo htmlspecialchars($user['id']); ?>
+                        </div>
+                        <div class="userActions">
+                            <a href="/admin_panel.php?view_profile=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm mb-1" title="View Profile"><i class="bi bi-person-fill"></i></a>
+                            <a href="/admin_panel.php?ban_user=<?php echo $user['id']; ?>" class="btn btn-danger btn-sm" title="Ban User"><i class="bi bi-slash-circle"></i></a>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 mb-4">
-            <div class="card" style="min-height: 400px;">
+            <div class="card" style="height: 400px; display: flex; flex-direction: column;">
                 <h5 class="card-title">Banned Users</h5>
+                <div class="scrollableContainer" style="flex: 1; overflow-y: auto; max-height: unset;">
+                    <?php foreach (getBannedUsers() as $user): ?>
+                    <div class="newUserEntry">
+                        <div class="listNewUser">
+                            <?php echo htmlspecialchars($user['email']); ?><br>
+                            Joined: <?php echo date("M d, Y", strtotime($user['created_at'])); ?><br>
+                            ID: <?php echo htmlspecialchars($user['id']); ?>
+                        </div>
+                        <div class="userActions">
+                            <a href="/admin_panel.php?view_profile=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm mb-1" title="View Profile"><i class="bi bi-person-fill"></i></a>
+                            <a href="/admin_panel.php?unban_user=<?php echo $user['id']; ?>" class="btn btn-success btn-sm" title="Unban User"><i class="bi bi-check-circle"></i></a>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
     </div>

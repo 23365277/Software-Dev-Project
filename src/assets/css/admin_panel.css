@@ -21,10 +21,40 @@
 }
 
 .reportEntry {
-    background-color: #fff;          /* White background for card */
-    border: 1px solid #ddd;          /* Light border */
-    border-radius: 8px;              /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
-    padding: 12px 16px;              /* Internal padding */
-    margin-bottom: 12px;             /* Space between cards */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.listReport {
+    flex: 1;
+    font-size: 0.85rem;
+    min-width: 0;
+    word-break: break-word;
+}
+
+.reportActions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 4px;
+    align-self: center;
+}
+
+.newUserEntry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.userActions {
+    flex-shrink: 0;
 }

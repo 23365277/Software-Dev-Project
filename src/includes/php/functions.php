@@ -286,11 +286,26 @@ function getTotalMatches() {
 
 function getAllUsers() {
 	global $pdo;
-	$stmt = $pdo->query("SELECT id, email FROM users");
+	$stmt = $pdo->query("SELECT id, email, created_at FROM users ORDER BY created_at DESC");
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getUsersForGraph() {
+function getBannedUsers() {
+    global $pdo;
+    $stmt = $pdo->query("
+        SELECT 
+            u.id,
+            u.email,
+            u.created_at,
+            bu.admin_id
+        FROM banned_users bu
+        INNER JOIN users u ON u.id = bu.target_id
+        ORDER BY u.created_at DESC
+    ");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getUsersForGraph() {	
     global $pdo;
 	$days = 30;
 
