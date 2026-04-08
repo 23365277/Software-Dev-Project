@@ -91,7 +91,7 @@
                 <div class="mb-2">
                     <input type="text" id="userSearch" class="form-control" placeholder="Search by email or ID...">
                 </div>
-                <div class="scrollableContainer" style="flex: 1; overflow-y: auto; max-height: unset;">
+                <div class="scrollableContainer" id="userManagementList" style="flex: 1; overflow-y: auto; max-height: unset;">
                     <?php foreach (getAllUsers() as $user): ?>
                     <div class="newUserEntry">
                         <div class="listNewUser">
@@ -217,3 +217,15 @@ new Chart(document.getElementById('matchChart'), {
     }
 });
 </script>
+
+<script>
+document.getElementById('userSearch').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    const entries = document.querySelectorAll('#userManagementList .newUserEntry');
+
+    entries.forEach(entry => {
+        const text = entry.querySelector('.listNewUser').textContent.toLowerCase();
+        entry.style.display = text.includes(query) ? '' : 'none';
+    });
+});
+</script>   
