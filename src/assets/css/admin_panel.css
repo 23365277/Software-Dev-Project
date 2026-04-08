@@ -57,4 +57,39 @@
 
 .userActions {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.activityEntry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.85rem;
+}
+
+.activityEntry:last-child {
+    border-bottom: none;
+}
+
+.activityEmail {
+    font-weight: 500;
+}
+
+.activityExtra {
+    color: #666;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.activityTime {
+    margin-left: auto;
+    color: #999;
+    white-space: nowrap;
+    font-size: 0.78rem;
 }

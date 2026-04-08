@@ -2,9 +2,10 @@
     session_start();
 
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
-    $profile = getProfileInfo();
-    $preferences = getPreferenceInfo();
-    $interests = getUserInterests();
+    $viewUserId = isset($_GET['user_id']) ? (int) $_GET['user_id'] : $_SESSION['user_id'];
+    $profile = getProfileInfoById($viewUserId);
+    $preferences = getPreferenceInfoById($viewUserId);
+    $interests = getUserInterestsById($viewUserId);
 
     if ($profile && $preferences && $interests) {
         $_SESSION['profile'] = $profile;

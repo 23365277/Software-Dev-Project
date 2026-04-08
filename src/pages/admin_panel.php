@@ -1,8 +1,41 @@
 <?php
-	$pageTitle = "Roamance - Admin Panel";
-	$pageCSS = "/assets/css/admin_panel.css";
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+    session_start();
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+
+    if (isset($_GET['resolve_report'])) {
+        resolveReport((int) $_GET['resolve_report']);
+        header("Location: /pages/admin_panel.php");
+        exit;
+    }
+
+    if (isset($_GET['ban_reported'])) {
+        banUser((int) $_GET['ban_reported']);
+        header("Location: /pages/admin_panel.php");
+        exit;
+    }
+
+    if (isset($_GET['ban_user'])) {
+        banUser((int) $_GET['ban_user']);
+        header("Location: /pages/admin_panel.php");
+        exit;
+    }
+
+    if (isset($_GET['suspend_user'])) {
+        $days = isset($_GET['days']) ? (int) $_GET['days'] : 7;
+        suspendUser((int) $_GET['suspend_user'], $days);
+        header("Location: /pages/admin_panel.php");
+        exit;
+    }
+
+    if (isset($_GET['unban_user'])) {
+        unbanUser((int) $_GET['unban_user']);
+        header("Location: /pages/admin_panel.php");
+        exit;
+    }
+
+    $pageTitle = "Roamance - Admin Panel";
+    $pageCSS = "/assets/css/admin_panel.css";
+    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
 <?php
@@ -13,8 +46,6 @@
     $matchGraphData = getMatchesForGraph();
     $matchDates = $matchGraphData['matchDates'];
     $matchCounts = $matchGraphData['matchCounts'];
-
-
 ?>
 
 <div class="container mt-4">
@@ -52,8 +83,8 @@
                         "</div>"; ?>
 
                         <?php echo "<div class='reportActions'>" .
-                            "<a href='/admin_panel.php?resolve_report=" . htmlspecialchars($report['id']) . "' class='btn btn-success btn-sm mb-1'>Resolve</a><br>" .
-                            "<a href='/admin_panel.php?ban_reported=" . htmlspecialchars($report['reported_user_id']) . "' class='btn btn-danger btn-sm'>Ban User</a>" .
+                            "<a href='/pages/admin_panel.php?resolve_report=" . htmlspecialchars($report['id']) . "' class='btn btn-success btn-sm mb-1'>Resolve</a><br>" .
+                            "<button class='btn btn-warning btn-sm' onclick=\"openActionModal(" . (int)$report['reported_user_id'] . ", '" . htmlspecialchars(addslashes($report['reported_email']), ENT_QUOTES) . "')\">Actions</button>" .
                         "</div>"; ?>
                     </div>
                     <?php endforeach; ?></p>
@@ -73,7 +104,7 @@
                         <div class="newUserEntry">
                             <?php echo "<div class='listNewUser'>" . htmlspecialchars($user['email']) . "<br>" . "Joined: " . date("M d, Y", strtotime($user['created_at'])) . "<br>" . "ID: " . htmlspecialchars($user['id']) . "</div>"; ?>
                             <div class='userActions'>
-                                <a href='/admin_panel.php?view_profile=<?php echo htmlspecialchars($user['id']); ?>' class='btn btn-outline-primary btn-sm' title='View Profile'>
+                                <a href='/pages/profile_view.php?user_id=<?php echo htmlspecialchars($user['id']); ?>' class='btn btn-outline-primary btn-sm' title='View Profile'>
                                     <i class='bi bi-person-fill'></i>
                                 </a>
                             </div>
@@ -100,8 +131,8 @@
                             ID: <?php echo htmlspecialchars($user['id']); ?>
                         </div>
                         <div class="userActions">
-                            <a href="/admin_panel.php?view_profile=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm mb-1" title="View Profile"><i class="bi bi-person-fill"></i></a>
-                            <a href="/admin_panel.php?ban_user=<?php echo $user['id']; ?>" class="btn btn-danger btn-sm" title="Ban User"><i class="bi bi-slash-circle"></i></a>
+                            <a href="/pages/profile_view.php?user_id=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm" title="View Profile"><i class="bi bi-person-fill"></i></a>
+                            <button class="btn btn-warning btn-sm" title="Actions" onclick="openActionModal(<?php echo (int)$user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email']), ENT_QUOTES); ?>')"><i class="bi bi-three-dots-vertical"></i></button>
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -120,8 +151,8 @@
                             ID: <?php echo htmlspecialchars($user['id']); ?>
                         </div>
                         <div class="userActions">
-                            <a href="/admin_panel.php?view_profile=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm mb-1" title="View Profile"><i class="bi bi-person-fill"></i></a>
-                            <a href="/admin_panel.php?unban_user=<?php echo $user['id']; ?>" class="btn btn-success btn-sm" title="Unban User"><i class="bi bi-check-circle"></i></a>
+                            <a href="/pages/profile_view.php?user_id=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm" title="View Profile"><i class="bi bi-person-fill"></i></a>
+                            <a href="/pages/admin_panel.php?unban_user=<?php echo $user['id']; ?>" class="btn btn-success btn-sm" title="Unban User"><i class="bi bi-check-circle"></i></a>
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -131,6 +162,54 @@
     </div>
     <div class="card mb-4 ms-4" style="min-height: 200px;">
         <h5 class="card-title">Recent Activity</h5>
+        <div class="scrollableContainer" style="max-height: 300px;">
+            <?php foreach (getRecentActivity() as $event): ?>
+            <div class="activityEntry">
+                <?php if ($event['type'] === 'signup'): ?>
+                    <span class="badge bg-success">Sign-up</span>
+                <?php else: ?>
+                    <span class="badge bg-danger">Report</span>
+                <?php endif; ?>
+                <span class="activityEmail"><?php echo htmlspecialchars($event['email']); ?></span>
+                <?php if ($event['extra']): ?>
+                    <span class="activityExtra">— <?php echo htmlspecialchars($event['extra']); ?></span>
+                <?php endif; ?>
+                <span class="activityTime"><?php echo date("M d, g:ia", strtotime($event['created_at'])); ?></span>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- User Action Modal -->
+<div class="modal fade" id="actionModal" tabindex="-1" aria-labelledby="actionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="actionModalLabel">User Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Select an action for: <strong id="actionUserEmail"></strong></p>
+                <div id="suspendOptions" style="display:none;" class="mt-2">
+                    <label class="form-label">Suspension Duration:</label>
+                    <select class="form-select" id="suspendDays">
+                        <option value="1">1 Day</option>
+                        <option value="3">3 Days</option>
+                        <option value="7" selected>7 Days</option>
+                        <option value="14">14 Days</option>
+                        <option value="30">30 Days</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" id="suspendBtn">Suspend</button>
+                <button type="button" class="btn btn-danger" id="banBtn">Ban</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -227,5 +306,39 @@ document.getElementById('userSearch').addEventListener('input', function () {
         const text = entry.querySelector('.listNewUser').textContent.toLowerCase();
         entry.style.display = text.includes(query) ? '' : 'none';
     });
+});
+</script>
+
+<script>
+let actionUserId = null;
+let actionModal = null;
+
+function openActionModal(userId, userEmail) {
+    actionUserId = userId;
+    document.getElementById('actionUserEmail').textContent = userEmail;
+    document.getElementById('suspendOptions').style.display = 'none';
+    document.getElementById('suspendBtn').textContent = 'Suspend';
+
+    if (!actionModal) {
+        actionModal = new bootstrap.Modal(document.getElementById('actionModal'));
+    }
+    actionModal.show();
+}
+
+document.getElementById('suspendBtn').addEventListener('click', function () {
+    const suspendOptions = document.getElementById('suspendOptions');
+    if (suspendOptions.style.display === 'none') {
+        suspendOptions.style.display = 'block';
+        this.textContent = 'Confirm Suspend';
+    } else {
+        const days = document.getElementById('suspendDays').value;
+        window.location.href = `/pages/admin_panel.php?suspend_user=${actionUserId}&days=${days}`;
+    }
+});
+
+document.getElementById('banBtn').addEventListener('click', function () {
+    if (confirm(`Are you sure you want to permanently ban this user?`)) {
+        window.location.href = `/pages/admin_panel.php?ban_user=${actionUserId}`;
+    }
 });
 </script>   

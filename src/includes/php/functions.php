@@ -441,6 +441,7 @@ function getRecentReports($limit = 5) {
 			u.email AS reported_email
 		FROM reports r
 		JOIN users u ON r.reported_id = u.id
+		WHERE r.status = 'PENDING'	
 		ORDER BY r.created_at DESC
 		LIMIT $limit
 	");
@@ -448,6 +449,22 @@ function getRecentReports($limit = 5) {
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+function getRecentActivity($limit = 15) {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT type, ref_id, email, extra, created_at FROM (
+            (SELECT 'signup' AS type, id AS ref_id, email, NULL AS extra, created_at FROM users ORDER BY created_at DESC LIMIT :limit)
+            UNION ALL
+            (SELECT 'report' AS type, r.report_id AS ref_id, u.email, r.reason AS extra, r.created_at FROM reports r JOIN users u ON r.reported_id = u.id ORDER BY r.created_at DESC LIMIT :limit)
+        ) combined
+        ORDER BY created_at DESC
+        LIMIT :limit
+    ");
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 function getNextPassport(PDO $pdo, $userId) {
 	$stmt = $pdo->prepare("SELECT user_id, profile_picture, first_name, last_name, country, date_of_birth, bio 
@@ -510,4 +527,106 @@ function getLikes(PDO $pdo, $userId): array {
 		$profile['age'] = $today->diff(new DateTime($profile['date_of_birth']))->y;
 	}
 	return $likes;
+}
+
+function banUser($targetId) {
+    global $pdo;
+    $adminId = $_SESSION['user_id'];
+
+    if ($targetId == $adminId) {
+        return ['success' => false, 'error' => 'You cannot ban yourself.'];
+    }
+
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET account_status = 'BANNED' WHERE id = :id");
+        $stmt->execute([':id' => $targetId]);
+
+        $stmt = $pdo->prepare("
+            INSERT INTO banned_users (target_id, admin_id)
+            SELECT :target_id, :admin_id
+            WHERE NOT EXISTS (
+                SELECT 1 FROM banned_users WHERE target_id = :target_id
+            )
+        ");
+        $stmt->execute([':target_id' => $targetId, ':admin_id' => $adminId]);
+
+		$stmnt = $pdo->prepare("UPDATE reports SET status = 'RESOLVED' WHERE reported_id = :id");
+		$stmnt->execute([':id' => $targetId]);
+
+
+        return ['success' => true];
+    } catch (PDOException $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+function suspendUser($targetId, $days) {
+    global $pdo;
+    $adminId = $_SESSION['user_id'];
+
+    if ($targetId == $adminId) {
+        return ['success' => false, 'error' => 'You cannot suspend yourself.'];
+    }
+
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET account_status = 'SUSPENDED' WHERE id = :id");
+        $stmt->execute([':id' => $targetId]);
+        return ['success' => true];
+    } catch (PDOException $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+function unbanUser($targetId) {
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("UPDATE users SET account_status = 'ACTIVE' WHERE id = :id");
+        $stmt->execute([':id' => $targetId]);
+
+        $stmt = $pdo->prepare("DELETE FROM banned_users WHERE target_id = :id");
+        $stmt->execute([':id' => $targetId]);
+
+        return ['success' => true];
+    } catch (PDOException $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+function resolveReport($reportId) {
+    global $pdo;
+
+    try {
+        $stmt = $pdo->prepare("UPDATE reports SET status = 'RESOLVED' WHERE report_id = :id");
+        $stmt->execute([':id' => $reportId]);
+        return ['success' => true];
+    } catch (PDOException $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
+}
+
+function getProfileInfoById($userId) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM profiles WHERE user_id = ?");
+    $stmt->execute([$userId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getPreferenceInfoById($userId) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM preferences WHERE id = ?");
+    $stmt->execute([$userId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getUserInterestsById($userId) {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT interests.name
+        FROM user_interests
+        JOIN interests ON user_interests.interest_id = interests.id
+        WHERE user_interests.user_id = ?
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
