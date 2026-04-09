@@ -1,3 +1,12 @@
+.welcome-banner {
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
 #chatbox-container {
     position: fixed;
     bottom: 20px;

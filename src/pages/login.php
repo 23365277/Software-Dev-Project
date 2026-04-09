@@ -9,6 +9,19 @@
 		header('Location: /pages/home.php');
 	}
 
+	// Auto-login from remember me cookie
+	if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
+		$user = getUserByRememberToken($_COOKIE['remember_me']);
+		if ($user) {
+			$_SESSION['user_id']    = $user['id'];
+			$_SESSION['user_email'] = $user['email'];
+			header('Location: /pages/home.php');
+			exit();
+		} else {
+			setcookie('remember_me', '', time() - 1, '/', '', true, true);
+		}
+	}
+
 	if (isset($_POST['login'])) {
 		$email = $_POST['email'];
 		$password = $_POST['password'];
@@ -16,6 +29,15 @@
 		$user_id = verifyLogin($email, $password);
 		if($user_id){
 			$_SESSION["email"] = $email;
+			$profile = getProfileInfoById($user_id);
+			$firstName = $profile['first_name'] ?? '';
+			if ($firstName) {
+				setcookie('user_name', $firstName, time() + (30 * 24 * 60 * 60), '/', '', true, false);
+			}
+			if (!empty($_POST['remember_me'])) {
+				$token = setRememberToken($user_id);
+				setcookie('remember_me', $token, time() + (30 * 24 * 60 * 60), '/', '', true, true);
+			}
 			header('Location: /pages/home.php');
 			exit();
 		} else {
@@ -52,6 +74,9 @@
         <form method="POST" action="">
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
+            <label style="display:flex; align-items:center; gap:8px; font-size:0.9em; margin:4px 0;">
+                <input type="checkbox" name="remember_me" value="1"> Remember me
+            </label>
 			<button type="submit" name="login" class="btn btn-secondary btn-signup">Log In</button>
             <!-- <button type="button" name="signup" class="btn btn-primary btn-signup">Sign Up</button> -->
         </form>

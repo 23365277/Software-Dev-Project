@@ -12,6 +12,12 @@ $pageCSS = "/assets/css/messaging.css";
 include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 ?>
 
+<?php if (isset($_SESSION['user_id']) && !empty($_COOKIE['user_name'])): ?>
+<div class="welcome-banner">
+    Welcome back, <?php echo htmlspecialchars($_COOKIE['user_name']); ?>!
+</div>
+<?php endif; ?>
+
 <div class="container col-12 row">
     <div class="card col-lg-4 col-md-6 col-sm-12">
         <h2 class="matches center-text">Matches and Likes</h2>

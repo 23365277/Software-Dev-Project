@@ -2,6 +2,24 @@
 if(session_status() == PHP_SESSION_NONE){
 	session_start();
 }
+
+if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    $user = getUserByRememberToken($_COOKIE['remember_me']);
+    if ($user) {
+        $_SESSION['user_id']    = $user['id'];
+        $_SESSION['user_email'] = $user['email'];
+        if (!isset($_COOKIE['user_name'])) {
+            $profile = getProfileInfoById($user['id']);
+            $firstName = $profile['first_name'] ?? '';
+            if ($firstName) {
+                setcookie('user_name', $firstName, time() + (30 * 24 * 60 * 60), '/', '', true, false);
+            }
+        }
+    } else {
+        setcookie('remember_me', '', time() - 1, '/', '', true, true);
+    }
+}
 ?>
 
 <!DOCTYPE html>

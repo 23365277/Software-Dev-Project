@@ -213,9 +213,38 @@ function verifyLogin($email, $password) {
     if ($user && password_verify($password, $user['password_hash'])){
 	    $_SESSION["user_id"] = $user["id"];
 	    $_SESSION["user_email"] = $user["email"];
-        return true;
+        return $user["id"];
     }
     return false;
+}
+
+function setRememberToken($userId) {
+    global $pdo;
+    $token = bin2hex(random_bytes(32));
+    $hash  = hash('sha256', $token);
+    $expires = date('Y-m-d H:i:s', strtotime('+30 days'));
+    $stmt = $pdo->prepare("INSERT INTO remember_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)");
+    $stmt->execute([$userId, $hash, $expires]);
+    return $token;
+}
+
+function getUserByRememberToken($token) {
+    global $pdo;
+    $hash = hash('sha256', $token);
+    $stmt = $pdo->prepare("
+        SELECT u.id, u.email FROM users u
+        JOIN remember_tokens rt ON rt.user_id = u.id
+        WHERE rt.token_hash = ? AND rt.expires_at > NOW()
+    ");
+    $stmt->execute([$hash]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function deleteRememberToken($token) {
+    global $pdo;
+    $hash = hash('sha256', $token);
+    $stmt = $pdo->prepare("DELETE FROM remember_tokens WHERE token_hash = ?");
+    $stmt->execute([$hash]);
 }
 
 function sendMessage($sender_id, $receiver_id, $message){
