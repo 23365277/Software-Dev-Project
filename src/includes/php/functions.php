@@ -508,22 +508,6 @@ function getRecentActivity($limit = 15) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getRecentActivity($limit = 15) {
-    global $pdo;
-    $stmt = $pdo->prepare("
-        SELECT type, ref_id, email, extra, created_at FROM (
-            (SELECT 'signup' AS type, id AS ref_id, email, NULL AS extra, created_at FROM users ORDER BY created_at DESC LIMIT :limit)
-            UNION ALL
-            (SELECT 'report' AS type, r.report_id AS ref_id, u.email, r.reason AS extra, r.created_at FROM reports r JOIN users u ON r.reported_id = u.id ORDER BY r.created_at DESC LIMIT :limit)
-        ) combined
-        ORDER BY created_at DESC
-        LIMIT :limit
-    ");
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
 function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 
 	$preferences = getPreferenceInfo($pdo, $userId);
