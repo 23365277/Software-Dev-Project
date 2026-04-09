@@ -167,12 +167,23 @@
             <div class="activityEntry">
                 <?php if ($event['type'] === 'signup'): ?>
                     <span class="badge bg-success">Sign-up</span>
+                <?php elseif ($event['type'] === 'contact'): ?>
+                    <span class="badge bg-primary">Contact</span>
                 <?php else: ?>
                     <span class="badge bg-danger">Report</span>
                 <?php endif; ?>
                 <span class="activityEmail"><?php echo htmlspecialchars($event['email']); ?></span>
                 <?php if ($event['extra']): ?>
                     <span class="activityExtra">— <?php echo htmlspecialchars($event['extra']); ?></span>
+                <?php endif; ?>
+                <?php if ($event['type'] === 'contact' && $event['message']): ?>
+                    <?php
+                        $full    = $event['message'];
+                        $preview = mb_strlen($full) > 80 ? mb_substr($full, 0, 80) . '…' : $full;
+                    ?>
+                    <span class="activityExtra" title="<?php echo htmlspecialchars($full); ?>">
+                        "<?php echo htmlspecialchars($preview); ?>"
+                    </span>
                 <?php endif; ?>
                 <span class="activityTime"><?php echo date("M d, g:ia", strtotime($event['created_at'])); ?></span>
             </div>

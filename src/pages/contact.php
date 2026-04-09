@@ -21,13 +21,58 @@
         <div class="auth-box mt-4">
             <h2>Contact Form</h2>
             <hr>
-            <form method="POST">
-                <input type="text" name="name" placeholder="Name" required>
-                <input type="email" name="email" placeholder="Email" required>
+            <?php if (!isset($_SESSION['user_id'])): ?>
+                <p style="color:#fff; text-align:center; margin-top:16px;">
+                    You must be <a href="/pages/login.php">logged in</a> to contact support.
+                </p>
+            <?php else: ?>
+            <form id="contact-form">
+                <div id="contact-error" style="display:none; background:#fee2e2; color:#b91c1c; padding:10px; border-radius:5px; font-size:0.9em;"></div>
+                <div id="contact-success" style="display:none; background:#dcfce7; color:#15803d; padding:10px; border-radius:5px; font-size:0.9em;"></div>
                 <input type="text" name="subject" placeholder="Subject" required>
-                <textarea name="message" placeholder="Your Message" rows="5"></textarea>
-                <button type="submit" class="btn-signup">Send Message</button>
+                <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                <button type="submit" id="contact-btn" class="btn-signup">Send Message</button>
             </form>
+            <script>
+            document.getElementById('contact-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const errorDiv   = document.getElementById('contact-error');
+                const successDiv = document.getElementById('contact-success');
+                const btn        = document.getElementById('contact-btn');
+
+                errorDiv.style.display   = 'none';
+                successDiv.style.display = 'none';
+                btn.disabled             = true;
+                btn.textContent          = 'Sending...';
+
+                const body = new URLSearchParams({
+                    subject: this.subject.value,
+                    message: this.message.value
+                });
+
+                try {
+                    const res  = await fetch('/actions/contact_action.php', { method: 'POST', body });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        successDiv.textContent   = 'Message sent! We\'ll get back to you soon.';
+                        successDiv.style.display = 'block';
+                        this.reset();
+                    } else {
+                        errorDiv.textContent   = data.error;
+                        errorDiv.style.display = 'block';
+                    }
+                } catch (err) {
+                    errorDiv.textContent   = 'A network error occurred. Please try again.';
+                    errorDiv.style.display = 'block';
+                } finally {
+                    btn.disabled    = false;
+                    btn.textContent = 'Send Message';
+                }
+            });
+            </script>
+            <?php endif; ?>
         </div>
     </div>
 

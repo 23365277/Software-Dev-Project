@@ -525,10 +525,12 @@ function getRecentReports($limit = 5) {
 function getRecentActivity($limit = 15) {
     global $pdo;
     $stmt = $pdo->prepare("
-        SELECT type, ref_id, email, extra, created_at FROM (
-            (SELECT 'signup' AS type, id AS ref_id, email, NULL AS extra, created_at FROM users ORDER BY created_at DESC LIMIT :limit)
+        SELECT type, ref_id, email, extra, message, created_at FROM (
+            (SELECT 'signup' AS type, id AS ref_id, email, NULL AS extra, NULL AS message, created_at FROM users ORDER BY created_at DESC LIMIT :limit)
             UNION ALL
-            (SELECT 'report' AS type, r.report_id AS ref_id, u.email, r.reason AS extra, r.created_at FROM reports r JOIN users u ON r.reported_id = u.id ORDER BY r.created_at DESC LIMIT :limit)
+            (SELECT 'report' AS type, r.report_id AS ref_id, u.email, r.reason AS extra, NULL AS message, r.created_at FROM reports r JOIN users u ON r.reported_id = u.id ORDER BY r.created_at DESC LIMIT :limit)
+            UNION ALL
+            (SELECT 'contact' AS type, c.id AS ref_id, u.email, c.subject AS extra, c.message AS message, c.created_at FROM contact_admin c JOIN users u ON c.contacter_id = u.id ORDER BY c.created_at DESC LIMIT :limit)
         ) combined
         ORDER BY created_at DESC
         LIMIT :limit
