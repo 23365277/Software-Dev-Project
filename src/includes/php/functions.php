@@ -435,7 +435,17 @@ function getRecentReports($limit = 5) {
 
 
 function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
-	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio 
+
+	$preferences = getPreferenceInfo($pdo, $userId);
+	
+	if (!$preferences) {
+		$preferences = [
+			'age' => null,
+			'gender' => null
+		];
+	}
+
+	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio, p.gender
 	FROM profiles p 
 	LEFT JOIN user_trips ut ON ut.user_id = p.user_id
     LEFT JOIN trips t ON t.id = ut.trips_id
@@ -449,14 +459,20 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		FROM blocks b 
 		WHERE b.blocker_id = :userId)
 	AND (:trip_country IS NULL OR t.location = :trip_country)
+	AND p.gender = :preferred_gender
+	AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) = :age
         ORDER BY RAND()
         LIMIT 1
     ");
 
-    $stmt->execute([
-        ':userId' => $userId,
-        ':trip_country' => $tripCountry
-    ]);
+	$params = [
+		':userId' => $userId,
+		':trip_country' => $tripCountry,
+		':preferred_gender' => $preferences['gender'] ?? null,
+		':age' => $preferences['age'] ?? null
+	];
+
+    $stmt->execute($params);
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
