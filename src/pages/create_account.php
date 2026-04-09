@@ -61,7 +61,7 @@
     <input type="text" name="password" placeholder="Password" required>
     <input type="text" name="first_name" placeholder="First Name" required>
     <input type="text" name="last_name" placeholder="Last Name" required>
-    <input type="date" name="date_of_birth" placeholder="Date of Birth" required>
+    <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" required>
   </div>
 
   <div class="tab">

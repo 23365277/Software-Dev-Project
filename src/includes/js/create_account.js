@@ -35,6 +35,27 @@ function nextPrev(n) {
     showTab(currentTab);
 }
 
+// function validateForm() {
+//     let valid = true;
+//     const x = document.getElementsByClassName("tab");
+//     const inputs = x[currentTab].querySelectorAll("input, select, textarea");
+
+//     inputs.forEach(input => {
+//         if (input.hasAttribute("required") && input.value.trim() === "") {
+//             input.classList.add("invalid");
+//             valid = false;
+//         } else {
+//             input.classList.remove("invalid");
+//         }
+//     });
+
+//     if (!valid) {
+//         alert("Please fill all required fields.");
+//     }
+
+//     return valid;
+// }
+
 function validateForm() {
     let valid = true;
     const x = document.getElementsByClassName("tab");
@@ -46,6 +67,22 @@ function validateForm() {
             valid = false;
         } else {
             input.classList.remove("invalid");
+        }
+
+        if (input.type === "date" && input.id === "dob") {
+            const dob = new Date(input.value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+
+            if (age < 18) {
+                alert("You must be at least 18 years old to register.");
+                input.classList.add("invalid");
+                valid = false;
+            }
         }
     });
 
