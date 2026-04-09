@@ -211,6 +211,7 @@ function updateProfile($value, $column){
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
+        session_regenerate_id(true);
 	    $_SESSION["user_id"] = $user["id"];
 	    $_SESSION["user_email"] = $user["email"];
         return $user["id"];
