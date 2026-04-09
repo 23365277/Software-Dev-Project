@@ -3,8 +3,6 @@
 
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
-	$error = '';
-
 	if (isset($_SESSION['user_id'])){
 		header('Location: /pages/home.php');
 	}
@@ -19,29 +17,6 @@
 			exit();
 		} else {
 			setcookie('remember_me', '', time() - 1, '/', '', true, true);
-		}
-	}
-
-	if (isset($_POST['login'])) {
-		$email = $_POST['email'];
-		$password = $_POST['password'];
-
-		$user_id = verifyLogin($email, $password);
-		if($user_id){
-			$_SESSION["email"] = $email;
-			$profile = getProfileInfoById($user_id);
-			$firstName = $profile['first_name'] ?? '';
-			if ($firstName) {
-				setcookie('user_name', $firstName, time() + (30 * 24 * 60 * 60), '/', '', true, false);
-			}
-			if (!empty($_POST['remember_me'])) {
-				$token = setRememberToken($user_id);
-				setcookie('remember_me', $token, time() + (30 * 24 * 60 * 60), '/', '', true, true);
-			}
-			header('Location: /pages/home.php');
-			exit();
-		} else {
-			$error = "Something went wrong, please try again.";
 		}
 	}
 
@@ -71,15 +46,53 @@
     <div class="auth-box mt-4">
         <h2>Join Roamance</h2>
         <hr>
-        <form method="POST" action="">
+        <form id="login-form">
+            <div id="login-error" style="display:none; background:#fee2e2; color:#b91c1c; padding:10px; border-radius:5px; font-size:0.9em;"></div>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <label style="display:flex; align-items:center; gap:8px; font-size:0.9em; margin:4px 0;">
                 <input type="checkbox" name="remember_me" value="1"> Remember me
             </label>
-			<button type="submit" name="login" class="btn btn-secondary btn-signup">Log In</button>
-            <!-- <button type="button" name="signup" class="btn btn-primary btn-signup">Sign Up</button> -->
+            <button type="submit" id="login-btn" class="btn btn-secondary btn-signup">Log In</button>
         </form>
+
+        <script>
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const errorDiv = document.getElementById('login-error');
+            const btn      = document.getElementById('login-btn');
+
+            errorDiv.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+
+            const body = new URLSearchParams({
+                email:       this.email.value,
+                password:    this.password.value,
+                remember_me: this.remember_me.checked ? '1' : ''
+            });
+
+            try {
+                const res  = await fetch('/actions/login_action.php', { method: 'POST', body });
+                const data = await res.json();
+
+                if (data.success) {
+                    window.location.href = '/pages/home.php';
+                } else {
+                    errorDiv.textContent    = data.error;
+                    errorDiv.style.display  = 'block';
+                    btn.disabled            = false;
+                    btn.textContent         = 'Log In';
+                }
+            } catch (err) {
+                errorDiv.textContent   = 'A network error occurred. Please try again.';
+                errorDiv.style.display = 'block';
+                btn.disabled           = false;
+                btn.textContent        = 'Log In';
+            }
+        });
+        </script>
     </div>
 </div>
 
