@@ -166,6 +166,48 @@ function getUserInterests() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function updatePreferences($value, $column){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+        return false;
+    }
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("
+		UPDATE preferences
+		SET $column = :value
+		WHERE id = :user_id
+	");
+
+	$stmt->execute([
+		':value' => $value,
+		':user_id' => $userId
+	]);
+}
+
+function updateProfile($value, $column){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+        return false;
+    }
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("
+		UPDATE profiles
+		SET $column = :value
+		WHERE user_id = :user_id
+	");
+
+	$stmt->execute([
+		':value' => $value,
+		':user_id' => $userId
+	]);
+}
+
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
