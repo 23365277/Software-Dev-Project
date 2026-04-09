@@ -5,9 +5,16 @@
 
     $visitedCountries = [];
     if (isset($_SESSION['user_id'])) {
-        $stmt = $pdo->prepare("SELECT t.location FROM user_trips ut JOIN trips t ON ut.trips_id = t.id WHERE ut.user_id = :user_id");
+        $stmt = $pdo->prepare("SELECT d. location FROM user_destinations ud JOIN destinations d ON ud.destination_id = d.id WHERE ud.user_id = :user_id");
         $stmt->execute([':user_id' => $_SESSION['user_id']]);
         $visitedCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    $tripsCountries = [];
+    if (isset($_SESSION['user_id'])) {
+        $stmt = $pdo->prepare("SELECT t.location FROM user_trips ut JOIN trips t ON ut.trips_id = t.id WHERE ut.user_id = :user_id");
+        $stmt->execute([':user_id' => $_SESSION['user_id']]);
+        $tripsCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
 ?>
@@ -41,6 +48,7 @@
 let map;
 let marker;
 const visitedCountries = <?php echo json_encode($visitedCountries); ?>;
+const tripsCountries = <?php echo json_encode($tripsCountries); ?>;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -51,13 +59,25 @@ function initMap() {
     map.data.setStyle((feature) => {
         const country = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
         const visited = visitedCountries.includes(country);
+        const planned = tripsCountries.includes(country);
         return {
-            fillColor: visited ? "green" : "gray",
-            fillOpacity: visited ? 0.7 : 0.25,
+            fillColor: visited ? "green" : planned ? "yellow" : "gray",
+            fillOpacity: visited || planned ? 0.7 : 0.25,
             strokeColor: "black",
             strokeWeight: 1,
             clickable: true
         };
+    });
+
+    map.data.addListener('click', (event) => {
+        const country =
+            event.feature.getProperty('ADMIN') ||
+            event.feature.getProperty('name') ||
+            event.feature.getProperty('NAME');
+
+        if (!country) return;
+
+        window.location.href = "/pages/testfile.php?trip_country=" + encodeURIComponent(country);
     });
 
     map.data.loadGeoJson('/assets/data/countries.geojson');

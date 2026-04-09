@@ -16,6 +16,20 @@
         $interestNames = array_column($interests ?? [], 'name');
         $interestString = !empty($interestNames) ? implode(', ', $interestNames) : 'No interests added';
 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $value = $_POST['value'] ?? '';
+            $column = $_POST['column'] ?? '';
+            $table = $_POST['table'] ?? '';
+
+            if ($table === 'preferences') {
+                updatePreferences($value, $column);
+            } elseif ($table === 'profile') {
+                updateProfile($value, $column);
+            } else {
+                die("Invalid table");
+            }
+        }
+    
 	$pageTitle = "Roamance - Profile View";
 	$pageCSS = "/assets/css/profile_view.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
@@ -30,24 +44,26 @@
 
     <div class="profile-card shadow">
         <div class="profile-header">
-            <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2> <button>Edit</button>
+            <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2>
             <p class="text-muted">
-                <?= htmlspecialchars(($profile['city'] ?? '') . ', ' . ($profile['country'] ?? '')) ?> <button>Edit</button>
+                <?= htmlspecialchars(($profile['city'] ?? '') . ', ' . ($profile['country'] ?? '')) ?>
             </p>
         </div>
 
         <p class="profile-bio">
-            <?= htmlspecialchars($profile['bio'] ?? 'No bio yet') ?> <button>Edit</button>
+            <?= htmlspecialchars($profile['bio'] ?? 'No bio yet') ?> <button type="button" onclick="onEdit('bio', 'profile')">Edit</button>
         </p>
     </div>
 
     <div class="tab" id="editBtn">
-        <form class="auth-form">
+        <form class="auth-form" method="POST" action="">
             <div class="form-header">
                 <h2>Edit</h2>
                 <button type="button" class="cancel-btn" onclick="cancel()">X</button>
             </div>
+            <input type="hidden" name="column" id="columnInput">
             <input type=text name="value" placeholder="Edit">
+            <input type="hidden" name="table" id="tableInput">
             <button type="submit">Edit</button>
         </form>
     </div>
@@ -57,42 +73,42 @@
         <div class="col-md-4">
             <div class="info-box">
                 <strong>DOB</strong>
-                <p><?= htmlspecialchars($profile['date_of_birth'] ?? '') ?></p> <button>Edit</button>
+                <p><?= htmlspecialchars($profile['date_of_birth'] ?? '') ?></p> <button type="button" onclick="onEdit('date_of_birth', 'profile')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Gender</strong>
-                <p><?= htmlspecialchars($profile['gender'] ?? '') ?></p> <button type="button" onclick="onEdit()">Edit</button>
+                <p><?= htmlspecialchars($profile['gender'] ?? '') ?></p> <button type="button" onclick="onEdit('gender', 'profile')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Height</strong>
-                <p><?= htmlspecialchars(($profile['height_cm'] ?? '') . ' cm') ?></p> <button>Edit</button>
+                <p><?= htmlspecialchars(($profile['height_cm'] ?? '') . ' cm') ?></p> <button type="button" onclick="onEdit('height_cm', 'profile')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Looking For</strong>
-                <p><?= htmlspecialchars($profile['looking_for'] ?? '') ?></p> <button>Edit</button>
+                <p><?= htmlspecialchars($profile['looking_for'] ?? '') ?></p> <button type="button" onclick="onEdit('looking_for', 'profile')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Preferred Age</strong>
-                <p><?= htmlspecialchars($preferences['age'] ?? '') ?></p> <button>Edit</button>
+                <p><?= htmlspecialchars($preferences['age'] ?? '') ?></p> <button type="button" onclick="onEdit('age', 'preferences')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Preferred Gender</strong>
-                <p><?= htmlspecialchars($preferences['gender'] ?? '') ?></p> <button>Edit</button>
+                <p><?= htmlspecialchars($preferences['gender'] ?? '') ?></p> <button type="button" onclick="onEdit('gender', 'preferences')">Edit</button>
             </div>
         </div>
 
@@ -106,9 +122,9 @@
                     <span class="interest-tag">
                         <?= htmlspecialchars($interest['name']) ?>
                     </span>
-                <?php endforeach; ?> <button>Edit</button>
+                <?php endforeach; ?> <button type="button" onclick="onEdit()">Edit</button>
             <?php else: ?>
-                <p>No interests added</p> <button>Edit</button>
+                <p>No interests added</p> <button type="button" onclick="onEdit()">Edit</button>
             <?php endif; ?>
         </div>
     </div>

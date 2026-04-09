@@ -1,27 +1,39 @@
 <?php
 $userId = $_SESSION["user_id"];
-$user = getNextPassport($pdo, $userId);
-$currentProfileId = $user['user_id'];
-$profileImage = $user['profile_picture'];
-$firstName = $user['first_name'];
-$lastName = $user['last_name'];
-$country = $user['country'];
-$age = $user['age'];
-$bio = $user['bio'];
-$stamps = [
-    ["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "0"],
-    ["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "6"],
-    ["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "1"],
-   ["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
-   ["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
-    ["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],
-   ["country" => "Germany", "icon" => "🇩🇪", "date" => "2024-07-04"],
-   ["country" => "Spain", "icon" => "🇪🇸", "date" => "2023-11-15"],
-    ["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
-    ["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
-];
-$galleryImages = $user['galleryImages'];
+$user = getNextPassport($pdo, $userId, $selectedCountry);
 
+if (!$user) {
+    $currentProfileId = null;
+    $profileImage = "";
+    $firstName = "";
+    $lastName = "";
+    $country = "";
+    $age = "";
+    $bio = "";
+    $galleryImages = [];
+	$stamps = [];
+} else {
+	$currentProfileId = $user['user_id'];
+	$profileImage = $user['profile_picture'];
+	$firstName = $user['first_name'];
+	$lastName = $user['last_name'];
+	$country = $user['country'];
+	$age = $user['age'];
+	$bio = $user['bio'];
+	$stamps = [
+		["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "0"],
+		["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "6"],
+		["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "1"],
+	["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
+	["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
+		["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],
+	["country" => "Germany", "icon" => "🇩🇪", "date" => "2024-07-04"],
+	["country" => "Spain", "icon" => "🇪🇸", "date" => "2023-11-15"],
+		["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
+		["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
+	];
+	$galleryImages = $user['galleryImages'];
+}
 ?>
 
 <link rel="stylesheet" href="/assets/css/passport.css">
@@ -29,6 +41,12 @@ $galleryImages = $user['galleryImages'];
 <div class="passport-wrapper mx-auto">
 	<div class="cover"></div>
 		<div class="passport position-relative mx-auto">
+			<?php if ($currentProfileId===null): ?>
+				<div class="noProfileOverlay" id="noProfileOverlay" style="<?= $currentProfileId !== null ? 'display:none;' : '' ?>">
+					<p>No more profiles available</p>
+					<p>Try adjusting your preferences or check back later!</p>
+				</div>
+			<?php endif; ?>
 			<div id="approvedStamp" class="stamp_overlay approved">
 				<img src="/assets/images/approved_stamp.svg" alt="Approved Stamp">
 			</div>
@@ -83,12 +101,10 @@ $galleryImages = $user['galleryImages'];
 							</div>
 							<div class="body">
 								<div class="BioDest">
-									<?php if($bio): ?>
-											<div class="bio">
-												<p class="heading">TRAVELLER BIO</p>
-												<p class="body-text"><?= $bio ?></p>
-											</div>
-									<?php endif; ?>
+									<div class="bio">
+										<p class="heading">TRAVELLER BIO</p>
+										<p class="body-text"><?= $bio ?></p>
+									</div>
 									<div class="dest">
 											<p class="heading">PLANNED TRIPS</p>
 											<p class="body-text">France • 6 Months</p>

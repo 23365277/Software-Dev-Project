@@ -166,6 +166,48 @@ function getUserInterests() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function updatePreferences($value, $column){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+        return false;
+    }
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("
+		UPDATE preferences
+		SET $column = :value
+		WHERE id = :user_id
+	");
+
+	$stmt->execute([
+		':value' => $value,
+		':user_id' => $userId
+	]);
+}
+
+function updateProfile($value, $column){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+        return false;
+    }
+
+	$userId = $_SESSION["user_id"];
+
+	$stmt = $pdo->prepare("
+		UPDATE profiles
+		SET $column = :value
+		WHERE user_id = :user_id
+	");
+
+	$stmt->execute([
+		':value' => $value,
+		':user_id' => $userId
+	]);
+}
+
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){
@@ -466,9 +508,37 @@ function getRecentActivity($limit = 15) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getNextPassport(PDO $pdo, $userId) {
-	$stmt = $pdo->prepare("SELECT user_id, profile_picture, first_name, last_name, country, date_of_birth, bio 
+function getRecentActivity($limit = 15) {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT type, ref_id, email, extra, created_at FROM (
+            (SELECT 'signup' AS type, id AS ref_id, email, NULL AS extra, created_at FROM users ORDER BY created_at DESC LIMIT :limit)
+            UNION ALL
+            (SELECT 'report' AS type, r.report_id AS ref_id, u.email, r.reason AS extra, r.created_at FROM reports r JOIN users u ON r.reported_id = u.id ORDER BY r.created_at DESC LIMIT :limit)
+        ) combined
+        ORDER BY created_at DESC
+        LIMIT :limit
+    ");
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
+
+	$preferences = getPreferenceInfo($pdo, $userId);
+	
+	if (!$preferences) {
+		$preferences = [
+			'age' => null,
+			'gender' => null
+		];
+	}
+
+	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio, p.gender
 	FROM profiles p 
+	LEFT JOIN user_trips ut ON ut.user_id = p.user_id
+    LEFT JOIN trips t ON t.id = ut.trips_id
 	WHERE p.user_id != :userId 
 	AND p.user_id NOT IN ( 
 		SELECT l.receiver_id 
@@ -477,10 +547,28 @@ function getNextPassport(PDO $pdo, $userId) {
 	AND p.user_id NOT IN ( 
 		SELECT b.blocked_id 
 		FROM blocks b 
-		WHERE b.blocker_id = :userId) 
-	ORDER BY RAND() LIMIT 1");	
-	$stmt->execute(['userId' => $userId]);
-	$user = $stmt->fetch(PDO::FETCH_ASSOC);
+		WHERE b.blocker_id = :userId)
+	AND (:trip_country IS NULL OR t.location = :trip_country)
+	AND p.gender = :preferred_gender
+	AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) = :age
+        ORDER BY RAND()
+        LIMIT 1
+    ");
+
+	$params = [
+		':userId' => $userId,
+		':trip_country' => $tripCountry,
+		':preferred_gender' => $preferences['gender'] ?? null,
+		':age' => $preferences['age'] ?? null
+	];
+
+    $stmt->execute($params);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return null;
+    }
 
 	$today = new DateTime();
 	$user['age'] = $today->diff(new DateTime($user['date_of_birth']))->y;
