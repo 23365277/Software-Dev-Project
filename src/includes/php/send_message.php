@@ -30,6 +30,13 @@ if (!$message || !$receiver_id) {
     exit;
 }
 
+// Block phone numbers
+if (preg_match('/(\+?\d[\s\-.()\[\]]{0,3}){7,}/', $message)) {
+    http_response_code(422);
+    echo json_encode(['error' => 'Phone numbers are not allowed in messages']);
+    exit;
+}
+
 // Try to send the message
 try {
     sendMessage($sender_id, $receiver_id, $message);

@@ -28,6 +28,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
                 </div>
             </div>
             <?php if(isset($_SESSION['user_id'])): ?>
+            <div id="home-error"></div>
             <div id="home-input-area">
                 <input type="text" id="home-msg-input" placeholder="Type your message..." disabled>
                 <button id="home-msg-send" disabled>Send</button>
@@ -57,6 +58,17 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
     const homeMessagesEl = document.getElementById('home-messages-area');
     const homeInputEl    = document.getElementById('home-msg-input');
     const homeSendBtn    = document.getElementById('home-msg-send');
+    const homeErrorDiv   = document.getElementById('home-error');
+    let homeErrorTimeout = null;
+
+    const HOME_PHONE_REGEX = /(\+?\d[\s\-.()\[\]]{0,3}){7,}/;
+
+    function homeShowError(msg) {
+        homeErrorDiv.textContent = msg;
+        homeErrorDiv.classList.add('visible');
+        clearTimeout(homeErrorTimeout);
+        homeErrorTimeout = setTimeout(() => homeErrorDiv.classList.remove('visible'), 3000);
+    }
 
     async function homeLoadContacts() {
         try {
@@ -123,6 +135,12 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
         if (!homeCurrentContact) return;
         const message = homeInputEl.value.trim();
         if (!message) return;
+
+        if (HOME_PHONE_REGEX.test(message)) {
+            homeShowError('Phone numbers are not allowed in messages.');
+            return;
+        }
+
         fetch('/includes/php/send_message.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

@@ -89,10 +89,26 @@ function fetchMessages() {
 }
 
 
+const PHONE_REGEX = /(\+?\d[\s\-.()\[\]]{0,3}){7,}/;
+const errorDiv = document.getElementById("chatbox-error");
+let errorTimeout = null;
+
+function showError(msg) {
+    errorDiv.textContent = msg;
+    errorDiv.classList.add("visible");
+    clearTimeout(errorTimeout);
+    errorTimeout = setTimeout(() => errorDiv.classList.remove("visible"), 3000);
+}
+
 function collect_message() {
     if (!currentContact) return;
     const message = input.value.trim();
     if (!message) return;
+
+    if (PHONE_REGEX.test(message)) {
+        showError("Phone numbers are not allowed in messages.");
+        return;
+    }
 
     fetch("/includes/php/send_message.php", {
         method: "POST",

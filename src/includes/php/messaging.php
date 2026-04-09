@@ -22,6 +22,7 @@
                 <span>Select a contact to start chatting</span>
             </div>
         </div>
+        <div id="chatbox-error"></div>
         <div id="chatbox-input-area">
             <input type="text" id="chatbox-input" placeholder="Type your message..." disabled>
             <button id="chatbox-send" disabled>Send</button>
