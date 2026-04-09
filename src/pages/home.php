@@ -176,6 +176,5 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
 <?php endif; ?>
 
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/messaging.php";
 include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/login_welcome.php';
 ?>

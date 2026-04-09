@@ -4,7 +4,6 @@
 	$pageTitle = "Roamance - Post A Trip";
 	$pageCSS = "/assets/css/post_a_trip.css";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
-	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/messaging.php";
 ?>
 
 <div class="card col-12 my-4">
@@ -31,4 +30,4 @@
         </div>
     </div>
 </div>
-    
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

@@ -352,4 +352,5 @@ document.getElementById('banBtn').addEventListener('click', function () {
         window.location.href = `/pages/admin_panel.php?ban_user=${actionUserId}`;
     }
 });
-</script>   
+</script>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

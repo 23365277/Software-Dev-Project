@@ -110,3 +110,4 @@ function initMap() {
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2QU_U5Ck0fQvEFTE2RGDSEQAm1ITlcZU&libraries=places&callback=initMap" async defer></script>
 
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

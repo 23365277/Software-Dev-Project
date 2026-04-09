@@ -167,4 +167,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-</script>
+</script><?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

@@ -3,8 +3,6 @@
 	$pageCSS = "/assets/css/about.css";
 
 		include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
-	
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/messaging.php';
 ?>
 <!--<div class="container-fluid">
 <div class="row">
