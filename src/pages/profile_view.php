@@ -101,7 +101,8 @@
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Preferred Age</strong>
-                <p><?= htmlspecialchars($preferences['age'] ?? '') ?></p> <button type="button" onclick="onEdit('age', 'preferences')">Edit</button>
+                <p> Min:<?= htmlspecialchars($preferences['min_age'] ?? '') ?></p> <button type="button" onclick="onEdit('min_age', 'preferences')">Edit</button>
+                <p> Max:<?= htmlspecialchars($preferences['max_age'] ?? '') ?></p> <button type="button" onclick="onEdit('max_age', 'preferences')">Edit</button>
             </div>
         </div>
 
