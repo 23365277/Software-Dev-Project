@@ -39,7 +39,7 @@
 <div class="container mt-5">
     <div class="info-box">
         <h1>Welcome to Roamance</h1>
-        <p>Where wanderlust meets romance. Connect with fellow travel enthusiasts who share your passion for exploring the world.</p>
+        <p>Hello there Where wanderlust meets romance. Connect with fellow travel enthusiasts who share your passion for exploring the world.</p>
         <p>Find your perfect travel companion and create unforgettable memories together across the globe.</p>
     </div>
 
