@@ -173,7 +173,7 @@ let selectedCountry = <?= json_encode($selectedCountry) ?>;
 
 document.getElementById("resetTripPreferenceBtn").addEventListener("click", () => {
     selectedCountry = null;
-	
+
 	if (tripPreferenceAlert) {
 		tripPreferenceAlert.classList.add("hidden");
 	}
@@ -184,12 +184,17 @@ document.getElementById("resetTripPreferenceBtn").addEventListener("click", () =
 
 function showNoProfilesOverlay() {
 	const overlay = document.getElementById("noProfileOverlay");
-	overlay.classList.remove("hidden");
+	if (!overlay) {
+		return;
+	}
+	overlay.style.display = "flex";
+	overlay.classList.add("show");
 }
 
 function hideNoProfilesOverlay() {
 	const overlay = document.getElementById("noProfileOverlay");
-	overlay.classList.add("hidden");
+	overlay.style.display = "none";
+	overlay.classList.remove("show");
 }
 
 function loadNextPassport() {

@@ -542,11 +542,12 @@ function getRecentActivity($limit = 15) {
 
 function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 
-	$preferences = getPreferenceInfo($pdo, $userId);
+	$preferences = getPreferenceInfoById($userId);
 	
 	if (!$preferences) {
 		$preferences = [
-			'age' => null,
+			'min-age' => null,
+			'max-age' => null,
 			'gender' => null
 		];
 	}
@@ -565,8 +566,8 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		FROM blocks b 
 		WHERE b.blocker_id = :userId)
 	AND (:trip_country IS NULL OR t.location = :trip_country)
-	AND p.gender = :preferred_gender
-	AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) = :age
+	AND p.gender = :preferred_gender 
+	AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) BETWEEN :min_age AND :max_age
         ORDER BY RAND()
         LIMIT 1
     ");
@@ -575,7 +576,8 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		':userId' => $userId,
 		':trip_country' => $tripCountry,
 		':preferred_gender' => $preferences['gender'] ?? null,
-		':age' => $preferences['age'] ?? null
+		':min_age' => $preferences['min_age'] ?? null,
+		':max_age' => $preferences['max_age'] ?? null
 	];
 
     $stmt->execute($params);
