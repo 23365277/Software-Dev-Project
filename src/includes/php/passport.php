@@ -11,6 +11,7 @@ if (!$user) {
     $age = "";
     $bio = "";
     $galleryImages = [];
+	$nextTrip = null;
 	$stamps = [];
 } else {
 	$currentProfileId = $user['user_id'];
@@ -20,18 +21,8 @@ if (!$user) {
 	$country = $user['country'];
 	$age = $user['age'];
 	$bio = $user['bio'];
-	$stamps = [
-		["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "0"],
-		["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "6"],
-		["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "1"],
-	["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
-	["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
-		["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],
-	["country" => "Germany", "icon" => "🇩🇪", "date" => "2024-07-04"],
-	["country" => "Spain", "icon" => "🇪🇸", "date" => "2023-11-15"],
-		["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
-		["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
-	];
+	$stamps = $user['stamps'] ?? [];
+	$nextTrip = $user['nextTrip'];
 	$galleryImages = $user['galleryImages'];
 }
 ?>
@@ -104,8 +95,14 @@ if (!$user) {
 										<p class="body-text"><?= $bio ?></p>
 									</div>
 									<div class="dest">
-											<p class="heading">PLANNED TRIPS</p>
-											<p class="body-text">France • 6 Months</p>
+											<p class="heading">NEXT PLANNED TRIP</p>
+											<?php if ($nextTrip): ?>
+												<p class="body-text">
+													<?= htmlspecialchars($nextTrip['location']) ?> • <?= date('d M Y', strtotime($nextTrip['start_date'])) ?>
+												</p>
+											<?php else: ?>
+												<p class="body-text">No planned trips</p>
+											<?php endif; ?>
 									</div>	
 								</div>
 							</div>
