@@ -259,3 +259,55 @@ header .logo {
     background: #e0f0ff;
     transform: translateY(-1px);
 }
+
+/* ===== NAV LINKS (logged out) ===== */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: relative;
+    padding: 0.3rem 0;
+    transition: color 0.2s ease;
+}
+
+/* Animated underline on About & Contact */
+.nav-links a:not(.btn-signup)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 2px;
+    transition: width 0.25s ease;
+}
+
+.nav-links a:not(.btn-signup):hover::after {
+    width: 100%;
+}
+
+/* Sign Up button */
+.nav-links .btn-signup {
+    background: #ffffff;
+    color: #0f3a5c;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-links .btn-signup:hover {
+    background: #e0f0ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
