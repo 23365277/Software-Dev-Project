@@ -10,7 +10,7 @@ function getUserByEmail($email) {
 }
 
 function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
-						 $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5) {
+						 $min_age, $max_age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5) {
     global $pdo;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -27,25 +27,26 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
     $userId = $pdo->lastInsertId();
 
 	profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $height_cm, $bio);
-	preferences($userId, $Pgender, $age);
+	preferences($userId, $Pgender, $min_age, $max_age);
 	interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5);
 
     return $userId;
 }
 
-function preferences($userId, $Pgender, $age){
+function preferences($userId, $Pgender, $min_age, $max_age){
 	global $pdo;
 
 	$stmt1 = $pdo -> prepare("
-		INSERT INTO preferences (id, gender, age)
+		INSERT INTO preferences (id, pref_gender, min_age, max_age)
 		VALUES
-		(:user_id, :gender, :age)
+		(:user_id, :gender, :min_age, :max_age)
 		");
 	
 	$stmt1 -> execute([
 		':user_id' => $userId,
 		':gender' => $Pgender,
-		':age' => $age
+		':min_age' => $min_age,
+		':max_age' => $max_age
 	]);
 
 }
