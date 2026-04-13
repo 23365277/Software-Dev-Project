@@ -56,6 +56,17 @@ function nextPrev(n) {
 //     return valid;
 // }
 
+// function confirmEmail(){
+//     let confirm = true;
+
+//     let email = document.getElementById("email");
+//     let confirmEmail = document.getElementById("emailConfirm");
+
+//     if(email === confirmEmail){
+//         return confirm
+//     }
+// }
+
 function validateForm() {
     let valid = true;
     const x = document.getElementsByClassName("tab");
@@ -85,6 +96,28 @@ function validateForm() {
             }
         }
     });
+
+    let email = document.getElementById("email").value;
+    let confirmEmail = document.getElementById("emailConfirm").value;
+
+    if (!email || !confirmEmail) {
+        alert("Fill in email fields");
+        valid = false;
+    } else if (email !== confirmEmail) {
+        alert("Email doesn't match");
+        valid = false;
+    }
+
+    let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("passwordConfirm").value;
+
+    if (!password || !confirmPassword) {
+        alert("Fill in password fields");
+        valid = false;
+    } else if (password !== confirmPassword) {
+        alert("Password doesn't match");
+        valid = false;
+    }
 
     if (!valid) {
         alert("Please fill all required fields.");

@@ -77,7 +77,7 @@ function initMap() {
 
         if (!country) return;
 
-        window.location.href = "/pages/testfile.php?trip_country=" + encodeURIComponent(country);
+        window.location.href = "/pages/discovery_feed.php?trip_country=" + encodeURIComponent(country);
     });
 
     map.data.loadGeoJson('/assets/data/countries.geojson');

@@ -10,7 +10,7 @@ function getUserByEmail($email) {
 }
 
 function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
-						 $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5) {
+						 $min_age, $max_age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5) {
     global $pdo;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -27,25 +27,26 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
     $userId = $pdo->lastInsertId();
 
 	profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $height_cm, $bio);
-	preferences($userId, $Pgender, $age);
+	preferences($userId, $Pgender, $min_age, $max_age);
 	interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5);
 
     return $userId;
 }
 
-function preferences($userId, $Pgender, $age){
+function preferences($userId, $Pgender, $min_age, $max_age){
 	global $pdo;
 
 	$stmt1 = $pdo -> prepare("
-		INSERT INTO preferences (id, gender, age)
+		INSERT INTO preferences (id, pref_gender, min_age, max_age)
 		VALUES
-		(:user_id, :gender, :age)
+		(:user_id, :gender, :min_age, :max_age)
 		");
 	
 	$stmt1 -> execute([
 		':user_id' => $userId,
 		':gender' => $Pgender,
-		':age' => $age
+		':min_age' => $min_age,
+		':max_age' => $max_age
 	]);
 
 }
@@ -552,22 +553,21 @@ function getRecentActivity($limit = 15) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
 function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 
 	$preferences = getPreferenceInfoById($userId);
 	
 	if (!$preferences) {
 		$preferences = [
-			'min-age' => null,
-			'max-age' => null,
+			'min_age' => null,
+			'max_age' => null,
 			'gender' => null
 		];
 	}
 
 	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio, p.gender
 	FROM profiles p 
-	LEFT JOIN user_trips ut ON ut.user_id = p.user_id
-    LEFT JOIN trips t ON t.id = ut.trips_id
 	WHERE p.user_id != :userId 
 	AND p.user_id NOT IN ( 
 		SELECT l.receiver_id 
@@ -577,9 +577,18 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		SELECT b.blocked_id 
 		FROM blocks b 
 		WHERE b.blocker_id = :userId)
-	AND (:trip_country IS NULL OR t.location = :trip_country)
-	AND p.gender = :preferred_gender 
-	AND TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) BETWEEN :min_age AND :max_age
+	AND (:trip_country IS NULL OR EXISTS 
+		(SELECT 1
+		FROM user_trips ut
+		INNER JOIN trips t ON t.id = ut.trips_id 
+		WHERE ut.user_id = p.user_id 
+		AND t.location = :trip_country
+		AND ut.start_date >= CURDATE()))
+	AND (:preferred_gender IS NULL OR p.gender = :preferred_gender)
+	AND (
+		(:min_age IS NULL OR TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= :min_age)
+		AND 
+		(:max_age IS NULL OR TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) <= :max_age))
         ORDER BY RAND()
         LIMIT 1
     ");
@@ -611,8 +620,197 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 	$photoStmt->execute(['userId' => $user['user_id']]);
 	$user['galleryImages'] = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 
+	$user['nextTrip'] = getUserTrips($pdo, $user['user_id']);
+	$destinations = getUserStamps($pdo, $user['user_id']);
+	$user['stamps'] = array_map(function ($destination) {
+		return [
+			'country' => $destination['location'],
+			'icon' => getCountryFlag($destination['location']),
+			'date' => $destination['visited_date'],
+			'desc' => $destination['description']
+		];
+	}, $destinations);
+
 	return $user;
 }
+
+
+function getUserTrips(PDO $pdo, $userId) {
+	$tripStmt = $pdo->prepare("
+	SELECT t.location, ut.start_date, ut.end_date
+	FROM user_trips ut
+	INNER JOIN trips t ON t.id = ut.trips_id
+	WHERE ut.user_id = :userId
+		AND ut.start_date >= CURDATE()
+	ORDER BY ut.start_date ASC
+	LIMIT 1");
+	$tripStmt->execute(['userId' => $userId]);
+	return $tripStmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
+
+
+function getUserStamps(PDO $pdo, $userId) {
+	$destinationStmt = $pdo->prepare("
+	SELECT d.location, ud.visited_date, ud.description
+	FROM user_destinations ud
+	INNER JOIN destinations d ON d.id = ud.destination_id
+	WHERE ud.user_id = :userId
+	ORDER BY ud.visited_date DESC
+	LIMIT 10");
+
+	$destinationStmt->execute(['userId' => $userId]);
+	return $destinationStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+}
+
+
+function getCountryFlag(string $country): string {
+
+    $flags = [
+        // A
+        'Afghanistan' => '🇦🇫',
+        'Albania' => '🇦🇱',
+        'Algeria' => '🇩🇿',
+        'Andorra' => '🇦🇩',
+        'Angola' => '🇦🇴',
+        'Argentina' => '🇦🇷',
+        'Armenia' => '🇦🇲',
+        'Australia' => '🇦🇺',
+        'Austria' => '🇦🇹',
+
+        // B
+        'Bahamas' => '🇧🇸',
+        'Bahrain' => '🇧🇭',
+        'Bangladesh' => '🇧🇩',
+        'Belarus' => '🇧🇾',
+        'Belgium' => '🇧🇪',
+        'Belize' => '🇧🇿',
+        'Benin' => '🇧🇯',
+        'Bhutan' => '🇧🇹',
+        'Bolivia' => '🇧🇴',
+        'Bosnia and Herzegovina' => '🇧🇦',
+        'Botswana' => '🇧🇼',
+        'Brazil' => '🇧🇷',
+        'Brunei' => '🇧🇳',
+        'Bulgaria' => '🇧🇬',
+
+        // C
+        'Cambodia' => '🇰🇭',
+        'Cameroon' => '🇨🇲',
+        'Canada' => '🇨🇦',
+        'Chile' => '🇨🇱',
+        'China' => '🇨🇳',
+        'Colombia' => '🇨🇴',
+        'Costa Rica' => '🇨🇷',
+        'Croatia' => '🇭🇷',
+        'Cuba' => '🇨🇺',
+        'Cyprus' => '🇨🇾',
+        'Czech Republic' => '🇨🇿',
+
+        // D
+        'Denmark' => '🇩🇰',
+        'Dominican Republic' => '🇩🇴',
+
+        // E
+        'Ecuador' => '🇪🇨',
+        'Egypt' => '🇪🇬',
+		'Eritrea' => '🇪🇷',
+		'Estonia' => '🇪🇪',
+
+        // F
+        'Finland' => '🇫🇮',
+        'France' => '🇫🇷',
+
+        // G
+        'Germany' => '🇩🇪',
+        'Ghana' => '🇬🇭',
+        'Greece' => '🇬🇷',
+
+        // H
+        'Hungary' => '🇭🇺',
+
+        // I
+        'Iceland' => '🇮🇸',
+        'India' => '🇮🇳',
+        'Indonesia' => '🇮🇩',
+        'Iran' => '🇮🇷',
+        'Iraq' => '🇮🇶',
+        'Ireland' => '🇮🇪',
+        'Israel' => '🇮🇱',
+        'Italy' => '🇮🇹',
+
+        // J
+        'Japan' => '🇯🇵',
+        'Jordan' => '🇯🇴',
+
+        // K
+        'Kazakhstan' => '🇰🇿',
+        'Kenya' => '🇰🇪',
+        'Kuwait' => '🇰🇼',
+
+        // L
+        'Latvia' => '🇱🇻',
+        'Lebanon' => '🇱🇧',
+        'Lithuania' => '🇱🇹',
+        'Luxembourg' => '🇱🇺',
+
+        // M
+        'Malaysia' => '🇲🇾',
+        'Mexico' => '🇲🇽',
+        'Morocco' => '🇲🇦',
+
+        // N
+        'Netherlands' => '🇳🇱',
+        'New Zealand' => '🇳🇿',
+        'Nigeria' => '🇳🇬',
+        'Norway' => '🇳🇴',
+
+        // P
+        'Pakistan' => '🇵🇰',
+        'Peru' => '🇵🇪',
+        'Philippines' => '🇵🇭',
+        'Poland' => '🇵🇱',
+        'Portugal' => '🇵🇹',
+
+        // Q
+        'Qatar' => '🇶🇦',
+
+        // R
+        'Romania' => '🇷🇴',
+        'Russia' => '🇷🇺',
+
+        // S
+        'Saudi Arabia' => '🇸🇦',
+        'Serbia' => '🇷🇸',
+        'Singapore' => '🇸🇬',
+        'Slovakia' => '🇸🇰',
+        'Slovenia' => '🇸🇮',
+        'South Africa' => '🇿🇦',
+        'South Korea' => '🇰🇷',
+        'Spain' => '🇪🇸',
+        'Sweden' => '🇸🇪',
+        'Switzerland' => '🇨🇭',
+
+        // T
+        'Thailand' => '🇹🇭',
+        'Turkey' => '🇹🇷',
+
+        // U
+        'Ukraine' => '🇺🇦',
+        'United Arab Emirates' => '🇦🇪',
+        'United Kingdom' => '🇬🇧',
+        'United States' => '🇺🇸',
+
+        // V
+        'Vietnam' => '🇻🇳',
+
+        // Z
+        'Zambia' => '🇿🇲',
+        'Zimbabwe' => '🇿🇼'
+    ];
+
+    return $flags[$country] ?? '🌍';
+}
+
 
 function getMatches(PDO $pdo, $userId): array {
 	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio
