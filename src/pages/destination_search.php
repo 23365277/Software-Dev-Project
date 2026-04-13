@@ -1,7 +1,22 @@
 <?php
-	$pageTitle = "Roamance - Destination Search";
+	$pageTitle = "Roamance - Atlas";
 	$pageCSS = "/assets/css/destination_search.css";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+
+    $visitedCountries = [];
+    if (isset($_SESSION['user_id'])) {
+        $stmt = $pdo->prepare("SELECT d. location FROM user_destinations ud JOIN destinations d ON ud.destination_id = d.id WHERE ud.user_id = :user_id");
+        $stmt->execute([':user_id' => $_SESSION['user_id']]);
+        $visitedCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    $tripsCountries = [];
+    if (isset($_SESSION['user_id'])) {
+        $stmt = $pdo->prepare("SELECT t.location FROM user_trips ut JOIN trips t ON ut.trips_id = t.id WHERE ut.user_id = :user_id");
+        $stmt->execute([':user_id' => $_SESSION['user_id']]);
+        $tripsCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
 ?>
 
 <div class="container py-4">
@@ -14,15 +29,58 @@
     </div>
 </div>
 
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+            <div class="card">
+                <h2 class="stamps col-6">Stamps</h2>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="card">
+                <h2 class="Currencies">Currencies</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 let map;
 let marker;
+const visitedCountries = <?php echo json_encode($visitedCountries); ?>;
+const tripsCountries = <?php echo json_encode($tripsCountries); ?>;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 53.3498, lng: -6.2603 },
         zoom: 8
     });
+
+    map.data.setStyle((feature) => {
+        const country = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
+        const visited = visitedCountries.includes(country);
+        const planned = tripsCountries.includes(country);
+        return {
+            fillColor: visited ? "green" : planned ? "yellow" : "gray",
+            fillOpacity: visited || planned ? 0.7 : 0.25,
+            strokeColor: "black",
+            strokeWeight: 1,
+            clickable: true
+        };
+    });
+
+    map.data.addListener('click', (event) => {
+        const country =
+            event.feature.getProperty('ADMIN') ||
+            event.feature.getProperty('name') ||
+            event.feature.getProperty('NAME');
+
+        if (!country) return;
+
+        window.location.href = "/pages/discovery_feed.php?trip_country=" + encodeURIComponent(country);
+    });
+
+    map.data.loadGeoJson('/assets/data/countries.geojson');
 
     const input = document.getElementById('searchInput');
     const searchBox = new google.maps.places.SearchBox(input);
