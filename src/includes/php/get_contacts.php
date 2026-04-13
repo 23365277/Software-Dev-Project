@@ -17,11 +17,22 @@ try {
         SELECT DISTINCT u.id, u.email
         FROM messages m
         JOIN users u ON (u.id = m.sender_id OR u.id = m.receiver_id)
-        WHERE (m.sender_id = :uid OR m.receiver_id = :uid)
-        AND u.id != :uid
+        WHERE (m.sender_id = :uid OR m.receiver_id = :uid2)
+        AND u.id != :uid3
+        AND NOT EXISTS (
+            SELECT 1 FROM blocks
+            WHERE (blocker_id = :uid4 AND blocked_id = u.id)
+               OR (blocker_id = u.id AND blocked_id = :uid5)
+        )
     ");
 
-    $stmt->execute([':uid' => $loggedInUser]);
+    $stmt->execute([
+        ':uid'  => $loggedInUser,
+        ':uid2' => $loggedInUser,
+        ':uid3' => $loggedInUser,
+        ':uid4' => $loggedInUser,
+        ':uid5' => $loggedInUser,
+    ]);
     $contacts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode($contacts);

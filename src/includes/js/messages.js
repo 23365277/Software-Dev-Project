@@ -8,12 +8,16 @@ const input = document.getElementById("chatbox-input");
 const chatBox = document.getElementById("chatbox-messages");
 const contactsContainer = document.getElementById("chatbox-contacts");
 const sendBtn = document.getElementById("chatbox-send");
-const reportBtn = document.getElementById("chatbox-report-btn");
+const actionsContainer  = document.getElementById("chatbox-actions");
+const actionsToggle     = document.getElementById("chatbox-actions-toggle");
+const actionsMenu       = document.getElementById("chatbox-actions-menu");
+const reportBtn         = document.getElementById("chatbox-report-btn");
+const blockBtn          = document.getElementById("chatbox-block-btn");
 const reportModalOverlay = document.getElementById("report-modal-overlay");
 const reportReasonInput = document.getElementById("report-reason");
-const reportModalError = document.getElementById("report-modal-error");
-const reportSubmitBtn = document.getElementById("report-submit-btn");
-const reportCancelBtn = document.getElementById("report-cancel-btn");
+const reportModalError  = document.getElementById("report-modal-error");
+const reportSubmitBtn   = document.getElementById("report-submit-btn");
+const reportCancelBtn   = document.getElementById("report-cancel-btn");
 
 
 async function loadContacts() {
@@ -55,8 +59,8 @@ function selectContact(contactId, contactElement) {
     if (input) input.disabled = false;
     if (sendBtn) sendBtn.disabled = false;
 
-    // Show report button
-    if (reportBtn) reportBtn.style.display = 'inline-flex';
+    // Show actions dropdown
+    if (actionsContainer) actionsContainer.style.display = 'block';
 
     // Highlight active contact
     document.querySelectorAll('#chatbox-contacts .contact').forEach(c => c.classList.remove('active'));
@@ -156,10 +160,25 @@ setInterval(fetchMessages, 3000);
 loadContacts();
 
 
-// --- Report button ---
+// --- Actions dropdown ---
+
+if (actionsToggle) {
+    actionsToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = actionsMenu.style.display === 'block';
+        actionsMenu.style.display = isOpen ? 'none' : 'block';
+    });
+}
+
+document.addEventListener('click', () => {
+    if (actionsMenu) actionsMenu.style.display = 'none';
+});
+
+// --- Report ---
 
 if (reportBtn) {
     reportBtn.addEventListener('click', () => {
+        actionsMenu.style.display = 'none';
         if (!currentContact) return;
         reportReasonInput.value = '';
         reportModalError.textContent = '';
@@ -175,9 +194,7 @@ if (reportCancelBtn) {
 
 if (reportModalOverlay) {
     reportModalOverlay.addEventListener('click', (e) => {
-        if (e.target === reportModalOverlay) {
-            reportModalOverlay.style.display = 'none';
-        }
+        if (e.target === reportModalOverlay) reportModalOverlay.style.display = 'none';
     });
 }
 
@@ -188,9 +205,7 @@ if (reportSubmitBtn) {
             reportModalError.textContent = 'Please enter a reason.';
             return;
         }
-
         reportSubmitBtn.disabled = true;
-
         fetch('/includes/php/report_user.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -205,11 +220,37 @@ if (reportSubmitBtn) {
                 reportModalError.textContent = data.error || 'Failed to submit report.';
             }
         })
-        .catch(() => {
-            reportModalError.textContent = 'Network error. Please try again.';
+        .catch(() => { reportModalError.textContent = 'Network error. Please try again.'; })
+        .finally(() => { reportSubmitBtn.disabled = false; });
+    });
+}
+
+// --- Block ---
+
+if (blockBtn) {
+    blockBtn.addEventListener('click', () => {
+        actionsMenu.style.display = 'none';
+        if (!currentContact) return;
+        fetch('/includes/php/block_user.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ block_id: currentContact })
         })
-        .finally(() => {
-            reportSubmitBtn.disabled = false;
-        });
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showError('User blocked successfully.');
+                actionsContainer.style.display = 'none';
+                currentContact = null;
+                input.disabled = true;
+                sendBtn.disabled = true;
+                chatBox.classList.add('centered-message');
+                chatBox.innerHTML = '<span>Select a contact to start chatting</span>';
+                loadContacts();
+            } else {
+                showError(data.error || 'Failed to block user.');
+            }
+        })
+        .catch(() => { showError('Network error. Please try again.'); });
     });
 }

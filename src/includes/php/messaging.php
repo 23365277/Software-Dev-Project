@@ -12,7 +12,13 @@
         <div id="chatbox-header">
             <span>Chat / Inbox</span>
             <div style="display:flex; align-items:center; gap:10px;">
-                <button id="chatbox-report-btn" title="Report this user" style="display:none;">&#9872; Report</button>
+                <div id="chatbox-actions" style="display:none; position:relative;">
+                    <button id="chatbox-actions-toggle">Actions &#9662;</button>
+                    <div id="chatbox-actions-menu" style="display:none;">
+                        <button id="chatbox-report-btn">&#9872; Report User</button>
+                        <button id="chatbox-block-btn">&#128683; Block User</button>
+                    </div>
+                </div>
                 <label for="chatbox-toggle" style="cursor:pointer; font-size:1.3em; color:#fff;">&times;</label>
             </div>
         </div>

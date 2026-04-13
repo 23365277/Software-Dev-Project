@@ -386,25 +386,63 @@
     cursor: not-allowed;
 }
 
-/* Report button shared styles */
-#chatbox-report-btn,
-#home-report-btn {
-    background: #e53e3e;
+/* Actions dropdown toggle button */
+#chatbox-actions-toggle,
+#home-actions-toggle {
+    background: rgba(255,255,255,0.2);
     color: #fff;
-    border: none;
+    border: 1px solid rgba(255,255,255,0.4);
     border-radius: 6px;
     padding: 4px 10px;
-    font-size: 0.8em;
+    font-size: 0.82em;
     font-weight: bold;
     cursor: pointer;
-    align-items: center;
-    gap: 4px;
     transition: background 0.2s;
+    white-space: nowrap;
 }
-#chatbox-report-btn:hover,
-#home-report-btn:hover {
-    background: #c53030;
+#chatbox-actions-toggle:hover,
+#home-actions-toggle:hover {
+    background: rgba(255,255,255,0.35);
 }
+
+/* Dropdown menu */
+#chatbox-actions-menu,
+#home-actions-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    min-width: 150px;
+    z-index: 10001;
+    overflow: hidden;
+}
+#chatbox-actions-menu button,
+#home-actions-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 0.9em;
+    color: #2d3748;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+#chatbox-actions-menu button:hover,
+#home-actions-menu button:hover {
+    background: #f7f7fa;
+}
+#chatbox-block-btn,
+#home-block-btn {
+    color: #e53e3e !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+
 
 /* Report modal overlay */
 #report-modal-overlay,

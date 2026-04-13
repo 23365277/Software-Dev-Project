@@ -281,22 +281,28 @@ function blockUser($user_id) {
 	try{
 		if($user_id && $loggedInUser) {
 			$stmnt = $pdo->prepare(
-				"INSERT INTO blocks 
-				(blocker_id, blocked_id, blocked_at) 
-				SELECT 
+				"INSERT INTO blocks
+				(blocker_id, blocked_id, blocked_at)
+				SELECT
 				:blocker_id, :blocked_id, NOW()
 				WHERE NOT EXISTS (
 					SELECT 1 FROM blocks
-					WHERE blocker_id = :blocker_id
-					AND blocked_id = :blocked_id
+					WHERE blocker_id = :blocker_id2
+					AND blocked_id = :blocked_id2
 				)
 			");
-			
+
 			$stmnt->execute([
-				':blocker_id' => $loggedInUser,
-				':blocked_id' => $user_id
+				':blocker_id'  => $loggedInUser,
+				':blocked_id'  => $user_id,
+				':blocker_id2' => $loggedInUser,
+				':blocked_id2' => $user_id,
 			]);
-	
+
+			if ($stmnt->rowCount() === 0) {
+				return ['success' => false, 'error' => 'You have already blocked this user.'];
+			}
+
 			return ['success' => true];
 		}
 

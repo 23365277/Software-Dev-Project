@@ -29,7 +29,13 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
             <h2 style="display:flex; justify-content:space-between; align-items:center;">
                 Messages
                 <?php if(isset($_SESSION['user_id'])): ?>
-                <button id="home-report-btn" title="Report this user" style="display:none;">&#9872; Report</button>
+                <div id="home-actions" style="display:none; position:relative;">
+                    <button id="home-actions-toggle">Actions &#9662;</button>
+                    <div id="home-actions-menu" style="display:none;">
+                        <button id="home-report-btn">&#9872; Report User</button>
+                        <button id="home-block-btn">&#128683; Block User</button>
+                    </div>
+                </div>
                 <?php endif; ?>
             </h2>
             <div id="home-messages-body">
@@ -79,17 +85,21 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
 (function () {
     let homeCurrentContact = null;
 
-    const homeContactsEl      = document.getElementById('home-contacts');
-    const homeMessagesEl      = document.getElementById('home-messages-area');
-    const homeInputEl         = document.getElementById('home-msg-input');
-    const homeSendBtn         = document.getElementById('home-msg-send');
-    const homeErrorDiv        = document.getElementById('home-error');
-    const homeReportBtn       = document.getElementById('home-report-btn');
-    const homeReportOverlay   = document.getElementById('home-report-modal-overlay');
-    const homeReportReason    = document.getElementById('home-report-reason');
-    const homeReportError     = document.getElementById('home-report-modal-error');
-    const homeReportSubmit    = document.getElementById('home-report-submit-btn');
-    const homeReportCancel    = document.getElementById('home-report-cancel-btn');
+    const homeContactsEl    = document.getElementById('home-contacts');
+    const homeMessagesEl    = document.getElementById('home-messages-area');
+    const homeInputEl       = document.getElementById('home-msg-input');
+    const homeSendBtn       = document.getElementById('home-msg-send');
+    const homeErrorDiv      = document.getElementById('home-error');
+    const homeActionsContainer = document.getElementById('home-actions');
+    const homeActionsToggle = document.getElementById('home-actions-toggle');
+    const homeActionsMenu   = document.getElementById('home-actions-menu');
+    const homeReportBtn     = document.getElementById('home-report-btn');
+    const homeBlockBtn      = document.getElementById('home-block-btn');
+    const homeReportOverlay = document.getElementById('home-report-modal-overlay');
+    const homeReportReason  = document.getElementById('home-report-reason');
+    const homeReportError   = document.getElementById('home-report-modal-error');
+    const homeReportSubmit  = document.getElementById('home-report-submit-btn');
+    const homeReportCancel  = document.getElementById('home-report-cancel-btn');
     let homeErrorTimeout = null;
 
     const HOME_PHONE_REGEX = /(\+?\d[\s\-.()\[\]]{0,3}){7,}/;
@@ -132,7 +142,7 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
         homeCurrentContact = contactId;
         homeInputEl.disabled = false;
         homeSendBtn.disabled = false;
-        if (homeReportBtn) homeReportBtn.style.display = 'inline-flex';
+        if (homeActionsContainer) homeActionsContainer.style.display = 'block';
         homeContactsEl.querySelectorAll('.home-contact').forEach(c => c.classList.remove('active'));
         contactEl.classList.add('active');
         homeFetchMessages();
@@ -198,9 +208,25 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
     setInterval(homeFetchMessages, 3000);
     homeLoadContacts();
 
-    // --- Report button ---
+    // --- Actions dropdown ---
+
+    if (homeActionsToggle) {
+        homeActionsToggle.addEventListener('click', e => {
+            e.stopPropagation();
+            const isOpen = homeActionsMenu.style.display === 'block';
+            homeActionsMenu.style.display = isOpen ? 'none' : 'block';
+        });
+    }
+
+    document.addEventListener('click', () => {
+        if (homeActionsMenu) homeActionsMenu.style.display = 'none';
+    });
+
+    // --- Report ---
+
     if (homeReportBtn) {
         homeReportBtn.addEventListener('click', () => {
+            homeActionsMenu.style.display = 'none';
             if (!homeCurrentContact) return;
             homeReportReason.value = '';
             homeReportError.textContent = '';
@@ -242,12 +268,38 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
                     homeReportError.textContent = data.error || 'Failed to submit report.';
                 }
             })
-            .catch(() => {
-                homeReportError.textContent = 'Network error. Please try again.';
+            .catch(() => { homeReportError.textContent = 'Network error. Please try again.'; })
+            .finally(() => { homeReportSubmit.disabled = false; });
+        });
+    }
+
+    // --- Block ---
+
+    if (homeBlockBtn) {
+        homeBlockBtn.addEventListener('click', () => {
+            homeActionsMenu.style.display = 'none';
+            if (!homeCurrentContact) return;
+            fetch('/includes/php/block_user.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ block_id: homeCurrentContact })
             })
-            .finally(() => {
-                homeReportSubmit.disabled = false;
-            });
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    homeShowError('User blocked successfully.');
+                    homeActionsContainer.style.display = 'none';
+                    homeCurrentContact = null;
+                    homeInputEl.disabled = true;
+                    homeSendBtn.disabled = true;
+                    homeMessagesEl.classList.add('centered-message');
+                    homeMessagesEl.innerHTML = '<span>Select a conversation</span>';
+                    homeLoadContacts();
+                } else {
+                    homeShowError(data.error || 'Failed to block user.');
+                }
+            })
+            .catch(() => { homeShowError('Network error. Please try again.'); });
         });
     }
 })();
