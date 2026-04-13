@@ -1,11 +1,12 @@
 .welcome-banner {
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    color: #fff;
+    background: linear-gradient(90deg, #18314f, #2f5378 72%, rgba(240, 163, 21, 0.70));
+    color: #ffffff;
     padding: 10px 20px;
     border-radius: 8px;
-    font-size: 1.1em;
+    font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 16px;
+    box-shadow: 0 10px 10px #18314fcb;
 }
 #chatbox-container {
     position: fixed;

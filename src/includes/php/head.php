@@ -57,8 +57,13 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
 
 	<!-- For Page Specific CSS-->
 	<?php if (isset($pageCSS)): ?>
-    <link rel="stylesheet" href="<?php echo $pageCSS; ?>">
-
+        <?php if (is_array($pageCSS) ): ?>
+            <?php foreach ($pageCSS as $css): ?>
+                <link rel="stylesheet" href="<?php echo $css; ?>">
+            <?php endforeach; ?>
+        <?php else: ?>
+            <link rel="stylesheet" href="<?php echo $pageCSS; ?>">
+        <?php endif; ?>
     <?php endif; ?>
 </head>
 <body>

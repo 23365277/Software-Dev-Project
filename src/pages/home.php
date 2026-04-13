@@ -8,7 +8,8 @@ if (isset($login_successful) && $login_successful) {
     exit();
 }
 $pageTitle = "Roamance - Home";
-$pageCSS = "/assets/css/messaging.css";
+$pageCSS = ["/assets/css/messaging.css",
+            "/assets/css/home.css"];
 include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 ?>
 
@@ -18,13 +19,57 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 </div>
 <?php endif; ?>
 
-<div class="container col-12 row">
-    <div class="card col-lg-4 col-md-6 col-sm-12">
-        <h2 class="matches center-text">Matches and Likes</h2>
+<div class="row g-3">
+    <div class="col-lg-3 col-md-12 col-sm-12">
+        <div class="page-card-home">
+            <div class="home-content">
+                <span class="home-title">Welcome to Roamance</span>
+
+                <h2>Where every journey can lead to a new connection.</h2>
+
+                <p>
+                    Explore traveller profiles, share your next destination, shape your passport, and connect with people who are drawn to the same places, plans and adventures as you.
+                </p>
+            </div>
+        </div>
+        <a href="/pages/profile_view.php" class="page-link">
+            <div class="page-card page-card-profile">
+                <div class="page-card-content">
+                    <h3>Your Passport</h3>
+                    <p>
+                        Update your bio, photos, preferences and personal details
+                    </p>
+                    <span class="page-card-instruction">OPEN YOUR PROFILE</span>
+                </div>
+            </div>
+        </a>
+<div class="row g-3">
+    <div class="col-lg-3 col-md-12 col-sm-12">
+        <div class="page-card-home">
+            <div class="home-content">
+                <span class="home-title">Welcome to Roamance</span>
+
+                <h2>Where every journey can lead to a new connection.</h2>
+
+                <p>
+                    Explore traveller profiles, share your next destination, shape your passport, and connect with people who are drawn to the same places, plans and adventures as you.
+                </p>
+            </div>
+        </div>
+        <a href="/pages/profile_view.php" class="page-link">
+            <div class="page-card page-card-profile">
+                <div class="page-card-content">
+                    <h3>Your Passport</h3>
+                    <p>
+                        Update your bio, photos, preferences and personal details
+                    </p>
+                    <span class="page-card-instruction">OPEN YOUR PROFILE</span>
+                </div>
+            </div>
+        </a>
     </div>
-
-    <div class="container col-lg-8 col-md-6 col-sm-12">
-
+    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-6 col-md-6 col-sm-12">
         <div id="home-messages-panel">
             <h2 style="display:flex; justify-content:space-between; align-items:center;">
                 Messages
@@ -52,6 +97,60 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
             </div>
             <?php endif; ?>
         </div>
+        <div class="row mt-4 g-3 pages-row">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a href="/pages/discovery_feed.php" class="page-link">
+                    <div class="page-card page-card-discovery-feed">
+                        <div class="page-card-overlay"></div>
+                        <div class= "page-card-content">
+                            <h3>Passports</h3>
+                            <p>
+                                Browse traveller profiles and discover people who share the same travel desires.
+                            </p>
+                            <span class="page-card-instruction">ENTER FEED</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a href="/pages/post_a_trip.php" class="page-link">
+                    <div class="page-card page-card-trip">
+                        <div class="page-card-content">
+                            <h3>Post A Trip</h3>
+                            <p>
+                                Add an upcoming or past trip to your profile to show off and connect with travellers heading the same way.
+                            </p>
+                            <span class="page-card-instruction">ADD TRIP</span>
+                        </div>
+                    </div>
+                </a>
+        <div class="row mt-4 g-3 pages-row">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a href="/pages/discovery_feed.php" class="page-link">
+                    <div class="page-card page-card-discovery-feed">
+                        <div class="page-card-overlay"></div>
+                        <div class= "page-card-content">
+                            <h3>Passports</h3>
+                            <p>
+                                Browse traveller profiles and discover people who share the same travel desires.
+                            </p>
+                            <span class="page-card-instruction">ENTER FEED</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a href="/pages/post_a_trip.php" class="page-link">
+                    <div class="page-card page-card-trip">
+                        <div class="page-card-content">
+                            <h3>Post A Trip</h3>
+                            <p>
+                                Add an upcoming or past trip to your profile to show off and connect with travellers heading the same way.
+                            </p>
+                            <span class="page-card-instruction">ADD TRIP</span>
+                        </div>
+                    </div>
+                </a>
 
         <!-- Home Report User Modal -->
         <div id="home-report-modal-overlay" style="display:none;">
@@ -71,10 +170,38 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
             <div class="card col-lg-5 col-md-5 col-sm-12 mt-4">
                 <h2 class="center-text">Discovery Feed</h2>
             </div>
-            <div class="card col-lg-5 col-md-5 col-sm-12 mt-4">
-                <h2 class="center-text">Post A Trip</h2>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a href="/pages/destination_search.php" class="page-link">
+                    <div class="page-card page-card-atlas">
+                        <div class="page-card-content">
+                            <h3>Atlas</h3>
+                            <p>
+                                View your travel stats and also select a country to add trip preferences in discovery feed.
+                            </p>
+                            <span class="page-card-instruction">VIEW YOUR STATS</span>
+                        </div>
+                    </div>
+                </a>
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <a href="/pages/destination_search.php" class="page-link">
+                    <div class="page-card page-card-atlas">
+                        <div class="page-card-content">
+                            <h3>Atlas</h3>
+                            <p>
+                                View your travel stats and also select a country to add trip preferences in discovery feed.
+                            </p>
+                            <span class="page-card-instruction">VIEW YOUR STATS</span>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
+    </div>
+    <div class="card col-lg-3 col-md-6 col-sm-12">
+        <h2 class="matches center-text">Matches and Likes</h2>
+    </div>
+    <div class="card col-lg-3 col-md-6 col-sm-12">
+        <h2 class="matches center-text">Matches and Likes</h2>
     </div>
 </div>
 
