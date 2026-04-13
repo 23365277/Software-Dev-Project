@@ -1,29 +1,31 @@
 <?php
-	session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
-	if (isset($_SESSION['user_id'])){
-		header('Location: /pages/home.php');
-	}
+if (isset($_SESSION['user_id'])) {
+    header('Location: /pages/home.php');
+    exit();
+}
 
-	// Auto-login from remember me cookie
-	if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
-		$user = getUserByRememberToken($_COOKIE['remember_me']);
-		if ($user) {
-			$_SESSION['user_id']    = $user['id'];
-			$_SESSION['user_email'] = $user['email'];
-			header('Location: /pages/home.php');
-			exit();
-		} else {
-			setcookie('remember_me', '', time() - 1, '/', '', true, true);
-		}
-	}
+// Auto-login from remember me cookie
+if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
+    $user = getUserByRememberToken($_COOKIE['remember_me']);
+    if ($user) {
+        $_SESSION['user_id']    = $user['id'];
+        $_SESSION['user_email'] = $user['email'];
+        header('Location: /pages/home.php');
+        exit();
+    } else {
+        setcookie('remember_me', '', time() - 1, '/', '', true, true);
+    }
+}
 
-	$pageTitle = "Roamance - Dating for Travel Lovers";
-	$pageCSS = "/assets/css/login.css";
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
-
+$pageTitle = "Roamance - Dating for Travel Lovers";
+$pageCSS = "/assets/css/login.css";
+include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
 <!DOCTYPE html>
@@ -101,4 +103,5 @@
 </body>
 </html>
 
-
+<?php
+include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php';
