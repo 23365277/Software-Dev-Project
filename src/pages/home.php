@@ -26,7 +26,12 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
     <div class="container col-lg-8 col-md-6 col-sm-12">
 
         <div id="home-messages-panel">
-            <h2>Messages</h2>
+            <h2 style="display:flex; justify-content:space-between; align-items:center;">
+                Messages
+                <?php if(isset($_SESSION['user_id'])): ?>
+                <button id="home-report-btn" title="Report this user" style="display:none;">&#9872; Report</button>
+                <?php endif; ?>
+            </h2>
             <div id="home-messages-body">
                 <div id="home-contacts"></div>
                 <div id="home-messages-area" class="centered-message">
@@ -40,6 +45,20 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
                 <button id="home-msg-send" disabled>Send</button>
             </div>
             <?php endif; ?>
+        </div>
+
+        <!-- Home Report User Modal -->
+        <div id="home-report-modal-overlay" style="display:none;">
+            <div id="home-report-modal">
+                <h3>Report User</h3>
+                <p>Please describe the reason for this report:</p>
+                <textarea id="home-report-reason" placeholder="Enter reason..." rows="4"></textarea>
+                <div id="home-report-modal-error"></div>
+                <div id="home-report-modal-actions">
+                    <button id="home-report-submit-btn">Submit Report</button>
+                    <button id="home-report-cancel-btn">Cancel</button>
+                </div>
+            </div>
         </div>
 
         <div class="container row">
@@ -60,11 +79,17 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
 (function () {
     let homeCurrentContact = null;
 
-    const homeContactsEl = document.getElementById('home-contacts');
-    const homeMessagesEl = document.getElementById('home-messages-area');
-    const homeInputEl    = document.getElementById('home-msg-input');
-    const homeSendBtn    = document.getElementById('home-msg-send');
-    const homeErrorDiv   = document.getElementById('home-error');
+    const homeContactsEl      = document.getElementById('home-contacts');
+    const homeMessagesEl      = document.getElementById('home-messages-area');
+    const homeInputEl         = document.getElementById('home-msg-input');
+    const homeSendBtn         = document.getElementById('home-msg-send');
+    const homeErrorDiv        = document.getElementById('home-error');
+    const homeReportBtn       = document.getElementById('home-report-btn');
+    const homeReportOverlay   = document.getElementById('home-report-modal-overlay');
+    const homeReportReason    = document.getElementById('home-report-reason');
+    const homeReportError     = document.getElementById('home-report-modal-error');
+    const homeReportSubmit    = document.getElementById('home-report-submit-btn');
+    const homeReportCancel    = document.getElementById('home-report-cancel-btn');
     let homeErrorTimeout = null;
 
     const HOME_PHONE_REGEX = /(\+?\d[\s\-.()\[\]]{0,3}){7,}/;
@@ -107,6 +132,7 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
         homeCurrentContact = contactId;
         homeInputEl.disabled = false;
         homeSendBtn.disabled = false;
+        if (homeReportBtn) homeReportBtn.style.display = 'inline-flex';
         homeContactsEl.querySelectorAll('.home-contact').forEach(c => c.classList.remove('active'));
         contactEl.classList.add('active');
         homeFetchMessages();
@@ -171,6 +197,59 @@ const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
     homeInputEl.addEventListener('keypress', e => { if (e.key === 'Enter') homeSendMessage(); });
     setInterval(homeFetchMessages, 3000);
     homeLoadContacts();
+
+    // --- Report button ---
+    if (homeReportBtn) {
+        homeReportBtn.addEventListener('click', () => {
+            if (!homeCurrentContact) return;
+            homeReportReason.value = '';
+            homeReportError.textContent = '';
+            homeReportOverlay.style.display = 'flex';
+        });
+    }
+
+    if (homeReportCancel) {
+        homeReportCancel.addEventListener('click', () => {
+            homeReportOverlay.style.display = 'none';
+        });
+    }
+
+    if (homeReportOverlay) {
+        homeReportOverlay.addEventListener('click', e => {
+            if (e.target === homeReportOverlay) homeReportOverlay.style.display = 'none';
+        });
+    }
+
+    if (homeReportSubmit) {
+        homeReportSubmit.addEventListener('click', () => {
+            const reason = homeReportReason.value.trim();
+            if (!reason) {
+                homeReportError.textContent = 'Please enter a reason.';
+                return;
+            }
+            homeReportSubmit.disabled = true;
+            fetch('/includes/php/report_user.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ reported_id: homeCurrentContact, reason: reason })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    homeReportOverlay.style.display = 'none';
+                    homeShowError('User reported successfully.');
+                } else {
+                    homeReportError.textContent = data.error || 'Failed to submit report.';
+                }
+            })
+            .catch(() => {
+                homeReportError.textContent = 'Network error. Please try again.';
+            })
+            .finally(() => {
+                homeReportSubmit.disabled = false;
+            });
+        });
+    }
 })();
 </script>
 <?php endif; ?>

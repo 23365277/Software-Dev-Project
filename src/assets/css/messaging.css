@@ -386,3 +386,121 @@
     cursor: not-allowed;
 }
 
+/* Report button shared styles */
+#chatbox-report-btn,
+#home-report-btn {
+    background: #e53e3e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+    cursor: pointer;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.2s;
+}
+#chatbox-report-btn:hover,
+#home-report-btn:hover {
+    background: #c53030;
+}
+
+/* Report modal overlay */
+#report-modal-overlay,
+#home-report-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#report-modal,
+#home-report-modal {
+    background: #fff;
+    border-radius: 10px;
+    padding: 24px;
+    width: 340px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+#report-modal h3,
+#home-report-modal h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #1a202c;
+}
+#report-modal p,
+#home-report-modal p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #4a5568;
+}
+#report-reason,
+#home-report-reason {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.9em;
+    resize: vertical;
+    outline: none;
+    box-sizing: border-box;
+}
+#report-reason:focus,
+#home-report-reason:focus {
+    border-color: #667eea;
+}
+#report-modal-error,
+#home-report-modal-error {
+    color: #e53e3e;
+    font-size: 0.85em;
+    min-height: 16px;
+}
+#report-modal-actions,
+#home-report-modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+#report-submit-btn,
+#home-report-submit-btn {
+    background: #e53e3e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 18px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#report-submit-btn:hover,
+#home-report-submit-btn:hover {
+    background: #c53030;
+}
+#report-submit-btn:disabled,
+#home-report-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+#report-cancel-btn,
+#home-report-cancel-btn {
+    background: #e2e8f0;
+    color: #4a5568;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 18px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#report-cancel-btn:hover,
+#home-report-cancel-btn:hover {
+    background: #cbd5e1;
+}
+

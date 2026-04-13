@@ -11,7 +11,10 @@
     <div id="chatbox-window">
         <div id="chatbox-header">
             <span>Chat / Inbox</span>
-            <label for="chatbox-toggle" style="cursor:pointer; font-size:1.3em; color:#fff;">&times;</label>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button id="chatbox-report-btn" title="Report this user" style="display:none;">&#9872; Report</button>
+                <label for="chatbox-toggle" style="cursor:pointer; font-size:1.3em; color:#fff;">&times;</label>
+            </div>
         </div>
         <div id="chatbox-body">
             <div id="chatbox-contacts">
@@ -26,6 +29,20 @@
         <div id="chatbox-input-area">
             <input type="text" id="chatbox-input" placeholder="Type your message..." disabled>
             <button id="chatbox-send" disabled>Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- Report User Modal -->
+<div id="report-modal-overlay" style="display:none;">
+    <div id="report-modal">
+        <h3>Report User</h3>
+        <p>Please describe the reason for this report:</p>
+        <textarea id="report-reason" placeholder="Enter reason..." rows="4"></textarea>
+        <div id="report-modal-error"></div>
+        <div id="report-modal-actions">
+            <button id="report-submit-btn">Submit Report</button>
+            <button id="report-cancel-btn">Cancel</button>
         </div>
     </div>
 </div>

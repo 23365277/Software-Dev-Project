@@ -324,16 +324,22 @@ function reportUser($reported_id, $reason) {
 				:reporter_id, :reported_id, :reason, NOW()
 				WHERE NOT EXISTS (
 					SELECT 1 FROM reports
-					WHERE reporter_id = :reporter_id
-					AND reported_id = :reported_id
+					WHERE reporter_id = :reporter_id2
+					AND reported_id = :reported_id2
 				)
 			");
 
 			$stmnt->execute([
-				':reporter_id' => $reporter_id,
-				':reported_id' => $reported_id,
-				':reason' => $reason
+				':reporter_id'  => $reporter_id,
+				':reported_id'  => $reported_id,
+				':reason'       => $reason,
+				':reporter_id2' => $reporter_id,
+				':reported_id2' => $reported_id,
 			]);
+
+			if ($stmnt->rowCount() === 0) {
+				return ['success' => false, 'error' => 'You have already reported this user.'];
+			}
 
 			return ['success' => true];
 		}

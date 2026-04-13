@@ -8,6 +8,12 @@ const input = document.getElementById("chatbox-input");
 const chatBox = document.getElementById("chatbox-messages");
 const contactsContainer = document.getElementById("chatbox-contacts");
 const sendBtn = document.getElementById("chatbox-send");
+const reportBtn = document.getElementById("chatbox-report-btn");
+const reportModalOverlay = document.getElementById("report-modal-overlay");
+const reportReasonInput = document.getElementById("report-reason");
+const reportModalError = document.getElementById("report-modal-error");
+const reportSubmitBtn = document.getElementById("report-submit-btn");
+const reportCancelBtn = document.getElementById("report-cancel-btn");
 
 
 async function loadContacts() {
@@ -48,6 +54,9 @@ function selectContact(contactId, contactElement) {
     // Enable input and send button
     if (input) input.disabled = false;
     if (sendBtn) sendBtn.disabled = false;
+
+    // Show report button
+    if (reportBtn) reportBtn.style.display = 'inline-flex';
 
     // Highlight active contact
     document.querySelectorAll('#chatbox-contacts .contact').forEach(c => c.classList.remove('active'));
@@ -145,3 +154,62 @@ setInterval(fetchMessages, 3000);
 
 
 loadContacts();
+
+
+// --- Report button ---
+
+if (reportBtn) {
+    reportBtn.addEventListener('click', () => {
+        if (!currentContact) return;
+        reportReasonInput.value = '';
+        reportModalError.textContent = '';
+        reportModalOverlay.style.display = 'flex';
+    });
+}
+
+if (reportCancelBtn) {
+    reportCancelBtn.addEventListener('click', () => {
+        reportModalOverlay.style.display = 'none';
+    });
+}
+
+if (reportModalOverlay) {
+    reportModalOverlay.addEventListener('click', (e) => {
+        if (e.target === reportModalOverlay) {
+            reportModalOverlay.style.display = 'none';
+        }
+    });
+}
+
+if (reportSubmitBtn) {
+    reportSubmitBtn.addEventListener('click', () => {
+        const reason = reportReasonInput.value.trim();
+        if (!reason) {
+            reportModalError.textContent = 'Please enter a reason.';
+            return;
+        }
+
+        reportSubmitBtn.disabled = true;
+
+        fetch('/includes/php/report_user.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ reported_id: currentContact, reason: reason })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                reportModalOverlay.style.display = 'none';
+                showError('User reported successfully.');
+            } else {
+                reportModalError.textContent = data.error || 'Failed to submit report.';
+            }
+        })
+        .catch(() => {
+            reportModalError.textContent = 'Network error. Please try again.';
+        })
+        .finally(() => {
+            reportSubmitBtn.disabled = false;
+        });
+    });
+}
