@@ -167,6 +167,30 @@ function getUserInterests() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function updateFunction($value, $column){
+	global $pdo;
+	$profileCols = ['bio', 'height_cm', 'city', 'country', 'looking_for','profile_picture'];
+	$preferencesCols = ['pref_gender', 'min_age', 'max_age'];
+
+	if (in_array($column, $profileCols)) {
+		updateProfile($value, $column);
+	}
+	
+	if (in_array($column, $preferencesCols)) {
+		updatePreferences($value, $column);
+	}
+
+	// if (isset($profileCols[$column])) {
+	// 	updateProfile($value, $column);
+	// }
+	// if (isset($preferencesCols[$column])) {
+	// 	updatePreferences($value, $column);
+	// }
+	// if (isset($interestCols[$column])) {
+	// 	updateInterests($value, $column);
+	// }
+}
+
 function updatePreferences($value, $column){
 	global $pdo;
 
@@ -207,6 +231,11 @@ function updateProfile($value, $column){
 		':value' => $value,
 		':user_id' => $userId
 	]);
+}
+
+function updateInterests(){
+	global $pdo;
+
 }
 
 function verifyLogin($email, $password) {

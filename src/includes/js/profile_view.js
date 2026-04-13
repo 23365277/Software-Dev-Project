@@ -1,7 +1,7 @@
-function onEdit(column, table){
+function onEdit(column/*, table*/){
     document.getElementById("editBtn").style.display = "block";
     document.getElementById('columnInput').value = column;
-    document.getElementById('tableInput').value = table;
+    //document.getElementById('tableInput').value = table;
 }
 
 function cancel(){
