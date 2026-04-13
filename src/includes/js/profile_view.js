@@ -1,9 +1,9 @@
-function onEdit(column/*, table*/){
-    document.getElementById("editBtn").style.display = "block";
-    document.getElementById('columnInput').value = column;
-    //document.getElementById('tableInput').value = table;
+function onEdit(id, column){
+    document.getElementById(id).style.display = "block";
+    const form = document.querySelector(`#${id} form`);
+    form.querySelector('input[name="column"]').value = column;
 }
 
-function cancel(){
-    document.getElementById("editBtn").style.display = "none";
+function cancel(id){
+    document.getElementById(id).style.display = "none";
 }

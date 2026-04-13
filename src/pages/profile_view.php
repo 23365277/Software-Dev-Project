@@ -19,17 +19,9 @@
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             $value = $_POST['value'] ?? '';
             $column = $_POST['column'] ?? '';
-            //$table = $_POST['table'] ?? '';
 
             updateFunction($value, $column);
 
-            // if ($table === 'preferences') {
-            //     updatePreferences($value, $column);
-            // } elseif ($table === 'profile') {
-            //     updateProfile($value, $column);
-            // } else {
-            //     die("Invalid table");
-            // }
         }
     
 	$pageTitle = "Roamance - Profile View";
@@ -53,20 +45,115 @@
         </div>
 
         <p class="profile-bio">
-            <?= htmlspecialchars($profile['bio'] ?? 'No bio yet') ?> <button type="button" onclick="onEdit('bio')">Edit</button>
+            <?= htmlspecialchars($profile['bio'] ?? 'No bio yet') ?> <button type="button" onclick="onEdit('editBio', 'bio')">Edit</button>
         </p>
     </div>
 
-    <div class="tab" id="editBtn">
+    <div class="tab" id="editBio">
         <form class="auth-form" method="POST" action="">
             <div class="form-header">
                 <h2>Edit</h2>
-                <button type="button" class="cancel-btn" onclick="cancel()">X</button>
+                <button type="button" class="cancel-btn" onclick="cancel('editBio')">X</button>
             </div>
-            <input type="hidden" name="column" id="columnInput">
-            <input type=text name="value" placeholder="Edit">
-            <!-- <input type="hidden" name="table" id="tableInput"> -->
+            <input type="hidden" name="column" id="columnBio">
+            <textarea type=text name="value" placeholder="Edit"></textarea>
             <button type="submit">Edit</button>
+        </form>
+    </div>
+
+    <div class="tab" id="editHeight">
+        <form class="auth-form" method="POST" action="">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editHeight')">X</button>
+            </div>
+            <input type="hidden" name="column" id="columnHeight">
+            <input type="number" name="value" placeholder="Edit">
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+
+    <div class="tab" id="editLookingFor">
+        <form class="auth-form" method="POST" action="">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editLookingFor')">X</button>
+            </div>
+            <input type="hidden" name="column" id="columnLookingFor">
+            <select name="value" placeholder="LookingFor" required>
+                <option value="" disabled selected hidden>Looking For</option>
+                <option value="RELATIONSHIP">Relationship</option>
+                <option value="CASUAL">Casual</option>
+            </select>
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+
+    <div class="tab" id="editMinAge">
+        <form class="auth-form" method="POST" action="">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editMinAge')">X</button>
+            </div>
+            <input type="hidden" name="column" id="columnMinAge">
+            <input type="number" name="value" placeholder="Edit">
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+
+    <div class="tab" id="editMaxAge">
+    <form class="auth-form" method="POST" action="">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editMaxAge')">X</button>
+            </div>
+            <input type="hidden" name="column" id="columnMaxAge">
+            <input type="number" name="value" placeholder="Edit">
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+
+    <div class="tab" id="editPrefGender">
+        <form class="auth-form" method="POST" action="">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editPrefGender')">X</button>
+            </div>
+            <input type="hidden" name="column" id="columnPrefGender">
+            <select name="value" placeholder="PrefGender" required>
+                <option value="" disabled selected hidden>Preferred Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="other">Other</option>
+            </select>
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+
+    <div class="tab" id="editInterests">
+        <form class="auth-form" method="POST" action="">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editInterests')">X</button>
+            </div>
+            <input type="hidden" name="column" id="columnPrefGender">
+            <label>
+                <input type="text" name="interests[]" value="1">
+            </label>
+            <label>
+                <input type="text" name="interests[]" value="2">
+            </label>
+            <label>
+                <input type="text" name="interests[]" value="3">
+            </label>
+            <label>
+                <input type="text" name="interests[]" value="4">
+            </label>
+            <label>
+                <input type="text" name="interests[]" value="5">
+            </label>
+
+            <button type="submit">Save</button>
         </form>
     </div>
 
@@ -75,7 +162,7 @@
         <div class="col-md-4">
             <div class="info-box">
                 <strong>DOB</strong>
-                <p><?= htmlspecialchars($profile['date_of_birth'] ?? '') ?></p> <button type="button" onclick="onEdit('date_of_birth')">Edit</button>
+                <p><?= htmlspecialchars($profile['date_of_birth'] ?? '') ?></p>
             </div>
         </div>
 
@@ -89,29 +176,29 @@
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Height</strong>
-                <p><?= htmlspecialchars(($profile['height_cm'] ?? '') . ' cm') ?></p> <button type="button" onclick="onEdit('height_cm')">Edit</button>
+                <p><?= htmlspecialchars(($profile['height_cm'] ?? '') . ' cm') ?></p> <button type="button" onclick="onEdit('editHeight', 'height_cm')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Looking For</strong>
-                <p><?= htmlspecialchars($profile['looking_for'] ?? '') ?></p> <button type="button" onclick="onEdit('looking_for')">Edit</button>
+                <p><?= htmlspecialchars($profile['looking_for'] ?? '') ?></p> <button type="button" onclick="onEdit('editLookingFor', 'looking_for')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Preferred Age</strong>
-                <p> Min:<?= htmlspecialchars($preferences['min_age'] ?? '') ?></p> <button type="button" onclick="onEdit('min_age')">Edit</button>
-                <p> Max:<?= htmlspecialchars($preferences['max_age'] ?? '') ?></p> <button type="button" onclick="onEdit('max_age')">Edit</button>
+                <p> Min:<?= htmlspecialchars($preferences['min_age'] ?? '') ?></p> <button type="button" onclick="onEdit('editMinAge', 'min_age')">Edit</button>
+                <p> Max:<?= htmlspecialchars($preferences['max_age'] ?? '') ?></p> <button type="button" onclick="onEdit('editMaxAge', 'max_age')">Edit</button>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="info-box">
                 <strong>Preferred Gender</strong>
-                <p><?= htmlspecialchars($preferences['pref_gender'] ?? '') ?></p> <button type="button" onclick="onEdit('pref_gender')">Edit</button>
+                <p><?= htmlspecialchars($preferences['pref_gender'] ?? '') ?></p> <button type="button" onclick="onEdit('editPrefGender', 'pref_gender')">Edit</button>
             </div>
         </div>
 
@@ -125,9 +212,9 @@
                     <span class="interest-tag">
                         <?= htmlspecialchars($interest['name']) ?>
                     </span>
-                <?php endforeach; ?> <button type="button" onclick="onEdit()">Edit</button>
+                <?php endforeach; ?> <button type="button" onclick="onEdit('editInterests', 'interest_id')">Edit</button>
             <?php else: ?>
-                <p>No interests added</p> <button type="button" onclick="onEdit()">Edit</button>
+                <p>No interests added</p> <button type="button" onclick="onEdit('editInterests', 'interest_id')">Edit</button>
             <?php endif; ?>
         </div>
     </div>

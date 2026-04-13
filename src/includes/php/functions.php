@@ -180,15 +180,6 @@ function updateFunction($value, $column){
 		updatePreferences($value, $column);
 	}
 
-	// if (isset($profileCols[$column])) {
-	// 	updateProfile($value, $column);
-	// }
-	// if (isset($preferencesCols[$column])) {
-	// 	updatePreferences($value, $column);
-	// }
-	// if (isset($interestCols[$column])) {
-	// 	updateInterests($value, $column);
-	// }
 }
 
 function updatePreferences($value, $column){
@@ -235,7 +226,7 @@ function updateProfile($value, $column){
 
 function updateInterests(){
 	global $pdo;
-
+	
 }
 
 function verifyLogin($email, $password) {
