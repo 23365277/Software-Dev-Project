@@ -111,22 +111,27 @@ if (!$user) {
 							<span>VISA STAMPS</span>
 						</div>		
 				
-						<div class="stamps-container">
+						<?php if (empty($stamps)): ?>
+							<div class="no-stamps">
+								<span class="no-stamps-icon">✈️</span>
+								<p class="no-stamps-text">This user has posted no trips yet</p>
+							</div>
+						<?php else: ?>
+							<div class="stamps-container">
 								<div class="stamps">
 									<?php foreach($stamps as $stamp): ?>
-								<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
-										<span class="icon"><?= $stamp['icon'] ?></span>
-										<span class="country"><?= $stamp['country'] ?></span>
-									<span class="date"><?= $stamp['date'] ?></span>
-									
-									<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
-										<span class="desc"><?= $stamp['desc'] ?></span>
-									<?php endif; ?>
-									
-									</div>
+										<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
+											<span class="icon"><?= $stamp['icon'] ?></span>
+											<span class="country"><?= $stamp['country'] ?></span>
+											<span class="date"><?= $stamp['date'] ?></span>
+											<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
+												<span class="desc"><?= $stamp['desc'] ?></span>
+											<?php endif; ?>
+										</div>
 									<?php endforeach; ?>
+								</div>
 							</div>
-						</div>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>

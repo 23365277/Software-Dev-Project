@@ -652,6 +652,8 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		];
 	}, $destinations);
 
+	$user['interests'] = getUserInterestsById($user['user_id']);
+
 	return $user;
 }
 

@@ -10,47 +10,102 @@
 <html>
 <body class="passport-page">
 
-<div class="container-fluid px-0 py-4">
-	<div class="col-4 col-lg-4">
-		<div>
-			<button type="button" class="preference" id="preferenceToggle"> Head to Preferences</button>
+<div class="feed-layout">
+
+	<!-- Left Sidebar -->
+	<aside class="feed-sidebar feed-sidebar-left">
+		<div class="sidebar-card">
+			<h4 class="sidebar-title">⚙️ Preferences</h4>
+			<button type="button" class="preference sidebar-pref-btn" id="preferenceToggle">Edit Preferences</button>
+			<?php if (!empty($selectedCountry)): ?>
+				<div class="sidebar-pref-active">
+					<span>Filtering by:</span>
+					<strong id="tripPreferenceAlert"><?= htmlspecialchars($selectedCountry) ?></strong>
+					<button class="sidebar-reset-btn" id="resetTripPreferenceBtn">✕ Reset</button>
+				</div>
+			<?php else: ?>
+				<p class="sidebar-hint">No trip filter active</p>
+			<?php endif; ?>
 		</div>
-		<div class="preference-overlay " id="preferenceOverlay">
-			<div class="preference-panel" id="preferencePanel">
-				<button type="button" class="close-overlay" id="closePreferenceOverlay">&times;</button>
 
-				<h2 class="mb-4">Edit Your Preferences</h2>
+		<div class="sidebar-card">
+			<h4 class="sidebar-title">💡 How it works</h4>
+			<ul class="sidebar-tips">
+				<li>Browse traveller passports</li>
+				<li><strong>Like</strong> someone to connect</li>
+				<li>Match when they like you back</li>
+				<li>Plan your trip together</li>
+			</ul>
+		</div>
+	</aside>
 
-				<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
-
-				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
-
-				<?php if (!empty($selectedCountry)): ?>
-					<div class="alert alert-info mt-4" id="tripPreferenceAlert">
-						Current Trip Preference: <string><?= htmlspecialchars($selectedCountry) ?></string>
+	<!-- Passport + interests panel -->
+	<div class="passport-and-interests">
+		<div class="passport-container">
+			<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
+			<div class="container col-9 action-bar">
+				<div class="row justify-content-center align-items-center g-3 action-btns">
+					<div class="col-4 col-lg-3">
+						<button class="btn action-btn like w-100" id="likeBtn">Like</button>
 					</div>
-				<?php endif; ?>
-					<button type="button" class="btn btn-outline-dark reset-preferences-btn" id="resetTripPreferenceBtn">Reset Trip Preference</button>
+					<div class="col-auto text-center">
+						<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
+					</div>
+					<div class="col-4 col-lg-3">
+						<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="passport-container">
-		<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
-		<div class="container col-9 action-bar">
-			<div class="row justify-content-center align-items-center g-3 action-btns">
-				<div class="col-4 col-lg-3">
-					<button class="btn action-btn like w-100" id="likeBtn">Like</button>
-				</div>
-				<div class="col-auto text-center">
-					<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
-				</div>
-				<div class="col-4 col-lg-3">
-					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
+
+		<!-- Interests slide-out page -->
+		<div class="interests-panel" id="interestsPanel">
+			<div class="interests-page-wrapper">
+				<div class="interests-page">
+					<div class="interests-page-header">
+						<div class="tpass-header" style="border-bottom: #1e3a5f 2px solid; margin-bottom: 1rem; padding-bottom: 0.5rem;">
+							<img src="/assets/images/TPassIcon.png" alt="TPassIcon" style="width:23px;height:23px;">
+							<p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:450;color:#1e3a5f;margin:0;">Interests</p>
+						</div>
+					</div>
+					<div id="interestsTags">
+						<?php
+							$viewedInterests = isset($user) ? ($user['interests'] ?? []) : [];
+						?>
+						<?php if (empty($viewedInterests)): ?>
+							<p class="interests-empty">This user has no interests listed.</p>
+						<?php else: ?>
+							<div class="interests-tags">
+								<?php foreach ($viewedInterests as $interest): ?>
+									<span class="interest-tag"><?= htmlspecialchars($interest['name']) ?></span>
+								<?php endforeach; ?>
+							</div>
+						<?php endif; ?>
+					</div>
 				</div>
 			</div>
-			</div>
+			<button class="interests-tab" id="interestsTab" aria-label="Toggle interests">
+				<span>Interests</span>
+			</button>
 		</div>
 	</div>
+
+	<!-- Preference overlay (unchanged) -->
+	<div class="preference-overlay" id="preferenceOverlay">
+		<div class="preference-panel" id="preferencePanel">
+			<button type="button" class="close-overlay" id="closePreferenceOverlay">&times;</button>
+			<h2 class="mb-4">Edit Your Preferences</h2>
+			<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
+			<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
+			<?php if (!empty($selectedCountry)): ?>
+				<div class="alert alert-info mt-4">
+					Current Trip Preference: <strong><?= htmlspecialchars($selectedCountry) ?></strong>
+				</div>
+			<?php endif; ?>
+			<button type="button" class="btn btn-outline-dark reset-preferences-btn" id="resetTripPreferenceBtn2">Reset Trip Preference</button>
+		</div>
+	</div>
+
 </div>
 
 <!-- GSAP CDN -->
@@ -62,6 +117,10 @@ const preferenceOverlay = document.getElementById("preferenceOverlay");
 const closePreferenceOverlay = document.getElementById("closePreferenceOverlay");
 const resetPreferencesBtn = document.getElementById("resetTripPreferenceBtn");
 const tripPreferenceAlert = document.getElementById("tripPreferenceAlert");
+
+document.getElementById("interestsTab").addEventListener("click", () => {
+    document.getElementById("interestsPanel").classList.toggle("open");
+});
 
 preferenceToggle.addEventListener("click", () => {
 	preferenceOverlay.classList.add("active");
@@ -171,15 +230,16 @@ function returnXY() {
 
 let selectedCountry = <?= json_encode($selectedCountry) ?>;
 
-document.getElementById("resetTripPreferenceBtn").addEventListener("click", () => {
+function resetTripPreference() {
     selectedCountry = null;
-
-	if (tripPreferenceAlert) {
-		tripPreferenceAlert.classList.add("hidden");
-	}
-
+    if (tripPreferenceAlert) tripPreferenceAlert.closest(".sidebar-pref-active")?.remove();
     history.replaceState(null, "", "/pages/discovery_feed.php");
     window.closeCover();
+}
+
+document.getElementById("resetTripPreferenceBtn")?.addEventListener("click", resetTripPreference);
+document.getElementById("resetTripPreferenceBtn2")?.addEventListener("click", () => {
+    resetTripPreference();
 });
 
 function showNoProfilesOverlay() {
@@ -282,8 +342,18 @@ function loadNextPassport() {
 
 			document.getElementById("approvedStamp").classList.remove("visible");
 			document.getElementById("rejectedStamp").classList.remove("visible");
+			document.getElementById("interestsPanel").classList.remove("open");
 			likeBtn.disabled = false;
 			dislikeBtn.disabled = false;
+
+			const interestsTags = document.getElementById("interestsTags");
+			if (user.interests && user.interests.length > 0) {
+				interestsTags.innerHTML = '<div class="interests-tags">' +
+					user.interests.map(i => `<span class="interest-tag">${i.name}</span>`).join("") +
+					'</div>';
+			} else {
+				interestsTags.innerHTML = '<p class="interests-empty">This user has no interests listed.</p>';
+			}
 
 			gsap.set(".passport-wrapper", { x: 0, y: -1400 });
 			gsap.to(".passport-wrapper", { y: 0, duration: 1, ease: "power2.out", onComplete: peelCover });

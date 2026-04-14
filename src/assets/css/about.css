@@ -135,6 +135,24 @@
 .bg-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(231, 227, 227, 0); /* light overlay */
+    background: rgba(231, 227, 227, 0);
     z-index: -1;
+}
+
+@media (max-width: 768px) {
+    .about-section {
+        padding: 20px;
+    }
+
+    .about-section h1 {
+        font-size: 1.8em;
+    }
+
+    .about-section h2 {
+        font-size: 1.3em;
+    }
+
+    .container {
+        padding: 20px 10px;
+    }
 }

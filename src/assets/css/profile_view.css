@@ -230,3 +230,38 @@
   opacity: 0.5;
 }
 .step.active { opacity: 1; background-color: #4CAF50; }
+
+@media (max-width: 768px) {
+    .banner {
+        height: 180px;
+    }
+
+    .banner img {
+        height: 180px;
+    }
+
+    .profile-card {
+        margin-top: -40px;
+        padding: 15px;
+    }
+
+    .edit-btn {
+        position: static;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .auth-form {
+        width: 100%;
+        margin: 20px 0;
+        padding: 20px;
+    }
+
+    .profile-wrapper {
+        padding: 0 10px;
+    }
+
+    .info-box {
+        padding: 12px;
+    }
+}

@@ -1,23 +1,286 @@
+/* ── Page layout ───────────────────────────────────────────── */
+.feed-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-areas: "left center";
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    align-items: start;
+}
+
+.feed-sidebar-left      { grid-area: left; }
+.passport-and-interests { grid-area: center; position: relative; }
+
+/* ── Sidebar cards ─────────────────────────────────────────── */
+.sidebar-card {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.sidebar-title {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a3a5c;
+    margin: 0 0 0.85rem 0;
+    letter-spacing: 0.02em;
+}
+
+.sidebar-tips {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.sidebar-tips li {
+    font-size: 0.85rem;
+    color: #2d4a6a;
+    padding-left: 0.75rem;
+    border-left: 2px solid rgba(30,58,92,0.25);
+    line-height: 1.4;
+}
+
+.sidebar-pref-btn {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.sidebar-pref-active {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.82rem;
+    color: #1a3a5c;
+}
+
+.sidebar-pref-active span {
+    color: #5a7a9a;
+    font-size: 0.75rem;
+}
+
+.sidebar-pref-active strong {
+    font-size: 0.9rem;
+}
+
+.sidebar-reset-btn {
+    background: none;
+    border: 1px solid rgba(30,58,92,0.3);
+    border-radius: 6px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    color: #c0392b;
+    cursor: pointer;
+    transition: background 0.2s;
+    align-self: flex-start;
+    margin-top: 0.25rem;
+}
+
+.sidebar-reset-btn:hover {
+    background: rgba(192,57,43,0.1);
+}
+
+.sidebar-hint {
+    font-size: 0.8rem;
+    color: #7a9ab5;
+    margin: 0;
+    font-style: italic;
+}
+
+.sidebar-link-btn {
+    display: block;
+    text-align: center;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    background: rgba(30,58,92,0.15);
+    color: #1a3a5c;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    transition: background 0.2s;
+}
+
+.sidebar-link-btn:hover {
+    background: rgba(30,58,92,0.28);
+    color: #1a3a5c;
+}
+
+@media (max-width: 1024px) {
+    .feed-layout {
+        grid-template-columns: 180px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .feed-layout {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "center"
+            "left";
+        padding: 0.5rem;
+        gap: 1rem;
+    }
+}
+
+/* ── Interests slide-out panel ─────────────────────────────── */
+.passport-and-interests {
+    display: flex;
+    flex-direction: column;
+}
+
+.interests-panel {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+    pointer-events: none;
+}
+
+.interests-page-wrapper {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    display: flex;
+    align-items: stretch;
+}
+
+.interests-panel.open .interests-page-wrapper {
+    width: 260px;
+}
+
+.interests-page {
+    width: 260px;
+    flex-shrink: 0;
+    background: #fcfafa;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 12px 12px 0;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.12);
+    overflow-y: auto;
+    background-image: url("/assets/images/random-shapes.svg");
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.interests-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(252,250,250,0.95);
+    border-radius: 0 12px 12px 0;
+    z-index: 0;
+}
+
+.interests-page > * {
+    position: relative;
+    z-index: 1;
+}
+
+.interests-tab {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    background: linear-gradient(145deg, #25476f, #17304f);
+    color: #fff;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 0.5rem;
+    cursor: pointer;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    pointer-events: auto;
+    align-self: flex-start;
+    margin-top: 2rem;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.15);
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.interests-tab:hover {
+    background: linear-gradient(145deg, #2d5585, #1e3a5f);
+}
+
+/* ── Interests content ─────────────────────────────────────── */
+.interests-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.interests-tags .interest-tag {
+    background: linear-gradient(135deg, #25476f, #17304f);
+    color: #fff;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.interests-empty {
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+.interests-empty a {
+    color: #25476f;
+}
+
+/* ── Rest of page ──────────────────────────────────────────── */
 body.passport-page {
     margin: 0;
     min-height: 100vh;
     font-family: Arial, sans-serif;
     overflow-x: hidden;
     background:
-    radial-gradient(circle, rgba(240, 163, 21, 0.563), transparent 70%), 
+    radial-gradient(circle, rgba(240, 163, 21, 0.563), transparent 70%),
     linear-gradient(#ccdceb, #a3c1d4, #7598d0);
+}
+
+@media (max-width: 768px) {
+    .passport-container {
+        padding: 0;
+    }
+
+    .action-bar {
+        margin-top: 12px;
+    }
 }
 
 .passport-container {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
 }
 
 .action-bar {
     margin-top: 38px;
     width: 100%;
+    max-width: 1200px;
     justify-content: center;
 }
 
