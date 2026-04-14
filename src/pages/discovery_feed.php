@@ -43,6 +43,7 @@
 	<div class="passport-and-interests">
 		<div class="passport-container">
 			<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
+
 			<div class="container col-9 action-bar">
 				<div class="row justify-content-center align-items-center g-3 action-btns">
 					<div class="col-4 col-lg-3">
@@ -56,37 +57,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<!-- Interests slide-out page -->
-		<div class="interests-panel" id="interestsPanel">
-			<div class="interests-page-wrapper">
-				<div class="interests-page">
-					<div class="interests-page-header">
-						<div class="tpass-header" style="border-bottom: #1e3a5f 2px solid; margin-bottom: 1rem; padding-bottom: 0.5rem;">
-							<img src="/assets/images/TPassIcon.png" alt="TPassIcon" style="width:23px;height:23px;">
-							<p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:450;color:#1e3a5f;margin:0;">Interests</p>
-						</div>
-					</div>
-					<div id="interestsTags">
-						<?php
-							$viewedInterests = isset($user) ? ($user['interests'] ?? []) : [];
-						?>
-						<?php if (empty($viewedInterests)): ?>
-							<p class="interests-empty">This user has no interests listed.</p>
-						<?php else: ?>
-							<div class="interests-tags">
-								<?php foreach ($viewedInterests as $interest): ?>
-									<span class="interest-tag"><?= htmlspecialchars($interest['name']) ?></span>
-								<?php endforeach; ?>
-							</div>
-						<?php endif; ?>
-					</div>
-				</div>
-			</div>
-			<button class="interests-tab" id="interestsTab" aria-label="Toggle interests">
-				<span>Interests</span>
-			</button>
 		</div>
 	</div>
 
@@ -300,31 +270,32 @@ function loadNextPassport() {
 				tripText.textContent = "No planned trips";
 			}
 
-			const stampsContainer = document.querySelector(".stamps");
-			stampsContainer.innerHTML = "";
-
+			const stampsArea = document.getElementById("stampsArea");
 			const passportStamps = user.stamps || [];
 
-			passportStamps.forEach(stamp => {
-				const stampDiv = document.createElement("div");
-				stampDiv.className = "stamp";
-
-				if (stamp.desc && stamp.desc !== "0") {
-					stampDiv.classList.add("has-desc");
-				}
-
-				stampDiv.innerHTML = `
-					<span class="icon">${stamp.icon}</span>
-					<span class="country">${stamp.country}</span>
-					<span class="date">${stamp.date}</span>
-					${stamp.desc && stamp.desc !== "0" ? `<span class="desc">${stamp.desc}</span>` : ""}
-				`;
-
-				const angle = (Math.random() * 10) - 5;
-				stampDiv.style.transform = `rotate(${angle}deg)`;
-
-				stampsContainer.appendChild(stampDiv);
-			});
+			if (passportStamps.length === 0) {
+				stampsArea.innerHTML = `
+					<div class="no-stamps">
+						<span class="no-stamps-icon">✈️</span>
+						<p class="no-stamps-text">This user has posted no trips yet</p>
+					</div>`;
+			} else {
+				stampsArea.innerHTML = '<div class="stamps-container"><div class="stamps"></div></div>';
+				const stampsDiv = stampsArea.querySelector(".stamps");
+				passportStamps.forEach(stamp => {
+					const stampDiv = document.createElement("div");
+					stampDiv.className = "stamp";
+					if (stamp.desc && stamp.desc !== "0") stampDiv.classList.add("has-desc");
+					stampDiv.innerHTML = `
+						<span class="icon">${stamp.icon}</span>
+						<span class="country">${stamp.country}</span>
+						<span class="date">${stamp.date}</span>
+						${stamp.desc && stamp.desc !== "0" ? `<span class="desc">${stamp.desc}</span>` : ""}
+					`;
+					stampDiv.style.transform = `rotate(${(Math.random() * 10) - 5}deg)`;
+					stampsDiv.appendChild(stampDiv);
+				});
+			}
 
 			const carouselTrack = document.getElementById("carouselTrack");
 			carouselTrack.innerHTML = "";

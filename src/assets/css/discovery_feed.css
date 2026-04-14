@@ -143,24 +143,24 @@
 .interests-panel {
     position: absolute;
     top: 0;
-    left: 100%;
+    right: 0;
     height: 100%;
     display: flex;
-    align-items: stretch;
+    align-items: flex-start;
     pointer-events: none;
+    z-index: 2;
+    transform: translateX(260px);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interests-panel.open {
+    transform: translateX(0);
 }
 
 .interests-page-wrapper {
-    width: 0;
-    overflow: hidden;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: auto;
     display: flex;
-    align-items: stretch;
-}
-
-.interests-panel.open .interests-page-wrapper {
-    width: 260px;
+    align-self: stretch;
 }
 
 .interests-page {
@@ -199,18 +199,26 @@
     background: linear-gradient(145deg, #25476f, #17304f);
     color: #fff;
     border: none;
-    border-radius: 0 8px 8px 0;
-    padding: 1rem 0.5rem;
+    border-radius: 8px 0 0 8px;
+    padding: 0.75rem 0.5rem 1rem;
     cursor: pointer;
     font-family: 'Playfair Display', serif;
     font-size: 0.8rem;
     letter-spacing: 0.1em;
     pointer-events: auto;
     align-self: flex-start;
-    margin-top: 2rem;
+    margin-top: 3rem;
+    min-height: 120px;
+    display: flex;
+    justify-content: flex-end;
     box-shadow: 3px 0 10px rgba(0,0,0,0.15);
     transition: background 0.2s;
-    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .interests-panel {
+        display: none;
+    }
 }
 
 .interests-tab:hover {

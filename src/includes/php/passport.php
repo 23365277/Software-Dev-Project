@@ -111,31 +111,62 @@ if (!$user) {
 							<span>VISA STAMPS</span>
 						</div>		
 				
-						<?php if (empty($stamps)): ?>
-							<div class="no-stamps">
-								<span class="no-stamps-icon">✈️</span>
-								<p class="no-stamps-text">This user has posted no trips yet</p>
-							</div>
-						<?php else: ?>
-							<div class="stamps-container">
-								<div class="stamps">
-									<?php foreach($stamps as $stamp): ?>
-										<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
-											<span class="icon"><?= $stamp['icon'] ?></span>
-											<span class="country"><?= $stamp['country'] ?></span>
-											<span class="date"><?= $stamp['date'] ?></span>
-											<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
-												<span class="desc"><?= $stamp['desc'] ?></span>
-											<?php endif; ?>
-										</div>
-									<?php endforeach; ?>
+						<div id="stampsArea">
+							<?php if (empty($stamps)): ?>
+								<div class="no-stamps">
+									<span class="no-stamps-icon">✈️</span>
+									<p class="no-stamps-text">This user has posted no trips yet</p>
 								</div>
-							</div>
-						<?php endif; ?>
+							<?php else: ?>
+								<div class="stamps-container">
+									<div class="stamps">
+										<?php foreach($stamps as $stamp): ?>
+											<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
+												<span class="icon"><?= $stamp['icon'] ?></span>
+												<span class="country"><?= $stamp['country'] ?></span>
+												<span class="date"><?= $stamp['date'] ?></span>
+												<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
+													<span class="desc"><?= $stamp['desc'] ?></span>
+												<?php endif; ?>
+											</div>
+										<?php endforeach; ?>
+									</div>
+								</div>
+							<?php endif; ?>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	<!-- Interests slide-out panel — lives inside passport-wrapper so it animates with it -->
+	<div class="interests-panel" id="interestsPanel">
+		<button class="interests-tab" id="interestsTab" aria-label="Toggle interests">
+			<span>Interests</span>
+		</button>
+		<div class="interests-page-wrapper">
+			<div class="interests-page">
+				<div class="interests-page-header">
+					<div class="tpass-header" style="border-bottom: #1e3a5f 2px solid; margin-bottom: 1rem; padding-bottom: 0.5rem;">
+						<img src="/assets/images/TPassIcon.png" alt="TPassIcon" style="width:23px;height:23px;">
+						<p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:450;color:#1e3a5f;margin:0;">Interests</p>
+					</div>
+				</div>
+				<div id="interestsTags">
+					<?php $interests = $user['interests'] ?? []; ?>
+					<?php if (empty($interests)): ?>
+						<p class="interests-empty">This user has no interests listed.</p>
+					<?php else: ?>
+						<div class="interests-tags">
+							<?php foreach ($interests as $interest): ?>
+								<span class="interest-tag"><?= htmlspecialchars($interest['name']) ?></span>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="cover top-cover">
 		<img src="/assets/images/favicon_light.ico" alt="emb">
 	</div>
