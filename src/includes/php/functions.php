@@ -10,7 +10,7 @@ function getUserByEmail($email) {
 }
 
 function registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
-						 $min_age, $max_age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5) {
+						 $min_age, $max_age, $looking_for, $country, $city, $profile_picture, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5) {
     global $pdo;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -26,7 +26,7 @@ function registerNewUser($email, $password, $first_name, $last_name, $date_of_bi
 
     $userId = $pdo->lastInsertId();
 
-	profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $height_cm, $bio);
+	profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $profile_picture, $height_cm, $bio);
 	preferences($userId, $Pgender, $min_age, $max_age);
 	interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5);
 
@@ -51,13 +51,13 @@ function preferences($userId, $Pgender, $min_age, $max_age){
 
 }
 
-function profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $height_cm, $bio){
+function profile($userId, $first_name, $last_name, $date_of_birth, $gender, $looking_for, $country, $city, $profile_picture, $height_cm, $bio){
 	global $pdo;
 
 	$stmt2 = $pdo->prepare("
-	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, gender, bio, height_cm, city, country, looking_for, created_at)
+	INSERT INTO profiles (user_id, first_name, last_name, date_of_birth, gender, bio, height_cm, city, country, looking_for, profile_picture, created_at)
 	VALUES
-	(:user_id, :first_name, :last_name, :date_of_birth, :gender, :bio, :height_cm, :city, :country, :looking_for, NOW())"
+	(:user_id, :first_name, :last_name, :date_of_birth, :gender, :bio, :height_cm, :city, :country, :looking_for, :profile_picture, NOW())"
     );
     
     $stmt2->execute([
@@ -70,6 +70,7 @@ function profile($userId, $first_name, $last_name, $date_of_birth, $gender, $loo
 		':height_cm' => $height_cm,
 		':city' => $city,
 		':country' => $country,
+		':profile_picture' => $profile_picture,
 		':looking_for' => $looking_for
     ]);
 }
@@ -226,7 +227,7 @@ function updateProfile($value, $column){
 
 function updateInterests(){
 	global $pdo;
-	
+
 }
 
 function verifyLogin($email, $password) {

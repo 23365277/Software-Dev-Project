@@ -20,10 +20,10 @@ function showTab(n) {
     steps[n].className += " active";
 }
 
-function nextPrev(n) {
+async function nextPrev(n) {
     const x = document.getElementsByClassName("tab");
 
-    if (n === 1 && !validateForm()) return false;
+    if (n === 1 && !(await validateForm())) return false;
 
     x[currentTab].style.display = "none";
     
@@ -35,39 +35,28 @@ function nextPrev(n) {
     showTab(currentTab);
 }
 
-// function validateForm() {
-//     let valid = true;
-//     const x = document.getElementsByClassName("tab");
-//     const inputs = x[currentTab].querySelectorAll("input, select, textarea");
 
-//     inputs.forEach(input => {
-//         if (input.hasAttribute("required") && input.value.trim() === "") {
-//             input.classList.add("invalid");
-//             valid = false;
+// async function checkEmail(email) {
+//     fetch("/includes/php/check_email.php", {
+//         method: "POST",
+//         headers: {
+//             "Content-Type": "application/x-www-form-urlencoded"
+//         },
+//         body: "email=" + encodeURIComponent(email)
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.exists) {
+//             console.log("Email already exists");
+//             alert("Email already exists");
 //         } else {
-//             input.classList.remove("invalid");
+//             console.log("Email is available");
 //         }
-//     });
-
-//     if (!valid) {
-//         alert("Please fill all required fields.");
-//     }
-
-//     return valid;
+//     })
+//     .catch(error => console.error("Error:", error));
 // }
 
-// function confirmEmail(){
-//     let confirm = true;
-
-//     let email = document.getElementById("email");
-//     let confirmEmail = document.getElementById("emailConfirm");
-
-//     if(email === confirmEmail){
-//         return confirm
-//     }
-// }
-
-function validateForm() {
+async function validateForm() {
     let valid = true;
     const x = document.getElementsByClassName("tab");
     const inputs = x[currentTab].querySelectorAll("input, select, textarea");
@@ -108,6 +97,22 @@ function validateForm() {
         valid = false;
     }
 
+    if (valid) {
+        const response = await fetch("/includes/php/check_email.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "email=" + encodeURIComponent(email)
+        });
+
+        const data = await response.json();
+
+        if (data.exists) {
+            alert("Email already exists");
+            valid = false;
+        }
+    }
     let password = document.getElementById("password").value;
     let confirmPassword = document.getElementById("passwordConfirm").value;
 

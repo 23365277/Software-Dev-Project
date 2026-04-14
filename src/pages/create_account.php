@@ -19,23 +19,20 @@
         $height_cm = $_POST['height_cm'] ?? '';
         $country = $_POST['country'] ?? '';
         $city = $_POST['city'] ?? '';
+        $profile_picture = $_POST['profile_picture'] ?? '';
         $interest1 = $_POST['interest1'] ?? '';
         $interest2 = $_POST['interest2'] ?? '';
         $interest3 = $_POST['interest3'] ?? '';
         $interest4 = $_POST['interest4'] ?? '';
         $interest5 = $_POST['interest5'] ?? '';
         $userId = registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
-                        $min_age, $max_age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
+                        $min_age, $max_age, $looking_for, $country, $city, $profile_picture, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
 
         $_SESSION["user_id"] = $userId;
         if(isset($_SESSION['user_id'])){
           header("Location: /pages/home.php");
           exit();
         }
-        // $_SESSION['email'] = $email;
-    
-        
-        // exit();
     }
     
 
@@ -75,10 +72,12 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <textarea type="text" name="bio" placeholder="bio" required></textarea>
+    <!-- <textarea type="text" name="bio" placeholder="bio" required></textarea> -->
+    <input type="text" name="bio" placeholder="bio" required>
     <input type="number" name="height_cm" placeholder="Height cm" required>
     <input type="text" name="country" placeholder="Country" required>
     <input type="text" name="city" placeholder="City" required>
+    <input type="file" name="profile_picture" accept="image/*">
   </div>
 
   <div class="tab">
