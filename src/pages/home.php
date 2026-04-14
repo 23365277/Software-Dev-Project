@@ -7,10 +7,19 @@ if (isset($login_successful) && $login_successful) {
     header("Location: dashboard.php");
     exit();
 }
+
+$userId = $_SESSION["user_id"];
 $pageTitle = "Roamance - Home";
 $pageCSS = ["/assets/css/messaging.css",
+            "/assets/css/connections_passport.css",
             "/assets/css/home.css"];
 include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
+
+$matches = getMatches($pdo, $userId);
+$likes = getLikes($pdo, $userId);
+
+$latestMatch = $matches[0] ?? null;
+$latestLike = $likes[0] ?? null;
 ?>
 
 <?php if (isset($_SESSION['user_id']) && !empty($_COOKIE['user_name'])): ?>
@@ -115,8 +124,41 @@ include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
             </div>
         </div>
     </div>
-    <div class="card col-lg-3 col-md-6 col-sm-12">
-        <h2 class="matches center-text">Matches and Likes</h2>
+    <div class="col-lg-3 col-md-6 col-sm-12">
+        <a href="/pages/matches_likes.php" class="page-link">
+            <div class="page-card page-card-matches-likes">
+                <div class="page-card-content">
+                    <h3>Matches and Likes</h3>
+                    <span class="page-card-instruction">VIEW CONNECTIONS</span>
+                </div>
+                <div class="dashboard-connections-list">
+                    <?php if ($latestMatch): ?>
+                        <?php
+                            $profile = $latestMatch;
+                            $cardMode = 'dashboard';
+                            $cardLabel = 'Latest Match';
+                            $cardHref = '/pages/matches_likes.php';
+                            include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
+                        ?>
+                    <?php endif; ?>
+                    <?php if ($latestLike): ?>
+                        <?php
+                            $profile = $latestLike;
+                            $cardMode = 'dashboard';
+                            $cardLabel = 'Latest Passport Liked';
+                            $cardHref = '/pages/matches_like.php';
+                            include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
+                        ?>
+                    <?php endif; ?>
+                    <?php if (!$latestMatch && !$latestLike): ?>
+                        <div class="dashboard-connections-empty">
+                            <p>No new matches or likes yet.</p>
+                            <a href="/pages/discovery_feed.php" class="dashboard-empty-btn">Go to Discovery</a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
 

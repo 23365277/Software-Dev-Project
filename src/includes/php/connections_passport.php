@@ -1,24 +1,37 @@
 <?php
-$profileImage = $profile['profile_picture'];
-$firstName = $profile['first_name'];
-$lastName = $profile['last_name'];
-$country = $profile['country'];
-$age = $profile['age'];
-$bio = $profile['bio'];
+$profileId = $profile['user_id'];
+$profileImage = $profile['profile_picture'] ?? '/assets/images/default_profile.png';
+$firstName = $profile['first_name'] ?? '';
+$lastName = $profile['last_name'] ?? '';
+$country = $profile['country'] ?? '';
+$age = $profile['age'] ?? '';
+$bio = $profile['bio'] ?? '';
+$nextTrip = getUserTrips($pdo, $profileId) ?? null;
 
 $passportThemes = [
-    ['#25476f', '#17304f'], // blue
-    ['#7b2c2c', '#4a1616'], // red
-    ['#2c5f4a', '#18382c'], // green
-    ['#5a3e7b', '#2e1f4a'], // purple
-    ['#7b5a2c', '#4a3616'], // brown
-    ['#2c6f7b', '#163f4a'], // teal
+    ['#25476f', '#17304f'],
+    ['#7b2c2c', '#4a1616'],
+    ['#35ac7a', '#1e6e51'],
+    ['#5a3e7b', '#2e1f4a'],
+    ['#328998', '#205e6f'],
 ];
 
 $theme = $passportThemes[array_rand($passportThemes)];
+
+$cardMode = $cardMode ?? 'full';
+$cardLabel = $cardLabel ?? '';
+$cardHref = $cardHref ?? null;
 ?>
 
-<div class="mini-passport-wrapper mx-auto">
+<?php if ($cardHref): ?>
+<a href="<?= htmlspecialchars($cardHref) ?>" class="connection-card-link">
+<?php endif; ?>
+
+<div class="mini-passport-wrapper mx-auto <?= $cardMode === 'dashboard' ? 'dashboard-passport' : '' ?>">
+    <?php if (!empty($cardLabel)): ?>
+        <div class="connection-card-badge"><?= htmlspecialchars($cardLabel) ?></div>
+    <?php endif; ?>
+
     <div class="mini-cover"
         style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
         <img src="/assets/images/favicon_light.ico" alt="emb">
@@ -33,42 +46,44 @@ $theme = $passportThemes[array_rand($passportThemes)];
                 </div>
                 <div class="user-info">
                     <div class="profile-pic">
-                        <img src="<?= $profileImage ?>" alt="<?= $firstName . ' ' . $lastName ?>">
+                        <img src="<?= htmlspecialchars($profileImage) ?>" alt="<?= htmlspecialchars($firstName . ' ' . $lastName) ?>">
                     </div>
                     <div class="details">
                         <div class="details-left">
                             <p class="header">SURNAME</p>
                             <div class="name-field">
-                                <p class="surname"><?= $lastName ?></p>
+                                <p class="surname"><?= htmlspecialchars($lastName) ?></p>
                             </div>
                             <p class="header">FORENAME</p>
                             <div class="name-field">
-                                <p class="forename"><?= $firstName ?></p>
+                                <p class="forename"><?= htmlspecialchars($firstName) ?></p>
                             </div>
                         </div>
                         <div class="details-right">
                             <p class="header">NATIONALITY</p>
                             <div class="name-field">
-                                <p class="country"><?= $country ?></p>
+                                <p class="country"><?= htmlspecialchars($country) ?></p>
                             </div>
                             <p class="header">AGE</p>
                             <div class="name-field">
-                                <p class="age"><?= $age ?> years</p>
+                                <p class="age"><?= htmlspecialchars($age) ?> years</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="body">
                     <div class="BioDest">
-                        <?php if($bio): ?>
-                                <div class="bio">
-                                    <p class="heading">TRAVELLER BIO</p>
-                                    <p class="body-text"><?= $bio ?></p>
-                                </div>
-                        <?php endif; ?>
+                        <div class="bio">
+                            <p class="heading">TRAVELLER BIO</p>
+                            <p class="body-text">
+                                <?= !empty($bio) ? htmlspecialchars($bio) : 'No bio added yet.' ?>
+                            </p>
+                        </div>
                         <div class="dest">
                             <p class="heading">PLANNED TRIPS</p>
-                            <p class="body-text">France • 6 Months</p>
+                            <p class="body-text">
+                                <?= $nextTrip ? htmlspecialchars($nextTrip['location']) . ' • ' . date('d M Y', strtotime($nextTrip['start_date'])) : 'No trips planned yet.' ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -76,3 +91,7 @@ $theme = $passportThemes[array_rand($passportThemes)];
         </div>
     </div>
 </div>
+
+<?php if ($cardHref): ?>
+</a>
+<?php endif; ?>
