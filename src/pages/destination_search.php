@@ -1,7 +1,8 @@
 <?php
 	$pageTitle = "Roamance - Atlas";
-	$pageCSS = "/assets/css/destination_search.css";
+	$pageCSS = ["/assets/css/passport.css", "/assets/css/destination_search.css"];
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     $visitedCountries = [];
     if (isset($_SESSION['user_id'])) {
@@ -17,6 +18,15 @@
         $tripsCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
+    $rawStamps = isset($_SESSION['user_id']) ? getUserStamps($pdo, $_SESSION['user_id']) : [];
+    $stamps = array_map(function($s) {
+        return [
+            'icon'    => getCountryFlag($s['location']),
+            'country' => $s['location'],
+            'date'    => $s['visited_date'],
+            'desc'    => $s['description']
+        ];
+    }, $rawStamps);
 ?>
 
 <div class="container py-4">
@@ -32,8 +42,20 @@
 <div class="container py-4">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-            <div class="card">
-                <h2 class="stamps col-6">Stamps</h2>
+            <h2>Stamps</h2>
+            <div class="stamps-container">
+                <div class="stamps">
+                    <?php foreach($stamps as $stamp): ?>
+                    <div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
+                        <span class="icon"><?= $stamp['icon'] ?></span>
+                        <span class="country"><?= $stamp['country'] ?></span>
+                        <span class="date"><?= $stamp['date'] ?></span>
+                        <?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
+                            <span class="desc"><?= $stamp['desc'] ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -71,7 +93,6 @@ function initMap() {
         center: { lat: 53.3498, lng: -6.2603 },
         zoom: 8
     });
-
 
     map.data.setStyle((feature) => {
         const raw = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
