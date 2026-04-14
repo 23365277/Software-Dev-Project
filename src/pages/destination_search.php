@@ -1,7 +1,8 @@
 <?php
 	$pageTitle = "Roamance - Atlas";
-	$pageCSS = "/assets/css/destination_search.css";
+	$pageCSS = ["/assets/css/passport.css", "/assets/css/destination_search.css"];
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     $visitedCountries = [];
     if (isset($_SESSION['user_id'])) {
@@ -12,11 +13,20 @@
 
     $tripsCountries = [];
     if (isset($_SESSION['user_id'])) {
-        $stmt = $pdo->prepare("SELECT t.location FROM user_trips ut JOIN trips t ON ut.trips_id = t.id WHERE ut.user_id = :user_id");
+        $stmt = $pdo->prepare("SELECT location FROM trips WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $_SESSION['user_id']]);
         $tripsCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
+    $rawStamps = isset($_SESSION['user_id']) ? getUserStamps($pdo, $_SESSION['user_id']) : [];
+    $stamps = array_map(function($s) {
+        return [
+            'icon'    => getCountryFlag($s['location']),
+            'country' => $s['location'],
+            'date'    => $s['visited_date'],
+            'desc'    => $s['description']
+        ];
+    }, $rawStamps);
 ?>
 
 <div class="container py-4">
@@ -32,8 +42,20 @@
 <div class="container py-4">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
-            <div class="card">
-                <h2 class="stamps col-6">Stamps</h2>
+            <h2>Stamps</h2>
+            <div class="stamps-container">
+                <div class="stamps">
+                    <?php foreach($stamps as $stamp): ?>
+                    <div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
+                        <span class="icon"><?= $stamp['icon'] ?></span>
+                        <span class="country"><?= $stamp['country'] ?></span>
+                        <span class="date"><?= $stamp['date'] ?></span>
+                        <?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
+                            <span class="desc"><?= $stamp['desc'] ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-12">
@@ -47,8 +69,24 @@
 <script>
 let map;
 let marker;
-const visitedCountries = <?php echo json_encode($visitedCountries); ?>;
-const tripsCountries = <?php echo json_encode($tripsCountries); ?>;
+const locationNormalizeMap = {
+    'England': 'United Kingdom',
+    'Scotland': 'United Kingdom',
+    'Wales': 'United Kingdom',
+    'Northern Ireland': 'United Kingdom',
+    'Great Britain': 'United Kingdom',
+    'Britain': 'United Kingdom',
+    'United States of America': 'United States',
+    'USA': 'United States',
+    'US': 'United States',
+    'America': 'United States',
+    'Czechia': 'Czech Republic'
+};
+function normalizeLocations(arr) {
+    return arr.map(c => locationNormalizeMap[c] ?? c);
+}
+const visitedCountries = normalizeLocations(<?php echo json_encode($visitedCountries); ?>);
+const tripsCountries = normalizeLocations(<?php echo json_encode($tripsCountries); ?>);
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -57,7 +95,8 @@ function initMap() {
     });
 
     map.data.setStyle((feature) => {
-        const country = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
+        const raw = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
+        const country = locationNormalizeMap[raw] ?? raw;
         const visited = visitedCountries.includes(country);
         const planned = tripsCountries.includes(country);
         return {

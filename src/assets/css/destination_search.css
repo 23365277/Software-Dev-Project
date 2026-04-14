@@ -1,0 +1,8 @@
+.stamp {
+    max-height: none;
+    height: auto;
+}
+
+.stamp.has-desc {
+    max-height: none;
+}

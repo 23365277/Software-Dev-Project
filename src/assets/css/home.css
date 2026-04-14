@@ -3,6 +3,7 @@ body {
     background:
         radial-gradient(circle at top right, rgba(240, 163, 21, 0.499), transparent 75%),
         linear-gradient(#ccdceb, #a3c1d4, #7598d0);
+    overflow-x: hidden;
 }
 
 /* ── Home inline messages panel ─────────────────────────────── */
@@ -180,8 +181,8 @@ body {
     box-shadow: 0 14px 30px rgba(15, 42, 68, 0.4);
     transition: transform 0.2s ease, box-shadow 0.5s ease;
     background:
-    radial-gradient(circle at top left, rgba(255,255,255,0.6), transparent 40%),
-    radial-gradient(circle at bottom right, rgba(240,163,21,0.15), transparent 50%),
+    radial-gradient(circle at top left, rgba(255,255,255,0.8), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(240,163,21,0.40), transparent 50%),
     linear-gradient(145deg, #fffdf7 0%, #f7f0df 45%, #efe4c7 100%);
 }
 
@@ -221,7 +222,18 @@ body {
     background-repeat: no-repeat;
     background-position: right center;
     background-size: 100%;
-    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.page-card-discovery-feed::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("/assets/images/passport_stamp.svg");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 100%;
     pointer-events: none;
     z-index: 0;
 }
@@ -270,7 +282,6 @@ body {
     height: 74px;
     border-radius: 50%;
     border: 2px dashed #18314f9e;
-    opacity: 0.8;
     pointer-events: none;
     background-image: url("/assets/images/favicon_dark.ico");
     background-size: contain;
@@ -281,12 +292,12 @@ body {
 .page-card-profile::before {
     content: "";
     position: absolute;
-    inset: 0;                  /* covers the whole box */
+    inset: 0;
     background-image: url("/assets/images/random-shapes.svg");
-    background-size: cover;    /* cover entire box */
+    background-size: cover;
     background-position: center;
-    opacity: 0.05;             /* very subtle */
-    z-index: 0;                /* behind content */
+    opacity: 0.05;
+    z-index: 0;   
 }
 
 .page-card-home {
@@ -350,4 +361,134 @@ body {
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+}
+
+.page-card-matches-likes {
+    min-height: 700px;
+}
+
+.dashboard-connections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 10px;
+    padding: 15px;
+}
+
+.dashboard-passport {
+    position: relative;
+    min-height: 250px;
+    max-width: 100%;
+    perspective: none;
+}
+
+.dashboard-passport.mini-passport-wrapper {
+    min-height: 250px;
+}
+
+.dashboard-passport .mini-back-cover {
+    position: relative;
+    z-index: 1;
+    padding: 5px !important;
+    border-radius: 18px;
+}
+
+.dashboard-passport .mini-passport-content {
+    min-height: 235px;
+    border-radius: 14px;
+    padding: 10px !important;
+    overflow: hidden;
+    width: 94%;
+    margin: 0 auto;
+}
+
+.dashboard-passport .mini-cover {
+    transition: transform 1s ease;
+}
+
+.dashboard-passport .tpass-header {
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+}
+
+.dashboard-passport #tpassIcon {
+    width: 16px;
+    height: 16px;
+}
+
+.dashboard-passport #tpass {
+    font-size: 0.92rem;
+}
+
+.dashboard-passport .user-info {
+    gap: 0.7rem;
+    align-items: flex-start;
+}
+
+.dashboard-passport .profile-pic img {
+    width: 68px;
+    height: 92px;
+    border-radius: 10px;
+}
+
+.dashboard-passport .details {
+    gap: 0.55rem;
+}
+
+.dashboard-passport .header {
+    font-size: 0.66rem;
+    margin: 0 0 2px 0;
+}
+
+.dashboard-passport .name-field {
+    font-size: 0.78rem;
+    margin: 0 0 6px 0;
+    line-height: 1.1;
+}
+
+.dashboard-passport .body {
+    font-size: 0.74rem;
+    width: 100%;
+}
+
+.dashboard-passport .BioDest {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    margin-top: 0.75rem;
+}
+
+.dashboard-passport .BioDest .heading {
+    font-size: 0.68rem;
+    margin-bottom: 4px;
+}
+
+.dashboard-passport .body-text {
+    margin: 0;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.connection-card-badge {
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    z-index: 20;
+    background: #17304f;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.connection-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }

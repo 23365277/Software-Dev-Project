@@ -12,9 +12,14 @@
     z-index: 2;
     transform-origin: top;
     transform: rotateX(0deg);
+    transition: transform 0.1s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.mini-passport-wrapper:hover .mini-cover {
+    transform: rotateX(-180deg);
 }
 
 .mini-cover::before {
