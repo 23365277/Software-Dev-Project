@@ -1,8 +1,10 @@
 <?php
+ob_start();
 session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . "/config/database.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 
+ob_end_clean();
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -31,3 +33,4 @@ if (!$destination || !$start_date || !$end_date || !$activity) {
 
 $result = postTrip($destination, $start_date, $end_date, $activity);
 echo json_encode($result);
+exit;

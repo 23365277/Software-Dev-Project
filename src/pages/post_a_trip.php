@@ -45,9 +45,29 @@
             </div>
         </div>
     </div>
+    <!-- Trip Posted Modal -->
+    <div class="modal fade" id="tripSuccessModal" tabindex="-1" aria-labelledby="tripSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="tripSuccessModalLabel">Trip Posted!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    <p class="mt-3 mb-0">Your trip has been posted successfully. Fellow adventurers can now find you!</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/includes/js/post_a_trip.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2QU_U5Ck0fQvEFTE2RGDSEQAm1ITlcZU&libraries=places&callback=initAutocomplete" async defer></script>
     
