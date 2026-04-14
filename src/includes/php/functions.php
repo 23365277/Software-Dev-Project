@@ -975,3 +975,18 @@ function getUserInterestsById($userId) {
     $stmt->execute([$userId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function postTrip($destination, $start_date, $end_date, $description){
+	global $pdo;
+
+	if (!isset($_SESSION["user_id"])) {
+		return ['success' => false, 'error' => 'User not logged in'];
+	}
+
+	$stmnt = $pdo->prepare("
+		INSERT INTO trips (location, description, start_date, end_date, user_id)
+		VALUES (?, ?, ?, ?, ?)
+	");
+	$stmnt->execute([$destination, $description, $start_date, $end_date, $_SESSION["user_id"]]);
+	return ['success' => true];
+}
