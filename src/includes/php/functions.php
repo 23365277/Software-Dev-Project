@@ -228,6 +228,44 @@ function updateProfile($value, $column){
 function updateInterests(){
 	global $pdo;
 
+
+}
+
+function getAllInterests() {
+    global $pdo;
+
+    $stmt = $pdo->query("SELECT id, name FROM interests ORDER BY name ASC");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function updateUserInterests($userId, $interestIds) {
+    global $pdo;
+
+    // if (count($interestIds) > 5) {
+    //     throw new Exception("You can only select up to 5 interests.");
+    // }
+
+    $pdo->beginTransaction();
+
+    try {
+        // Delete old interests
+        $stmt = $pdo->prepare("DELETE FROM user_interests WHERE user_id = ?");
+        $stmt->execute([$userId]);
+
+        // Insert new ones
+        $stmt = $pdo->prepare("INSERT INTO user_interests (user_id, interest_id) VALUES (?, ?)");
+
+        foreach ($interestIds as $interestId) {
+            $stmt->execute([$userId, $interestId]);
+        }
+
+        $pdo->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        return false;
+    }
 }
 
 function verifyLogin($email, $password) {

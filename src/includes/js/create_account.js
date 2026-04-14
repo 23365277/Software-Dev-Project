@@ -124,9 +124,9 @@ async function validateForm() {
         valid = false;
     }
 
-    if (!valid) {
-        alert("Please fill all required fields.");
-    }
+    // if (!valid) {
+    //     alert("Please fill all required fields.");
+    // }
 
     return valid;
 }

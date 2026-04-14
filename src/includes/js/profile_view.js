@@ -7,3 +7,23 @@ function onEdit(id, column){
 function cancel(id){
     document.getElementById(id).style.display = "none";
 }
+
+function limitInterests(max = 5) {
+    const checkboxes = document.querySelectorAll('input[name="interests[]"]');
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', function () {
+            const checked = document.querySelectorAll('input[name="interests[]"]:checked');
+
+            if (checked.length > max) {
+                alert("You can only select up to " + max + " interests.");
+                this.checked = false;
+            }
+        });
+    });
+}
+
+// Call it when page loads
+document.addEventListener("DOMContentLoaded", function () {
+    limitInterests(5);
+});

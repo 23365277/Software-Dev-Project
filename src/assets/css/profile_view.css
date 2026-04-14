@@ -230,3 +230,11 @@
   opacity: 0.5;
 }
 .step.active { opacity: 1; background-color: #4CAF50; }
+
+.interests-container {
+    max-height: 250px;   /* controls height of the box */
+    overflow-y: auto;    /* enables scrolling INSIDE */
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+}

@@ -6,6 +6,8 @@
     $profile = getProfileInfoById($viewUserId);
     $preferences = getPreferenceInfoById($viewUserId);
     $interests = getUserInterestsById($viewUserId);
+    $allInterests = getAllInterests();
+    $userInterestIds = array_column($interests ?? [], 'id');
 
     if ($profile && $preferences && $interests) {
         $_SESSION['profile'] = $profile;
@@ -17,11 +19,16 @@
         $interestString = !empty($interestNames) ? implode(', ', $interestNames) : 'No interests added';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        
+        if(isset($_POST['interests'])) {
+            $interestIds = $_POST['interests'];
+            updateUserInterests($_SESSION['user_id'], $interestIds);
+        }else{
             $value = $_POST['value'] ?? '';
             $column = $_POST['column'] ?? '';
 
             updateFunction($value, $column);
-
+        }
         }
     
 	$pageTitle = "Roamance - Profile View";
@@ -29,12 +36,29 @@
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
-<div class="banner col-12" id="bannerSection">
+<!-- <div class="banner col-12" id="bannerSection">
     <img src="/assets/images/banner-pic.jpg" class="img-fluid" id="bannerImg" alt="Banner Image">
     <input type="file" id="bannerInput" accept="image/*" style="display: none;">
-</div>
+</div> -->
 
 <div class="container profile-wrapper">
+
+<div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
+<div class="profile-pic">
+    <p class="profile-bio">
+        <button type="button" onclick="onEdit('editBio', 'bio')">Edit</button>
+    </p>
+
+    <?php
+    $img = $profile['profile_picture'] ?? '/assets/images/default.png';
+    ?>
+
+    <img src="<?= $img ?>" alt="Profile Picture">
+</div>
+            <div class="edit-btn">
+                <button class="btn btn-outline-primary" id="editBtn">Edit Profile</button>
+            </div>
+        </div>
 
     <div class="profile-card shadow">
         <div class="profile-header">
@@ -136,22 +160,19 @@
                 <h2>Edit</h2>
                 <button type="button" class="cancel-btn" onclick="cancel('editInterests')">X</button>
             </div>
-            <input type="hidden" name="column" id="columnPrefGender">
-            <label>
-                <input type="text" name="interests[]" value="1">
-            </label>
-            <label>
-                <input type="text" name="interests[]" value="2">
-            </label>
-            <label>
-                <input type="text" name="interests[]" value="3">
-            </label>
-            <label>
-                <input type="text" name="interests[]" value="4">
-            </label>
-            <label>
-                <input type="text" name="interests[]" value="5">
-            </label>
+            <div class="interests-container">
+                <?php foreach ($allInterests as $interest): ?>
+                    <label>
+                        <input
+                            type="checkbox"
+                            name="interests[]"
+                            value="<?= $interest['id'] ?>"
+                <?= in_array($interest['id'], $userInterestIds) ? 'checked' : '' ?>
+            >
+            <?= htmlspecialchars($interest['name']) ?>
+        </label><br>
+    <?php endforeach; ?>
+</div>
 
             <button type="submit">Save</button>
         </form>
@@ -214,7 +235,7 @@
                     </span>
                 <?php endforeach; ?> <button type="button" onclick="onEdit('editInterests', 'interest_id')">Edit</button>
             <?php else: ?>
-                <p>No interests added</p> <button type="button" onclick="onEdit('editInterests', 'interest_id')">Edit</button>
+                <p>No interests added</p> <button type="button" onclick="onEdit('editInterests', 'interest_id'), limitInterests()">Edit</button>
             <?php endif; ?>
         </div>
     </div>
@@ -247,15 +268,10 @@
         
 </div>
 
-<!-- <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
-            <div class="profile-pic">
-                <img src="/assets/images/profile-pic.jpg" class="rounded-circle" style="width: 200px; height: 200px;" id="profileImg" alt="Profile Image">
-            </div>
-            <div class="edit-btn">
-                <button class="btn btn-outline-primary" id="editBtn">Edit Profile</button>
-            </div>
-        </div> -->
-
 <script src="/includes/js/profile_view.js"></script>
+
+<?php
+print_r($_SESSION);
+?>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
