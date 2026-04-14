@@ -6,3 +6,382 @@
 .stamp.has-desc {
     max-height: none;
 }
+
+.atlas-page {
+    color: #18314f;
+    padding-bottom: 2rem;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(240, 163, 21, 0.499), transparent 75%),
+        linear-gradient(#ccdceb, #a3c1d4, #7598d0);
+    overflow-x: hidden;
+}
+
+/* MAIN PAGE LAYOUT */
+
+.atlas-top-layout {
+    display: grid;
+    grid-template-columns: 340px minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* LEFT JOURNAL PANEL */
+
+.atlas-journal-panel {
+    position: relative;
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.85), transparent 38%),
+        radial-gradient(circle at bottom right, rgba(240,163,21,0.22), transparent 45%),
+        linear-gradient(145deg, #fffdf7 0%, #f7f0df 45%, #efe4c7 100%);
+    border-radius: 20px;
+    border: 3px solid #0f2a44;
+    border-left: 14px solid #0f2a44;
+    box-shadow: 0 14px 30px rgba(15, 42, 68, 0.32);
+    padding: 1.4rem 1.25rem 1.35rem;
+    min-height: 100%;
+    overflow: hidden;
+}
+
+.atlas-journal-panel::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(24, 49, 79, 0.10);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+.journal-mini-title {
+    margin: 0 0 0.55rem;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(24, 49, 79, 0.08);
+    color: #31506e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.atlas-page-title {
+    margin: 0;
+    font-size: clamp(2.3rem, 3vw, 3rem);
+    line-height: 0.95;
+    color: #18314f;
+    font-weight: 800;
+}
+
+.atlas-page-copy {
+    margin: 1rem 0 1.2rem;
+    color: #31506e;
+    line-height: 1.6;
+    font-size: 0.98rem;
+}
+
+.atlas-metric-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.atlas-metric-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid rgba(240, 163, 21, 0.28);
+}
+
+.metric-value {
+    min-width: 42px;
+    font-size: 1.95rem;
+    line-height: 1;
+    font-weight: 800;
+    color: #18314f;
+}
+
+.metric-text {
+    color: #31506e;
+    font-weight: 600;
+}
+
+.atlas-journal-divider {
+    margin: 1.15rem 0;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(to right, #f0a315, rgba(240, 163, 21, 0));
+}
+
+.atlas-country-block h2 {
+    margin: 0 0 1rem;
+    font-size: 1.45rem;
+    color: #18314f;
+}
+
+.atlas-country-block h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 0.92rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #31506e;
+}
+
+.country-line-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.country-chip {
+    display: inline-block;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(24, 49, 79, 0.12);
+    background: rgba(255,255,255,0.58);
+    color: #31506e;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.visited-chip {
+    background: rgba(58, 206, 58, 0.12);
+    color: #1f7b1f;
+    border-color: rgba(58, 206, 58, 0.25);
+}
+
+.planned-chip {
+    background: rgba(240, 163, 21, 0.16);
+    color: #9a6400;
+    border-color: rgba(240, 163, 21, 0.28);
+}
+
+.empty-text {
+    margin: 0;
+    color: #5c6f85;
+    font-style: italic;
+}
+
+.atlas-action-btn {
+    display: inline-block;
+    margin-top: 1.35rem;
+    background: #1f3b5b;
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: 0.3s ease;
+    box-shadow: 0 6px 14px rgba(31, 59, 91, 0.18);
+}
+
+.atlas-action-btn:hover {
+    background: #2d537d;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* RIGHT MAP BOARD */
+
+.atlas-map-board {
+    position: relative;
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.82), transparent 38%),
+        radial-gradient(circle at bottom right, rgba(240,163,21,0.24), transparent 46%),
+        linear-gradient(145deg, #fffdf7 0%, #f7f0df 45%, #efe4c7 100%);
+    border-radius: 20px;
+    border: 3px solid #0f2a44;
+    border-left: 14px solid #0f2a44;
+    box-shadow: 0 14px 30px rgba(15, 42, 68, 0.36);
+    padding: 1.2rem;
+    overflow: hidden;
+}
+
+.atlas-map-board::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(24, 49, 79, 0.10);
+    border-radius: 14px;
+    pointer-events: none;
+}
+
+.atlas-board-top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.board-kicker {
+    margin: 0 0 0.35rem;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(24, 49, 79, 0.08);
+    color: #31506e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.atlas-board-top h2,
+.stamp-strip-header h2 {
+    margin: 0;
+    font-size: 2rem;
+    color: #18314f;
+    font-weight: 800;
+}
+
+.atlas-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding: 0.75rem 0.95rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(24, 49, 79, 0.10);
+    color: #31506e;
+    font-size: 0.9rem;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 0.35rem;
+}
+
+.legend-dot.visited { background: #3ace3a; }
+.legend-dot.planned { background: #f0a315; }
+.legend-dot.home {background: #31506e; }
+.legend-dot.neutral { background: #8d9aaa; }
+
+.atlas-search-wrap {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+}
+
+.atlas-search {
+    border-radius: 12px;
+    border: 2px solid #d7cfbf;
+    padding: 0.9rem 1rem;
+    background: rgba(255,255,255,0.88);
+    color: #18314f;
+    box-shadow: none;
+}
+
+.atlas-search:focus {
+    border-color: #f0a315;
+    box-shadow: 0 0 0 0.15rem rgba(240, 163, 21, 0.12);
+    background: #fff;
+}
+
+.map-shell {
+    position: relative;
+    z-index: 1;
+    border-radius: 16px;
+    border: 3px solid #18314f;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+    background: #dfe7ef;
+    overflow: hidden;
+}
+
+#map {
+    width: 100%;
+    height: 640px;
+}
+
+.atlas-map-note {
+    position: relative;
+    z-index: 1;
+    margin: 0.8rem 0 0;
+    font-size: 0.95rem;
+    color: #31506e;
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* STAMP STRIP */
+
+.atlas-stamp-strip {
+    position: relative;
+    margin-top: 1.5rem;
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.8), transparent 40%),
+        radial-gradient(circle at bottom right, rgba(240,163,21,0.20), transparent 45%),
+        linear-gradient(145deg, #fffdf7 0%, #f7f0df 45%, #efe4c7 100%);
+    border-radius: 20px;
+    border: 3px solid #0f2a44;
+    border-left: 14px solid #0f2a44;
+    box-shadow: 0 14px 30px rgba(15, 42, 68, 0.32);
+    padding: 1.2rem;
+    overflow: hidden;
+}
+
+.atlas-stamp-strip::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(24, 49, 79, 0.10);
+    border-radius: 14px;
+    pointer-events: none;
+}
+
+.stamp-strip-header {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+}
+
+.stamp-scroll-row {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.6rem;
+}
+
+.stamp-scroll-row::-webkit-scrollbar {
+    height: 10px;
+}
+
+.stamp-scroll-row::-webkit-scrollbar-track {
+    background: rgba(24, 49, 79, 0.08);
+    border-radius: 999px;
+}
+
+.stamp-scroll-row::-webkit-scrollbar-thumb {
+    background: #a9b8c8;
+    border-radius: 999px;
+}
+
+/* MOBILE */
+
+@media (max-width: 991px) {
+    .atlas-top-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .atlas-board-top {
+        flex-direction: column;
+    }
+
+    #map {
+        height: 460px;
+    }
+
+    .atlas-page-title {
+        font-size: 2.4rem;
+    }
+}
