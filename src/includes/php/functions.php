@@ -600,11 +600,10 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		WHERE b.blocker_id = :userId)
 	AND (:trip_country IS NULL OR EXISTS 
 		(SELECT 1
-		FROM user_trips ut
-		INNER JOIN trips t ON t.id = ut.trips_id 
-		WHERE ut.user_id = p.user_id 
+		FROM trips t
+		WHERE t.user_id = p.user_id 
 		AND t.location = :trip_country
-		AND ut.start_date >= CURDATE()))
+		AND t.start_date >= CURDATE()))
 	AND (:preferred_gender IS NULL OR p.gender = :preferred_gender)
 	AND (
 		(:min_age IS NULL OR TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= :min_age)
@@ -660,12 +659,11 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 
 function getUserTrips(PDO $pdo, $userId) {
 	$tripStmt = $pdo->prepare("
-	SELECT t.location, ut.start_date, ut.end_date
-	FROM user_trips ut
-	INNER JOIN trips t ON t.id = ut.trips_id
-	WHERE ut.user_id = :userId
-		AND ut.start_date >= CURDATE()
-	ORDER BY ut.start_date ASC
+	SELECT location, start_date, end_date
+	FROM trips
+	WHERE user_id = :userId
+		AND start_date >= CURDATE()
+	ORDER BY start_date ASC
 	LIMIT 1");
 	$tripStmt->execute(['userId' => $userId]);
 	return $tripStmt->fetch(PDO::FETCH_ASSOC) ?: null;
@@ -978,6 +976,35 @@ function getUserInterestsById($userId) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function normalizeLocation($location) {
+	$map = [
+		'England' => 'United Kingdom',
+		'Scotland' => 'United Kingdom',
+		'Wales' => 'United Kingdom',
+		'Northern Ireland' => 'United Kingdom',
+		'Great Britain' => 'United Kingdom',
+		'Britain' => 'United Kingdom',
+		'United States of America' => 'United States',
+		'USA' => 'United States',
+		'US' => 'United States',
+		'America' => 'United States',
+		'Czechia' => 'Czech Republic',
+	];
+	return $map[$location] ?? $location;
+}
+
+function addToVisited($pdo, $userId, $location, $visited_date, $description) {
+	$pdo->prepare("INSERT IGNORE INTO destinations (location) VALUES (?)")->execute([$location]);
+	$stmt = $pdo->prepare("SELECT id FROM destinations WHERE location = ?");
+	$stmt->execute([$location]);
+	$dest_id = $stmt->fetchColumn();
+
+	$pdo->prepare("
+		INSERT IGNORE INTO user_destinations (user_id, destination_id, visited_date, description)
+		VALUES (?, ?, ?, ?)
+	")->execute([$userId, $dest_id, $visited_date, $description]);
+}
+
 function postTrip($destination, $start_date, $end_date, $description){
 	global $pdo;
 
@@ -985,10 +1012,17 @@ function postTrip($destination, $start_date, $end_date, $description){
 		return ['success' => false, 'error' => 'User not logged in'];
 	}
 
-	$stmnt = $pdo->prepare("
+	$destination = normalizeLocation($destination);
+	$userId = $_SESSION["user_id"];
+
+	if ($end_date < date('Y-m-d')) {
+		addToVisited($pdo, $userId, $destination, $end_date, $description);
+		return ['success' => true];
+	}
+
+	$pdo->prepare("
 		INSERT INTO trips (location, description, start_date, end_date, user_id)
 		VALUES (?, ?, ?, ?, ?)
-	");
-	$stmnt->execute([$destination, $description, $start_date, $end_date, $_SESSION["user_id"]]);
+	")->execute([$destination, $description, $start_date, $end_date, $userId]);
 	return ['success' => true];
 }

@@ -12,7 +12,7 @@
 
     $tripsCountries = [];
     if (isset($_SESSION['user_id'])) {
-        $stmt = $pdo->prepare("SELECT t.location FROM user_trips ut JOIN trips t ON ut.trips_id = t.id WHERE ut.user_id = :user_id");
+        $stmt = $pdo->prepare("SELECT location FROM trips WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $_SESSION['user_id']]);
         $tripsCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -47,8 +47,24 @@
 <script>
 let map;
 let marker;
-const visitedCountries = <?php echo json_encode($visitedCountries); ?>;
-const tripsCountries = <?php echo json_encode($tripsCountries); ?>;
+const locationNormalizeMap = {
+    'England': 'United Kingdom',
+    'Scotland': 'United Kingdom',
+    'Wales': 'United Kingdom',
+    'Northern Ireland': 'United Kingdom',
+    'Great Britain': 'United Kingdom',
+    'Britain': 'United Kingdom',
+    'United States of America': 'United States',
+    'USA': 'United States',
+    'US': 'United States',
+    'America': 'United States',
+    'Czechia': 'Czech Republic'
+};
+function normalizeLocations(arr) {
+    return arr.map(c => locationNormalizeMap[c] ?? c);
+}
+const visitedCountries = normalizeLocations(<?php echo json_encode($visitedCountries); ?>);
+const tripsCountries = normalizeLocations(<?php echo json_encode($tripsCountries); ?>);
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -56,8 +72,10 @@ function initMap() {
         zoom: 8
     });
 
+
     map.data.setStyle((feature) => {
-        const country = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
+        const raw = feature.getProperty('ADMIN') ?? feature.getProperty('name') ?? feature.getProperty('NAME');
+        const country = locationNormalizeMap[raw] ?? raw;
         const visited = visitedCountries.includes(country);
         const planned = tripsCountries.includes(country);
         return {
