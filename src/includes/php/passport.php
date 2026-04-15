@@ -133,6 +133,19 @@ if (!$user) {
 									</div>
 								</div>
 							<?php endif; ?>
+						<div class="stamps-container">
+							<div class="stamps">
+								<?php foreach($stamps as $stamp): ?>
+								<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
+									<span class="icon"><?= $stamp['icon'] ?></span>
+									<span class="country"><?= $stamp['country'] ?></span>
+									<span class="date"><?= $stamp['date'] ?></span>
+									<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
+										<span class="desc"><?= $stamp['desc'] ?></span>
+									<?php endif; ?>
+								</div>
+								<?php endforeach; ?>
+							</div>
 						</div>
 					</div>
 				</div>

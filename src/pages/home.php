@@ -146,7 +146,7 @@ $latestLike = $likes[0] ?? null;
                             $profile = $latestLike;
                             $cardMode = 'dashboard';
                             $cardLabel = 'Latest Passport Liked';
-                            $cardHref = '/pages/matches_like.php';
+                            $cardHref = '/pages/matches_likes.php';
                             include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
                         ?>
                     <?php endif; ?>

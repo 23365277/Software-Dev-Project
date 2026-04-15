@@ -168,29 +168,27 @@ function getUserInterests() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function updateFunction($value, $column){
+function updateFunction($user_id, $value, $column){
 	global $pdo;
 	$profileCols = ['bio', 'height_cm', 'city', 'country', 'looking_for','profile_picture'];
 	$preferencesCols = ['pref_gender', 'min_age', 'max_age'];
 
 	if (in_array($column, $profileCols)) {
-		updateProfile($value, $column);
+		updateProfile($user_id, $value, $column);
 	}
 	
 	if (in_array($column, $preferencesCols)) {
-		updatePreferences($value, $column);
+		updatePreferences($user_id, $value, $column);
 	}
 
 }
 
-function updatePreferences($value, $column){
+function updatePreferences($user_id, $value, $column){
 	global $pdo;
 
 	if (!isset($_SESSION["user_id"])) {
         return false;
     }
-
-	$userId = $_SESSION["user_id"];
 
 	$stmt = $pdo->prepare("
 		UPDATE preferences
@@ -200,18 +198,16 @@ function updatePreferences($value, $column){
 
 	$stmt->execute([
 		':value' => $value,
-		':user_id' => $userId
+		':user_id' => $user_id
 	]);
 }
 
-function updateProfile($value, $column){
+function updateProfile($user_id, $value, $column){
 	global $pdo;
 
 	if (!isset($_SESSION["user_id"])) {
         return false;
     }
-
-	$userId = $_SESSION["user_id"];
 
 	$stmt = $pdo->prepare("
 		UPDATE profiles
@@ -221,13 +217,73 @@ function updateProfile($value, $column){
 
 	$stmt->execute([
 		':value' => $value,
-		':user_id' => $userId
+		':user_id' => $user_id
 	]);
 }
 
 function updateInterests(){
 	global $pdo;
 
+
+}
+
+function getAllInterests() {
+    global $pdo;
+
+    $stmt = $pdo->query("SELECT id, name FROM interests ORDER BY name ASC");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function updateUserInterests($userId, $interestIds) {
+    global $pdo;
+
+    $pdo->beginTransaction();
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM user_interests WHERE user_id = ?");
+        $stmt->execute([$userId]);
+
+        $stmt = $pdo->prepare("INSERT INTO user_interests (user_id, interest_id) VALUES (?, ?)");
+
+        foreach ($interestIds as $interestId) {
+            $stmt->execute([$userId, $interestId]);
+        }
+
+        $pdo->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        return false;
+    }
+}
+
+function getUserProfilePicture($userId) {
+    global $pdo; // or your DB connection
+
+    $stmt = $pdo->prepare("SELECT profile_picture FROM profiles WHERE user_id = ?");
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchColumn();
+}
+
+function deleteUserProfilePicture($imagePath) {
+
+    if (!empty($imagePath)) {
+
+        $fullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath;
+
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+        }
+    }
+}
+
+function updateUserProfilePicture($userId, $imagePath) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("UPDATE profiles SET profile_picture = ? WHERE user_id = ?");
+    $stmt->execute([$imagePath, $userId]);
 }
 
 function verifyLogin($email, $password) {
@@ -654,6 +710,12 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 	$user['interests'] = getUserInterestsById($user['user_id']);
 
 	return $user;
+}
+
+function getHomeCountry(PDO $pdo, $userId) {
+	$homeStmt = $pdo->prepare("SELECT country FROM profiles WHERE user_id = :userId");
+	$homeStmt->execute(['userId' => $userId]);
+	return $homeStmt->fetchColumn() ?: null;
 }
 
 
