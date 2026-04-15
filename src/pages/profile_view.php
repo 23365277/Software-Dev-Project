@@ -9,18 +9,18 @@
     $allInterests = getAllInterests();
     $userInterestIds = array_column($interests ?? [], 'id');
 
-    if ($profile && $preferences && $interests) {
-        $_SESSION['profile'] = $profile;
-        $_SESSION['preferences'] = $preferences;
-        $_SESSION['interests'] = $interests;
-    }
+    // if ($profile && $preferences && $interests) {
+    //     $_SESSION['profile'] = $profile;
+    //     $_SESSION['preferences'] = $preferences;
+    //     $_SESSION['interests'] = $interests;
+    // }
 
         $interestNames = array_column($interests ?? [], 'name');
         $interestString = !empty($interestNames) ? implode(', ', $interestNames) : 'No interests added';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-        $userId = $_SESSION['user_id'];
+        $userId = isset($_POST['user_id']) ? (int) $_POST['user_id'] : $_SESSION['user_id'];
         $newProfilePicture = '';
 
         // Check if file uploaded
@@ -55,13 +55,15 @@
         
         if(isset($_POST['interests'])) {
             $interestIds = $_POST['interests'];
-            updateUserInterests($_SESSION['user_id'], $interestIds);
+            updateUserInterests($viewUserId, $interestIds);
         }else{
             $value = $_POST['value'] ?? '';
             $column = $_POST['column'] ?? '';
 
-            updateFunction($value, $column);
+            updateFunction($viewUserId, $value, $column);
         }
+        header("Location: /pages/profile_view.php?user_id=$viewUserId");
+        exit;
         }
     
 	$pageTitle = "Roamance - Profile View";
@@ -100,6 +102,7 @@
 
     <div class="tab" id="editBio">
         <form class="auth-form" method="POST" action="">
+            <input type="hidden" name="user_id" value="<?= $viewUserId ?>">
             <div class="form-header">
                 <h2>Edit</h2>
                 <button type="button" class="cancel-btn" onclick="cancel('editBio')">X</button>
