@@ -172,6 +172,14 @@
     border-bottom: #1e3a5f 2px solid;
 }
 
+.mini-passport-wrapper[data-href] {
+    cursor: pointer;
+}
+
+.mini-passport-wrapper.is-flipped .mini-cover {
+    transform: rotateX(-180deg);
+}
+
 @media (max-width: 600px) {
     .profile-pic img {
         width: 90px;

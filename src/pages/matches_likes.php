@@ -11,9 +11,23 @@
     $matches = getMatches($pdo, $userId);
     $likes = getLikes($pdo, $userId);
 
+    foreach ($matches as &$profile) {
+        $trip = getUserTrips($pdo, $profile['user_id']);
+        $profile['trip_country'] = $trip['location'] ?? null;
+    }
+    unset($profile);
+
+    foreach ($likes as &$profile) {
+        $trip = getUserTrips($pdo, $profile['user_id']);
+        $profile['trip_country'] = $trip['location'] ?? null;
+    }
+    unset($profile);
+
+    $allProfiles = array_merge($matches, $likes);
+
     $countries = array_unique(array_filter(array_map(
-        fn($profile) => $profile['country'] ?? null,
-        array_merge($matches, $likes)
+        fn($p) => $p['trip_country'] ?? null,
+        $allProfiles
     )));
     sort($countries);
 ?>
@@ -26,17 +40,17 @@
     <div class="row mt-4 g-2 align-items-stretch search-filter-row">
         <div class="col-lg-10 col-md-10 col-sm-10 mt-4">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search by name, age, or planned trip...">
+                <input type="text" id="searchInput" placeholder="Search by name, age, nationality or planned trip...">
             </div>
         </div>
         <div class="col-lg-2 col-md-2 col-sm-2 mt-4">
-            <button type="button" id="filter-Toggle" class="filter">Country Filter</button>
+            <button type="button" id="filter-Toggle" class="filter">Trip Filter</button>
         </div>
     </div>
     <div class="filter-panel" id="filterPanel">
-        <label for="countryFilter">Country</label>
-        <select id="countryFilter">
-            <option value="">All Countries</option>
+        <label for="tripFilter">Trip</label>
+        <select id="tripFilter">
+            <option value="">All Trips</option>
             <?php foreach ($countries as $country): ?>
                 <option value="<?= htmlspecialchars(strtolower($country)) ?>">
                     <?= htmlspecialchars($country) ?>
@@ -124,17 +138,16 @@ document.addEventListener("DOMContentLoaded", () => {
         filterPanel.classList.toggle("active");
     });
 
-    const countryFilter = document.getElementById("countryFilter");
+    const tripFilter = document.getElementById("tripFilter");
 
-    countryFilter.addEventListener("change", () => {
-        const selectedCountry = countryFilter.value;
+    tripFilter.addEventListener("change", () => {
+        const selectedTrip = tripFilter.value;
         const cards = document.querySelectorAll(".mini-passport-wrapper");
 
         cards.forEach(card => {
-            const countryField = card.querySelector(".details-right .name-field");
-            const cardCountry = countryField.textContent.trim().toLowerCase();
+            const cardTrip = (card.dataset.tripCountry || "").toLowerCase();
 
-            if (selectedCountry === "" || cardCountry === selectedCountry) {
+            if (selectedTrip === "" || cardTrip === selectedTrip) {
                 card.style.display = "";
             } else {
                 card.style.display = "none";
@@ -154,8 +167,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const surname = surnameField.textContent.trim().toLowerCase();
             const ageField = card.querySelector(".details-right .age");
             const age = ageField.textContent.trim().toLowerCase();
+            const nationalityField = card.querySelector(".details-right .country");
+            const nationality = nationalityField.textContent.trim().toLowerCase();
+            const tripCountryField = card.querySelector(".dest");
+            const tripCountry = tripCountryField.textContent.trim().toLowerCase();
 
-            if (forename.includes(query) || surname.includes(query) || age.includes(query) || query == "") {
+            if (forename.includes(query) || surname.includes(query) || age.includes(query) || nationality.includes(query) || tripCountry.includes(query) || query == "") {
                 card.style.display = "";
             } else {
                 card.style.display = "none";

@@ -5,175 +5,243 @@ body {
         radial-gradient(circle at top right, rgba(240, 163, 21, 0.499), transparent 75%),
         linear-gradient(#ccdceb, #a3c1d4, #7598d0);
     font-family: Arial, sans-serif;
+    color: #18314f;
 }
 
 /* ── Outer page card ───────────────────────────────────────── */
-.card.col-12 {
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+.post-a-trip-back {
+    position: relative;
+    border-radius: 18px;
+    border: 5px solid rgba(24, 49, 79, 0.75);
+    background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.7), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(240,163,21,0.16), transparent 42%),
+        linear-gradient(145deg, #fffaf0 0%, #f5ecd9 48%, #ead9b8 100%);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+    overflow: hidden;
 }
 
-.card.col-12 h2 {
+.post-a-trip-back::after {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 2px solid rgba(24, 49, 79, 0.12);
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+/* ── Heading ───────────────────────────────────────────────── */
+.heading {
+    max-width: 500px;
+    position: relative;
+    z-index: 1;
+}
+
+.heading h2 {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #2d3748;
+    color: #18314f;
     font-size: 2rem;
     margin-bottom: 0.25rem;
+    font-weight: 700;
 }
 
-.card.col-12 > .row > p.center-text {
-    color: #718096;
+.heading-divider {
+    margin: 1rem 0;
+    height: 3px;
+    width: 100%;
+    border-radius: 999px;
+    background: linear-gradient(to right, #f0a315, rgba(240, 163, 21, 0));
+}
+
+.heading p {
+    color: #4f647a;
     font-size: 1rem;
     margin-bottom: 0;
+    line-height: 1.5;
 }
 
-/* ── Form section cards ────────────────────────────────────── */
-.card.col-lg-12 {
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
-    padding: 1.25rem 1rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+/* ── Shared panel styling ──────────────────────────────────── */
+.trip-info,
+.trip-preview {
+    background: rgba(255, 248, 236, 0.92);
+    border: 2px solid rgb(24, 49, 79);
+    border-radius: 14px;
+    padding: 1.4rem 1.15rem;
+    box-shadow: 0 6px 18px rgba(24, 49, 79, 0.08);
+    position: relative;
+    z-index: 1;
 }
 
-.card.col-lg-12 h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #4a5568;
-    margin-bottom: 0.5rem;
+/* ── Form section ──────────────────────────────────────────── */
+.trip-info {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0)),
+        rgba(255, 248, 236, 0.96);
 }
 
-.card.col-lg-12 .form-control {
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    padding: 0.6rem 0.85rem;
+.trip-info-content h3 {
     font-size: 0.95rem;
-    background: #fff;
-    color: #2d3748;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    font-weight: 700;
+    color: #18314f;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-.card.col-lg-12 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+.trip-info-content .form-control {
+    border: 1px solid #cdbb9b;
+    border-radius: 10px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+    background: #fffdf8;
+    color: #18314f;
+    box-shadow: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.trip-info-content .form-control::placeholder {
+    color: #7b8794;
+}
+
+.trip-info-content .form-control:focus {
+    border-color: #f0a315;
+    box-shadow: 0 0 0 3px rgba(240, 163, 21, 0.16);
+    background: #ffffff;
     outline: none;
 }
 
-/* ── Trip preview card ─────────────────────────────────────── */
-.container.col-lg-6 > .card {
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
-    padding: 1.5rem 1rem;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-}
-
-.container.col-lg-6 > .card h3 {
+/* ── Preview section ───────────────────────────────────────── */
+.trip-preview-country h3 {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 1.3rem;
-    color: #2d3748;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #18314f;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    font-weight: 700;
 }
 
-#preview-destination {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #667eea;
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 0.5rem;
-}
-
-#preview-map {
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-}
-
+#preview-destination-title,
 #preview-dates-title,
 #preview-activity-title {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: #a0aec0;
-    margin-bottom: 0.15rem;
+    color: #7a8a9a;
+    margin: 1rem 0 0.2rem;
+    display: none;
 }
 
+#preview-destination,
 #preview-dates,
 #preview-activity {
-    font-size: 1rem;
-    color: #2d3748;
-    margin-bottom: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #18314f;
+    border-bottom: 2px solid rgba(24, 49, 79, 0.12);
+    padding-bottom: 0.55rem;
+    margin-bottom: 0.75rem;
+    min-height: 1.5rem;
+}
+
+#preview-map {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(24, 49, 79, 0.15);
+    width: 100%;
+    height: 300px;
+    margin: 0.75rem 0 1rem;
+    background: #f3eadb;
 }
 
 /* ── Post Trip button ──────────────────────────────────────── */
 .post-trip-button .btn-primary {
-    background: linear-gradient(135deg, #667eea, #5a67d8);
-    border: none;
+    background: linear-gradient(135deg, #18314f, #25476f);
+    border: 2px solid #f0a315;
     border-radius: 10px;
-    padding: 0.7rem;
+    padding: 0.8rem 1rem;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.03em;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    color: #fffaf0;
+    box-shadow: 0 6px 14px rgba(24, 49, 79, 0.2);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
 .post-trip-button .btn-primary:hover {
-    background: linear-gradient(135deg, #7b93f0, #667eea);
-    box-shadow: 0 6px 18px rgba(102, 126, 234, 0.45);
+    filter: brightness(1.06);
     transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(24, 49, 79, 0.24);
 }
 
 .post-trip-button .btn-primary:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 3px 8px rgba(24, 49, 79, 0.18);
+}
+
+/* ── Modal styling ─────────────────────────────────────────── */
+.modal-content {
+    border-radius: 16px;
+    border: 3px solid rgba(24, 49, 79, 0.75);
+    background: linear-gradient(145deg, #fffaf0, #f3e6cc);
+}
+
+.modal-title {
+    color: #18314f;
+    font-weight: 700;
+}
+
+.modal-body p {
+    color: #4f647a;
+}
+
+.modal-footer .btn-primary {
+    background: linear-gradient(135deg, #18314f, #25476f);
+    border: 2px solid #f0a315;
+    font-weight: 700;
+}
+
+/* ── Google Places autocomplete dropdown ───────────────────── */
+.pac-container {
+    border-radius: 10px;
+    border: 1px solid #d7c4a5;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    overflow: hidden;
+}
+
+.pac-item {
+    padding: 0.65rem 0.85rem;
+}
+
+.pac-item:hover,
+.pac-item-selected {
+    background: #f8edd8;
 }
 
 /* ── Mobile ────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    .card.col-12 {
-        border-radius: 10px;
-        margin: 0.5rem !important;
+    .post-a-trip-back {
+        border-radius: 12px;
+        margin: 0.75rem !important;
     }
 
-    .card.col-12 h2 {
-        font-size: 1.5rem;
+    .heading {
+        max-width: 100%;
+        padding-right: 1rem;
     }
 
-    .container.col-lg-6 > .card {
-        min-height: unset !important;
+    .heading h2 {
+        font-size: 1.55rem;
+    }
+
+    .trip-info,
+    .trip-preview {
+        padding: 1.1rem 0.95rem;
     }
 
     #preview-map {
         height: 220px !important;
     }
-
-    .row.p-4 {
-        padding: 1rem !important;
-    }
-}
-
-/* ── Google Places autocomplete dropdown ───────────────────── */
-.pac-container {
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    font-size: 0.9rem;
-}
-
-.pac-item:hover {
-    background: #eef0fb;
-}
-
-.pac-item-selected {
-    background: #eef0fb;
 }

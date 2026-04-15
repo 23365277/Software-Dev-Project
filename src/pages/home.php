@@ -149,6 +149,7 @@ $latestLike = $likes[0] ?? null;
                     <h3>Matches and Likes</h3>
                     <span class="page-card-instruction">VIEW CONNECTIONS</span>
                 </div>
+        </a>
                 <div class="dashboard-connections-list">
                     <?php if ($latestMatch): ?>
                         <?php
@@ -176,7 +177,6 @@ $latestLike = $likes[0] ?? null;
                     <?php endif; ?>
                 </div>
             </div>
-        </a>
     </div>
 </div>
 

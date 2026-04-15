@@ -934,6 +934,12 @@ function getLikes(PDO $pdo, $userId): array {
 	return $likes;
 }
 
+function getDestinations(PDO $pdo) {
+	$destinationStmt = $pdo->prepare("SELECT d.location FROM destinations d");
+	$destinationStmt->execute();
+	return $destinationStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+}
+
 function banUser($targetId) {
     global $pdo;
     $adminId = $_SESSION['user_id'];
