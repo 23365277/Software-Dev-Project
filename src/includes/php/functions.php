@@ -262,6 +262,34 @@ function updateUserInterests($userId, $interestIds) {
     }
 }
 
+function getUserProfilePicture($userId) {
+    global $pdo; // or your DB connection
+
+    $stmt = $pdo->prepare("SELECT profile_picture FROM profiles WHERE user_id = ?");
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchColumn();
+}
+
+function deleteUserProfilePicture($imagePath) {
+
+    if (!empty($imagePath)) {
+
+        $fullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath;
+
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+        }
+    }
+}
+
+function updateUserProfilePicture($userId, $imagePath) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("UPDATE profiles SET profile_picture = ? WHERE user_id = ?");
+    $stmt->execute([$imagePath, $userId]);
+}
+
 function verifyLogin($email, $password) {
     $user = getUserByEmail($email);
     if ($user && password_verify($password, $user['password_hash'])){

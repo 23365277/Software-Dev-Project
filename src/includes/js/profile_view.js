@@ -4,6 +4,10 @@ function onEdit(id, column){
     form.querySelector('input[name="column"]').value = column;
 }
 
+function onEditProfilePic() {
+    document.getElementById('editProfilePic').style.display = 'block';
+}
+
 function cancel(id){
     document.getElementById(id).style.display = "none";
 }

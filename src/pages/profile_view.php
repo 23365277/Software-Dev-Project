@@ -19,6 +19,39 @@
         $interestString = !empty($interestNames) ? implode(', ', $interestNames) : 'No interests added';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+        $userId = $_SESSION['user_id'];
+        $newProfilePicture = '';
+
+        // Check if file uploaded
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0) {
+        
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+        
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+        
+            $fileName = uniqid('', true) . "_" . basename($_FILES["profile_picture"]["name"]);
+            $targetFile = $targetDir . $fileName;
+        
+            // Upload new file
+            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
+        
+                $newProfilePicture = '/assets/images/' . $fileName;
+        
+                // 1. Get old image
+                $oldImage = getUserProfilePicture($userId);
+        
+                // 2. Delete old image
+                deleteUserProfilePicture($oldImage);
+        
+                // 3. Save new image in DB
+                updateUserProfilePicture($userId, $newProfilePicture);
+            } else {
+                die("Failed to upload image");
+            }
+        }
         
         if(isset($_POST['interests'])) {
             $interestIds = $_POST['interests'];
@@ -48,7 +81,7 @@
     <img src="<?= $img ?>" alt="Profile Picture bitch bitch bitch bitch">
 </div>
             <div class="edit-btn">
-            <button type="button" onclick="onEdit('editBio', 'bio')">Edit</button>
+            <button type="button" onclick="onEditProfilePic()">Edit</button>
             </div>
         </div>
 
@@ -73,6 +106,17 @@
             </div>
             <input type="hidden" name="column" id="columnBio">
             <textarea type=text name="value" placeholder="Edit"></textarea>
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+    
+    <div class="tab" id="editProfilePic">
+        <form class="auth-form" method="POST" action="" enctype="multipart/form-data">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editProfilePic')">X</button>
+            </div>
+            <input type="file" name="profile_picture" accept="image/*">
             <button type="submit">Edit</button>
         </form>
     </div>
