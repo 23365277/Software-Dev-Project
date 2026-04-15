@@ -4,6 +4,10 @@ function onEdit(id, column){
     form.querySelector('input[name="column"]').value = column;
 }
 
+function onEditProfilePic() {
+    document.getElementById('editProfilePic').style.display = 'block';
+}
+
 function cancel(id){
     document.getElementById(id).style.display = "none";
 }
@@ -23,7 +27,6 @@ function limitInterests(max = 5) {
     });
 }
 
-// Call it when page loads
 document.addEventListener("DOMContentLoaded", function () {
     limitInterests(5);
 });

@@ -8,3 +8,7 @@ COPY . /var/www/html/
 
 # Optional: set proper permissions
 RUN chown -R www-data:www-data /var/www/html
+
+RUN echo "upload_max_filesize=10M" >> /usr/local/etc/php/conf.d/uploads.ini
+
+RUN echo "post_max_size=10M" >> /usr/local/etc/php/conf.d/uploads.ini

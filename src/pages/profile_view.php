@@ -9,26 +9,61 @@
     $allInterests = getAllInterests();
     $userInterestIds = array_column($interests ?? [], 'id');
 
-    if ($profile && $preferences && $interests) {
-        $_SESSION['profile'] = $profile;
-        $_SESSION['preferences'] = $preferences;
-        $_SESSION['interests'] = $interests;
-    }
+    // if ($profile && $preferences && $interests) {
+    //     $_SESSION['profile'] = $profile;
+    //     $_SESSION['preferences'] = $preferences;
+    //     $_SESSION['interests'] = $interests;
+    // }
 
         $interestNames = array_column($interests ?? [], 'name');
         $interestString = !empty($interestNames) ? implode(', ', $interestNames) : 'No interests added';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+        $userId = isset($_POST['user_id']) ? (int) $_POST['user_id'] : $_SESSION['user_id'];
+        $newProfilePicture = '';
+
+        // Check if file uploaded
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0) {
+        
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+        
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+        
+            $fileName = uniqid('', true) . "_" . basename($_FILES["profile_picture"]["name"]);
+            $targetFile = $targetDir . $fileName;
+        
+            // Upload new file
+            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
+        
+                $newProfilePicture = '/assets/images/' . $fileName;
+        
+                // 1. Get old image
+                $oldImage = getUserProfilePicture($userId);
+        
+                // 2. Delete old image
+                deleteUserProfilePicture($oldImage);
+        
+                // 3. Save new image in DB
+                updateUserProfilePicture($userId, $newProfilePicture);
+            } else {
+                die("Failed to upload image");
+            }
+        }
         
         if(isset($_POST['interests'])) {
             $interestIds = $_POST['interests'];
-            updateUserInterests($_SESSION['user_id'], $interestIds);
+            updateUserInterests($viewUserId, $interestIds);
         }else{
             $value = $_POST['value'] ?? '';
             $column = $_POST['column'] ?? '';
 
-            updateFunction($value, $column);
+            updateFunction($viewUserId, $value, $column);
         }
+        header("Location: /pages/profile_view.php?user_id=$viewUserId");
+        exit;
         }
     
 	$pageTitle = "Roamance - Profile View";
@@ -36,27 +71,19 @@
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
-<!-- <div class="banner col-12" id="bannerSection">
-    <img src="/assets/images/banner-pic.jpg" class="img-fluid" id="bannerImg" alt="Banner Image">
-    <input type="file" id="bannerInput" accept="image/*" style="display: none;">
-</div> -->
-
 <div class="container profile-wrapper">
 
 <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
 <div class="profile-pic">
-    <p class="profile-bio">
-        <button type="button" onclick="onEdit('editBio', 'bio')">Edit</button>
-    </p>
 
     <?php
     $img = $profile['profile_picture'] ?? '/assets/images/default.png';
     ?>
 
-    <img src="<?= $img ?>" alt="Profile Picture">
+    <img src="<?= $img ?>" alt="Profile Picture bitch bitch bitch bitch">
 </div>
             <div class="edit-btn">
-                <button class="btn btn-outline-primary" id="editBtn">Edit Profile</button>
+            <button type="button" onclick="onEditProfilePic()">Edit</button>
             </div>
         </div>
 
@@ -75,12 +102,24 @@
 
     <div class="tab" id="editBio">
         <form class="auth-form" method="POST" action="">
+            <input type="hidden" name="user_id" value="<?= $viewUserId ?>">
             <div class="form-header">
                 <h2>Edit</h2>
                 <button type="button" class="cancel-btn" onclick="cancel('editBio')">X</button>
             </div>
             <input type="hidden" name="column" id="columnBio">
             <textarea type=text name="value" placeholder="Edit"></textarea>
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+    
+    <div class="tab" id="editProfilePic">
+        <form class="auth-form" method="POST" action="" enctype="multipart/form-data">
+            <div class="form-header">
+                <h2>Edit</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('editProfilePic')">X</button>
+            </div>
+            <input type="file" name="profile_picture" accept="image/*">
             <button type="submit">Edit</button>
         </form>
     </div>
@@ -268,10 +307,5 @@
         
 </div>
 
+
 <script src="/includes/js/profile_view.js"></script>
-
-<?php
-print_r($_SESSION);
-?>
-
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

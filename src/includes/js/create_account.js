@@ -35,27 +35,6 @@ async function nextPrev(n) {
     showTab(currentTab);
 }
 
-
-// async function checkEmail(email) {
-//     fetch("/includes/php/check_email.php", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/x-www-form-urlencoded"
-//         },
-//         body: "email=" + encodeURIComponent(email)
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         if (data.exists) {
-//             console.log("Email already exists");
-//             alert("Email already exists");
-//         } else {
-//             console.log("Email is available");
-//         }
-//     })
-//     .catch(error => console.error("Error:", error));
-// }
-
 async function validateForm() {
     let valid = true;
     const x = document.getElementsByClassName("tab");
@@ -124,9 +103,6 @@ async function validateForm() {
         valid = false;
     }
 
-    // if (!valid) {
-    //     alert("Please fill all required fields.");
-    // }
 
     return valid;
 }

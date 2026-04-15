@@ -168,29 +168,27 @@ function getUserInterests() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function updateFunction($value, $column){
+function updateFunction($user_id, $value, $column){
 	global $pdo;
 	$profileCols = ['bio', 'height_cm', 'city', 'country', 'looking_for','profile_picture'];
 	$preferencesCols = ['pref_gender', 'min_age', 'max_age'];
 
 	if (in_array($column, $profileCols)) {
-		updateProfile($value, $column);
+		updateProfile($user_id, $value, $column);
 	}
 	
 	if (in_array($column, $preferencesCols)) {
-		updatePreferences($value, $column);
+		updatePreferences($user_id, $value, $column);
 	}
 
 }
 
-function updatePreferences($value, $column){
+function updatePreferences($user_id, $value, $column){
 	global $pdo;
 
 	if (!isset($_SESSION["user_id"])) {
         return false;
     }
-
-	$userId = $_SESSION["user_id"];
 
 	$stmt = $pdo->prepare("
 		UPDATE preferences
@@ -200,18 +198,16 @@ function updatePreferences($value, $column){
 
 	$stmt->execute([
 		':value' => $value,
-		':user_id' => $userId
+		':user_id' => $user_id
 	]);
 }
 
-function updateProfile($value, $column){
+function updateProfile($user_id, $value, $column){
 	global $pdo;
 
 	if (!isset($_SESSION["user_id"])) {
         return false;
     }
-
-	$userId = $_SESSION["user_id"];
 
 	$stmt = $pdo->prepare("
 		UPDATE profiles
@@ -221,7 +217,7 @@ function updateProfile($value, $column){
 
 	$stmt->execute([
 		':value' => $value,
-		':user_id' => $userId
+		':user_id' => $user_id
 	]);
 }
 
@@ -241,18 +237,12 @@ function getAllInterests() {
 function updateUserInterests($userId, $interestIds) {
     global $pdo;
 
-    // if (count($interestIds) > 5) {
-    //     throw new Exception("You can only select up to 5 interests.");
-    // }
-
     $pdo->beginTransaction();
 
     try {
-        // Delete old interests
         $stmt = $pdo->prepare("DELETE FROM user_interests WHERE user_id = ?");
         $stmt->execute([$userId]);
 
-        // Insert new ones
         $stmt = $pdo->prepare("INSERT INTO user_interests (user_id, interest_id) VALUES (?, ?)");
 
         foreach ($interestIds as $interestId) {
@@ -266,6 +256,34 @@ function updateUserInterests($userId, $interestIds) {
         $pdo->rollBack();
         return false;
     }
+}
+
+function getUserProfilePicture($userId) {
+    global $pdo; // or your DB connection
+
+    $stmt = $pdo->prepare("SELECT profile_picture FROM profiles WHERE user_id = ?");
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchColumn();
+}
+
+function deleteUserProfilePicture($imagePath) {
+
+    if (!empty($imagePath)) {
+
+        $fullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath;
+
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+        }
+    }
+}
+
+function updateUserProfilePicture($userId, $imagePath) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("UPDATE profiles SET profile_picture = ? WHERE user_id = ?");
+    $stmt->execute([$imagePath, $userId]);
 }
 
 function verifyLogin($email, $password) {
@@ -914,6 +932,12 @@ function getLikes(PDO $pdo, $userId): array {
 		$profile['age'] = $today->diff(new DateTime($profile['date_of_birth']))->y;
 	}
 	return $likes;
+}
+
+function getDestinations(PDO $pdo) {
+	$destinationStmt = $pdo->prepare("SELECT d.location FROM destinations d");
+	$destinationStmt->execute();
+	return $destinationStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 }
 
 function banUser($targetId) {
