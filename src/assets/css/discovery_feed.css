@@ -138,6 +138,8 @@
 .passport-and-interests {
     display: flex;
     flex-direction: column;
+    overflow-x: clip;
+    overflow-y: visible;
 }
 
 .interests-panel {
@@ -148,7 +150,7 @@
     display: flex;
     align-items: flex-start;
     pointer-events: none;
-    z-index: 2;
+    z-index: 4;
     transform: translateX(260px);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -158,9 +160,16 @@
 }
 
 .interests-page-wrapper {
-    pointer-events: auto;
+    pointer-events: none;
     display: flex;
     align-self: stretch;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.interests-panel.open .interests-page-wrapper {
+    pointer-events: auto;
+    opacity: 1;
 }
 
 .interests-page {
@@ -216,7 +225,8 @@
 }
 
 @media (max-width: 768px) {
-    .interests-panel {
+    .interests-panel,
+    .interests-tab {
         display: none;
     }
 }
