@@ -241,18 +241,12 @@ function getAllInterests() {
 function updateUserInterests($userId, $interestIds) {
     global $pdo;
 
-    // if (count($interestIds) > 5) {
-    //     throw new Exception("You can only select up to 5 interests.");
-    // }
-
     $pdo->beginTransaction();
 
     try {
-        // Delete old interests
         $stmt = $pdo->prepare("DELETE FROM user_interests WHERE user_id = ?");
         $stmt->execute([$userId]);
 
-        // Insert new ones
         $stmt = $pdo->prepare("INSERT INTO user_interests (user_id, interest_id) VALUES (?, ?)");
 
         foreach ($interestIds as $interestId) {

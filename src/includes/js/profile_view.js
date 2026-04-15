@@ -23,7 +23,6 @@ function limitInterests(max = 5) {
     });
 }
 
-// Call it when page loads
 document.addEventListener("DOMContentLoaded", function () {
     limitInterests(5);
 });

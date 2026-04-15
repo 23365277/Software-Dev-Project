@@ -2,6 +2,8 @@
 
     session_start();
 
+    ini_set('upload_max_filesize', '10M');
+    ini_set('post_max_size', '10M');
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -19,7 +21,24 @@
         $height_cm = $_POST['height_cm'] ?? '';
         $country = $_POST['country'] ?? '';
         $city = $_POST['city'] ?? '';
-        $profile_picture = $_POST['profile_picture'] ?? '';
+        $profile_picture = '';
+
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0) {
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+            
+            // Create folder if it doesn't exist
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+
+            $fileName = uniqid() . "_" . basename($_FILES["profile_picture"]["name"]);
+            $targetFile = $targetDir . $fileName;
+
+            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
+                // This is the path you store in DB
+                $profile_picture = '/assets/images/' . $fileName;
+            }
+        }
         $interest1 = $_POST['interest1'] ?? '';
         $interest2 = $_POST['interest2'] ?? '';
         $interest3 = $_POST['interest3'] ?? '';
@@ -51,7 +70,7 @@
     
 <div class="row justify-content-center" >
 <div class="col-3">
-<form id="regForm" class="auth-form" method="POST" action="" onsubmit="return validateAllTabs()" novalidate>
+<form id="regForm" class="auth-form" method="POST" action="" enctype="multipart/form-data" onsubmit="return validateAllTabs()" novalidate>
   
   <div class="tab">
   <h2 class="signup-Title">Create Account</h2>

@@ -36,27 +36,19 @@
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
-<!-- <div class="banner col-12" id="bannerSection">
-    <img src="/assets/images/banner-pic.jpg" class="img-fluid" id="bannerImg" alt="Banner Image">
-    <input type="file" id="bannerInput" accept="image/*" style="display: none;">
-</div> -->
-
 <div class="container profile-wrapper">
 
 <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
 <div class="profile-pic">
-    <p class="profile-bio">
-        <button type="button" onclick="onEdit('editBio', 'bio')">Edit</button>
-    </p>
 
     <?php
     $img = $profile['profile_picture'] ?? '/assets/images/default.png';
     ?>
 
-    <img src="<?= $img ?>" alt="Profile Picture">
+    <img src="<?= $img ?>" alt="Profile Picture bitch bitch bitch bitch">
 </div>
             <div class="edit-btn">
-                <button class="btn btn-outline-primary" id="editBtn">Edit Profile</button>
+            <button type="button" onclick="onEdit('editBio', 'bio')">Edit</button>
             </div>
         </div>
 
@@ -268,10 +260,5 @@
         
 </div>
 
+
 <script src="/includes/js/profile_view.js"></script>
-
-<?php
-print_r($_SESSION);
-?>
-
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
