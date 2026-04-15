@@ -41,9 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
     window.updateCarousel = function() {
         const track = document.getElementById("carouselTrack");
         const windowEl = document.querySelector(".carousel-window");
-        const slides = track.querySelectorAll("img");
 
         if (!track || !windowEl) return;
+
+        const slides = track.querySelectorAll("img");
         if (slides.length === 0) return;
 
         if (window.currentIndex < 0) window.currentIndex = 0;
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.moveSlide = function(direction) {
         const track = document.getElementById("carouselTrack");
+        if (!track) return;
         const slides = track.querySelectorAll("img");
         if (slides.length === 0) return;
 
