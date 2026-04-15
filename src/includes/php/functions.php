@@ -686,6 +686,12 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 	return $user;
 }
 
+function getHomeCountry(PDO $pdo, $userId) {
+	$homeStmt = $pdo->prepare("SELECT country FROM profiles WHERE user_id = :userId");
+	$homeStmt->execute(['userId' => $userId]);
+	return $homeStmt->fetchColumn() ?: null;
+}
+
 
 function getUserTrips(PDO $pdo, $userId) {
 	$tripStmt = $pdo->prepare("
