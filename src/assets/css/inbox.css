@@ -58,6 +58,8 @@
     cursor: pointer;
     border-bottom: 0.5px solid #e0e0e0;
     transition: background 0.1s;
+    text-decoration: none;
+    color: inherit;
 }
 
 .person-row:hover { background: #fff; }
@@ -171,7 +173,7 @@
     margin-left: 4px;
 }
 
-/* Messages */
+/* ── Messages area ── */
 .messages-area {
     flex: 1;
     padding: 20px;
@@ -179,17 +181,23 @@
     flex-direction: column;
     gap: 14px;
     overflow-y: auto;
+    overflow-x: hidden; /* FIX: prevent horizontal clipping */
     background: #f4f4f4;
     min-height: 50vh;
 }
 
+/* ── Message row ── */
 .msg {
     display: flex;
     align-items: flex-end;
     gap: 8px;
+    width: 100%;         /* FIX: stretch to full container width */
+    min-width: 0;        /* FIX: allow flex children to shrink */
 }
 
-.msg.sent { flex-direction: row-reverse; }
+.msg.sent {
+    flex-direction: row-reverse;
+}
 
 .msg-avatar {
     width: 28px;
@@ -202,15 +210,31 @@
     font-size: 11px;
     font-weight: 500;
     color: #185FA5;
-    flex-shrink: 0;
+    flex-shrink: 0;      /* FIX: never let avatar shrink */
 }
 
+/* ── FIX: inner wrapper so bubble + time stack correctly ── */
+.msg > div:not(.msg-avatar) {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 36px - 8px); /* full width minus avatar and gap */
+    min-width: 0;
+}
+
+.msg.sent > div:not(.msg-avatar) {
+    align-items: flex-end;
+}
+
+/* ── Bubble ── */
 .bubble {
-    max-width: 60%;
+    /* FIX: removed max-width: 60% from here — it's now on the wrapper above */
     padding: 9px 13px;
     border-radius: 16px;
     font-size: 13px;
     line-height: 1.5;
+    word-break: break-word; /* FIX: wrap long words instead of overflowing */
+    overflow-wrap: break-word;
+    white-space: pre-wrap;  /* FIX: preserve intentional line breaks */
 }
 
 .bubble.received {
@@ -228,7 +252,11 @@
 .msg-time {
     font-size: 10px;
     color: #aaa;
-    margin: 0 4px 2px;
+    margin: 3px 4px 0;
+}
+
+.msg-time.text-end {
+    text-align: right;
 }
 
 .date-divider {
@@ -238,7 +266,7 @@
     padding: 4px 0;
 }
 
-/* Message bar */
+/* ── Message bar ── */
 .message-bar {
     padding: 14px 20px;
     border-top: 0.5px solid #e0e0e0;
@@ -283,4 +311,120 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+}
+
+/* ── Report modal ── */
+#inbox-report-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#inbox-report-modal {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 360px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#inbox-report-modal h3 {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+#inbox-report-modal p {
+    font-size: 13px;
+    color: #555;
+}
+
+#inbox-report-reason {
+    width: 100%;
+    border: 0.5px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 13px;
+    resize: vertical;
+    outline: none;
+}
+
+#inbox-report-modal-error {
+    font-size: 12px;
+    color: #c0392b;
+    min-height: 16px;
+}
+
+#inbox-report-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+#inbox-report-submit-btn,
+#inbox-report-cancel-btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+#inbox-report-submit-btn {
+    background: #534AB7;
+    color: #fff;
+}
+
+#inbox-report-cancel-btn {
+    background: #f0f0f0;
+    color: #333;
+}
+
+/* ── Actions dropdown ── */
+#inbox-actions {
+    margin-left: auto;
+    position: relative;
+}
+
+#inbox-actions-toggle {
+    padding: 6px 12px;
+    border: 0.5px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+#inbox-actions-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    background: #fff;
+    border: 0.5px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    z-index: 100;
+    min-width: 160px;
+    overflow: hidden;
+}
+
+#inbox-actions-menu button {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    background: none;
+    border: none;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+}
+
+#inbox-actions-menu button:hover {
+    background: #f5f5f5;
 }

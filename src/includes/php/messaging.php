@@ -8,6 +8,7 @@
     <label for="chatbox-toggle" id="chatbox-arrow-btn" title="Inbox">
         Inbox <span style="font-size:1.7em; color:#fff;">&#8592;</span>
     </label>
+
     <div id="chatbox-window">
         <div id="chatbox-header">
             <span>Chat / Inbox</span>
@@ -22,15 +23,14 @@
                 <label for="chatbox-toggle" style="cursor:pointer; font-size:1.3em; color:#fff;">&times;</label>
             </div>
         </div>
+
         <div id="chatbox-body">
-            <div id="chatbox-contacts">
-                <input type="text" id="contact-search" placeholder="Search for contacts" disabled> 
-                <button id="contact-search-btn" disabled>Search</button>
-            </div>
+            <div id="chatbox-contacts"></div>
             <div id="chatbox-messages" class="centered-message">
                 <span>Select a contact to start chatting</span>
             </div>
         </div>
+
         <div id="chatbox-error"></div>
         <div id="chatbox-input-area">
             <input type="text" id="chatbox-input" placeholder="Type your message..." disabled>
@@ -53,12 +53,33 @@
     </div>
 </div>
 
-<?php if(isset($_SESSION["user_id"])): ?>
-    <script>
-        if (typeof myUserId === 'undefined') {
-            var myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
-        }
-    </script>
-    <script src="/includes/js/messages.js"></script>
-    <script src="/includes/js/utils.js"></script>
+<?php if (isset($_SESSION['user_id'])): ?>
+<script>
+    if (typeof myUserId === 'undefined') {
+        var myUserId = <?= json_encode($_SESSION['user_id']) ?>;
+    }
+</script>
+<!-- Single unified module -->
+<script src="/includes/js/messages.js"></script>
+<script>
+    RoamanceMessaging.init({
+        myUserId        : myUserId,
+        mode            : 'chatbox',
+        contactsEl      : '#chatbox-contacts',
+        messagesEl      : '#chatbox-messages',
+        inputEl         : '#chatbox-input',
+        sendBtnEl       : '#chatbox-send',
+        errorEl         : '#chatbox-error',
+        actionsEl       : '#chatbox-actions',
+        actionsToggleEl : '#chatbox-actions-toggle',
+        actionsMenuEl   : '#chatbox-actions-menu',
+        reportBtnEl     : '#chatbox-report-btn',
+        blockBtnEl      : '#chatbox-block-btn',
+        reportOverlayEl : '#report-modal-overlay',
+        reportReasonEl  : '#report-reason',
+        reportErrorEl   : '#report-modal-error',
+        reportSubmitEl  : '#report-submit-btn',
+        reportCancelEl  : '#report-cancel-btn',
+    });
+</script>
 <?php endif; ?>
