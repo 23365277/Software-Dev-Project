@@ -5,15 +5,12 @@ footer {
     background-color: rgba(69, 140, 196, 1);
 
     padding: 1rem;
-    bottom: 0;
-    position: fixed;
     width: 100%;
     text-align: center;
 }
 
 @media (max-width: 768px) {
     footer {
-        position: static;
         padding: 0.6rem 1rem;
         font-size: 0.85rem;
     }
