@@ -2,6 +2,7 @@
     $pageTitle = "Roamance - Inbox";
     $pageCSS   = "/assets/css/inbox.css";
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     $currentUserId = $_SESSION['user_id'];
 
@@ -75,6 +76,32 @@
     ");
     $incomingLikesQ->execute([$currentUserId, $currentUserId, $currentUserId]);
     $incomingLikes = $incomingLikesQ->fetchAll(PDO::FETCH_ASSOC);
+
+    // ── Selected user extra data ──────────────────────────────────────────────
+    $otherUserPhotos = [];
+    $otherUserNextTrip = null;
+    $sharedDestinations = [];
+
+    if ($selectedMatch) {
+        $otherId = (int)$selectedMatch['other_user_id'];
+
+        $photosQ = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ? ORDER BY is_primary DESC, uploaded_at DESC LIMIT 6");
+        $photosQ->execute([$otherId]);
+        $otherUserPhotos = $photosQ->fetchAll(PDO::FETCH_COLUMN);
+
+        $otherUserNextTrip = getUserTrips($pdo, $otherId);
+
+        $sharedQ = $pdo->prepare("
+            SELECT d.location
+            FROM user_destinations ud1
+            JOIN user_destinations ud2 ON ud1.destination_id = ud2.destination_id
+            JOIN destinations d ON d.id = ud1.destination_id
+            WHERE ud1.user_id = ? AND ud2.user_id = ?
+            ORDER BY d.location ASC
+        ");
+        $sharedQ->execute([$currentUserId, $otherId]);
+        $sharedDestinations = $sharedQ->fetchAll(PDO::FETCH_COLUMN);
+    }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
     function getAge($dob) {
@@ -205,6 +232,9 @@
                 <div id="inbox-report-modal">
                     <h3>Report User</h3>
                     <p>Please describe the reason for this report:</p>
+                    <p style="font-size:12px;color:#888;background:#f5f5f5;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+                        &#9432; When a report is submitted, admins may review the conversation between you and this user as part of their investigation.
+                    </p>
                     <textarea id="inbox-report-reason" placeholder="Enter reason..." rows="4"></textarea>
                     <div id="inbox-report-modal-error"></div>
                     <div id="inbox-report-modal-actions">
@@ -265,6 +295,62 @@
     <!-- ── Connections panel ── -->
     <div class="connections-panel">
 
+        <?php if ($selectedMatch): ?>
+
+            <!-- Photos -->
+            <div class="conn-box">
+                <h3 class="conn-box-title">📸 Photos</h3>
+                <div class="conn-photos-grid">
+                    <?php
+                        $displayPhotos = $otherUserPhotos;
+                        if (empty($displayPhotos) && $selectedMatch['profile_picture']) {
+                            $displayPhotos = [$selectedMatch['profile_picture']];
+                        }
+                    ?>
+                    <?php if (empty($displayPhotos)): ?>
+                        <p class="conn-empty">No photos uploaded</p>
+                    <?php else: ?>
+                        <?php foreach ($displayPhotos as $photo): ?>
+                            <img src="<?= htmlspecialchars($photo) ?>" class="conn-photo-thumb" alt="Photo" onclick="openPhotoLightbox(this.src)">
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Next Trip -->
+            <div class="conn-box">
+                <h3 class="conn-box-title">✈️ Next Trip</h3>
+                <div style="padding: 10px 14px;">
+                    <?php if ($otherUserNextTrip): ?>
+                        <div class="conn-trip">
+                            <span class="conn-trip-location"><?= htmlspecialchars($otherUserNextTrip['location']) ?></span>
+                            <span class="conn-trip-dates">
+                                <?= date('d M', strtotime($otherUserNextTrip['start_date'])) ?>
+                                – <?= date('d M Y', strtotime($otherUserNextTrip['end_date'])) ?>
+                            </span>
+                        </div>
+                    <?php else: ?>
+                        <p class="conn-empty">No upcoming trips</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Shared Destinations -->
+            <div class="conn-box">
+                <h3 class="conn-box-title">🗺️ In Common</h3>
+                <div class="conn-list">
+                    <?php if (empty($sharedDestinations)): ?>
+                        <p class="conn-empty">No shared destinations</p>
+                    <?php else: ?>
+                        <?php foreach ($sharedDestinations as $dest): ?>
+                            <div class="conn-dest-row">📍 <?= htmlspecialchars($dest) ?></div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        <?php endif; ?>
+
         <div class="conn-box">
             <h3 class="conn-box-title">💓 Matches</h3>
             <div class="conn-list">
@@ -309,3 +395,22 @@
 
 </div><!-- /.inbox-wrap -->
 </div><!-- /.inbox-page -->
+
+<!-- Photo lightbox -->
+<div id="photo-lightbox" onclick="closePhotoLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;">
+    <img id="photo-lightbox-img" src="" alt="" style="max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.6);">
+</div>
+
+<script>
+function openPhotoLightbox(src) {
+    const lb = document.getElementById('photo-lightbox');
+    document.getElementById('photo-lightbox-img').src = src;
+    lb.style.display = 'flex';
+}
+function closePhotoLightbox() {
+    document.getElementById('photo-lightbox').style.display = 'none';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePhotoLightbox();
+});
+</script>

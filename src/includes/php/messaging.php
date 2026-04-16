@@ -44,6 +44,9 @@
     <div id="report-modal">
         <h3>Report User</h3>
         <p>Please describe the reason for this report:</p>
+        <p style="font-size:12px;color:#888;background:#f5f5f5;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+            &#9432; When a report is submitted, admins may review the conversation between you and this user as part of their investigation.
+        </p>
         <textarea id="report-reason" placeholder="Enter reason..." rows="4"></textarea>
         <div id="report-modal-error"></div>
         <div id="report-modal-actions">

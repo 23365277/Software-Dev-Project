@@ -89,7 +89,8 @@
 
                         <?php echo "<div class='reportActions'>" .
                             "<a href='/pages/admin_panel.php?resolve_report=" . htmlspecialchars($report['id']) . "' class='btn btn-success btn-sm mb-1'>Resolve</a><br>" .
-                            "<button class='btn btn-warning btn-sm' onclick=\"openActionModal(" . (int)$report['reported_user_id'] . ", '" . htmlspecialchars(addslashes($report['reported_email']), ENT_QUOTES) . "')\">Actions</button>" .
+                            "<button class='btn btn-warning btn-sm mb-1' onclick=\"openActionModal(" . (int)$report['reported_user_id'] . ", '" . htmlspecialchars(addslashes($report['reported_email']), ENT_QUOTES) . "')\">Actions</button><br>" .
+                            "<button class='btn btn-info btn-sm' onclick=\"viewMessages(" . (int)$report['reporter_id'] . ", " . (int)$report['reported_user_id'] . ")\">💬 Messages</button>" .
                         "</div>"; ?>
                     </div>
                     <?php endforeach; ?></p>
@@ -358,4 +359,62 @@ document.getElementById('banBtn').addEventListener('click', function () {
     }
 });
 </script>
+<!-- Messages Modal -->
+<div class="modal fade" id="messagesModal" tabindex="-1" aria-labelledby="messagesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messagesModalLabel">Conversation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="messagesModalBody" style="max-height:500px;overflow-y:auto;background:#f4f4f4;padding:1rem;">
+                <p class="text-muted text-center">Loading...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewMessages(reporterId, reportedId) {
+    const body = document.getElementById('messagesModalBody');
+    body.innerHTML = '<p class="text-muted text-center">Loading...</p>';
+
+    const modal = new bootstrap.Modal(document.getElementById('messagesModal'));
+    modal.show();
+
+    fetch(`/actions/admin_get_messages.php?user1=${reporterId}&user2=${reportedId}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) {
+                body.innerHTML = `<p class="text-danger text-center">${data.error}</p>`;
+                return;
+            }
+            if (data.no_match || data.messages.length === 0) {
+                body.innerHTML = '<p class="text-muted text-center">No messages found between these users.</p>';
+                return;
+            }
+            body.innerHTML = data.messages.map(msg => {
+                const name = msg.first_name + ' ' + msg.last_name;
+                const time = new Date(msg.sent_at).toLocaleString();
+                const isReporter = msg.sender_id == reporterId;
+                const align = isReporter ? 'text-end' : 'text-start';
+                const bg = isReporter ? '#534AB7' : '#fff';
+                const color = isReporter ? '#fff' : '#333';
+                const border = isReporter ? '' : 'border:0.5px solid #ddd;';
+                return `
+                    <div class="mb-2 ${align}">
+                        <small class="text-muted d-block">${name} · ${time}</small>
+                        <span style="display:inline-block;padding:8px 12px;border-radius:12px;background:${bg};color:${color};${border}max-width:75%;word-break:break-word;">
+                            ${msg.message.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+                        </span>
+                    </div>`;
+            }).join('');
+            body.scrollTop = body.scrollHeight;
+        })
+        .catch(() => {
+            body.innerHTML = '<p class="text-danger text-center">Failed to load messages.</p>';
+        });
+}
+</script>
+
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

@@ -557,6 +557,53 @@ body {
     min-width: 0;
 }
 
+/* ── Photo grid ── */
+.conn-photos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 8px;
+}
+
+.conn-photo-thumb {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+    transition: opacity 0.15s;
+}
+
+.conn-photo-thumb:hover {
+    opacity: 0.85;
+}
+
+/* ── Next trip ── */
+.conn-trip {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.conn-trip-location {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a3a5c;
+}
+
+.conn-trip-dates {
+    font-size: 11px;
+    color: #888;
+}
+
+/* ── Shared destinations ── */
+.conn-dest-row {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-bottom: 0.5px solid #f2f2f2;
+    color: #1a3a5c;
+}
+
 /* ── Mobile ── */
 @media (max-width: 768px) {
     .inbox-wrap {
