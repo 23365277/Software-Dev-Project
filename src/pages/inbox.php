@@ -59,6 +59,23 @@
         $messages = $msgQ->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // ── Incoming likes (people who liked you, not yet matched) ───────────────
+    $incomingLikesQ = $pdo->prepare("
+        SELECT p.user_id, p.first_name, p.last_name, p.profile_picture
+        FROM likes l
+        JOIN profiles p ON p.user_id = l.sender_id
+        WHERE l.receiver_id = ?
+          AND NOT EXISTS (
+              SELECT 1 FROM matches m
+              WHERE (m.user1_id = ? AND m.user2_id = l.sender_id)
+                 OR (m.user2_id = ? AND m.user1_id = l.sender_id)
+          )
+        ORDER BY l.created_at DESC
+        LIMIT 20
+    ");
+    $incomingLikesQ->execute([$currentUserId, $currentUserId, $currentUserId]);
+    $incomingLikes = $incomingLikesQ->fetchAll(PDO::FETCH_ASSOC);
+
     // ── Helpers ───────────────────────────────────────────────────────────────
     function getAge($dob) {
         return (new DateTime($dob))->diff(new DateTime())->y;
@@ -74,7 +91,9 @@
     }
 ?>
 
-<div class="inbox-wrap ms-4">
+<div class="inbox-page">
+<h1 class="inbox-page-title">Messages</h1>
+<div class="inbox-wrap">
 
     <!-- ── Sidebar ── -->
     <div class="sidebar">
@@ -243,4 +262,50 @@
         <?php endif; ?>
     </div>
 
-</div>
+    <!-- ── Connections panel ── -->
+    <div class="connections-panel">
+
+        <div class="conn-box">
+            <h3 class="conn-box-title">💓 Matches</h3>
+            <div class="conn-list">
+                <?php if (empty($matches)): ?>
+                    <p class="conn-empty">No matches yet</p>
+                <?php else: ?>
+                    <?php foreach ($matches as $m): ?>
+                        <a href="?match_id=<?= $m['match_id'] ?>" class="conn-row <?= $m['match_id'] == $selectedMatchId ? 'active' : '' ?>">
+                            <?php if ($m['profile_picture']): ?>
+                                <img src="<?= htmlspecialchars($m['profile_picture']) ?>" class="conn-avatar" alt="">
+                            <?php else: ?>
+                                <div class="conn-avatar"><?= strtoupper(substr($m['first_name'],0,1).substr($m['last_name'],0,1)) ?></div>
+                            <?php endif; ?>
+                            <span class="conn-name"><?= htmlspecialchars($m['first_name'].' '.$m['last_name']) ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="conn-box">
+            <h3 class="conn-box-title">⭐ Liked You</h3>
+            <div class="conn-list">
+                <?php if (empty($incomingLikes)): ?>
+                    <p class="conn-empty">No likes yet</p>
+                <?php else: ?>
+                    <?php foreach ($incomingLikes as $l): ?>
+                        <a href="/pages/discovery_feed.php" class="conn-row">
+                            <?php if ($l['profile_picture']): ?>
+                                <img src="<?= htmlspecialchars($l['profile_picture']) ?>" class="conn-avatar" alt="">
+                            <?php else: ?>
+                                <div class="conn-avatar"><?= strtoupper(substr($l['first_name'],0,1).substr($l['last_name'],0,1)) ?></div>
+                            <?php endif; ?>
+                            <span class="conn-name"><?= htmlspecialchars($l['first_name'].' '.$l['last_name']) ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    </div>
+
+</div><!-- /.inbox-wrap -->
+</div><!-- /.inbox-page -->

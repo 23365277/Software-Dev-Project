@@ -15,16 +15,11 @@
     </nav>
     <?php endif; ?>
 
-    <!-- Everything Below this is for the navBar for a logged in user -->
-
-    
-    <?php if (isset($_SESSION['user_id'])): ?>
     <button class="hbtn" id="hbtn" aria-label="Open menu">
         <span class="hline"></span>
         <span class="hline"></span>
         <span class="hline"></span>
     </button>
-    <?php endif; ?>
 
     <!-- Click-outside overlay -->
     <div class="nav-overlay" id="navOverlay"></div>
@@ -37,15 +32,18 @@
 
             <?php if (isset($_SESSION['user_id'])): ?>
                 <li><a href="/pages/home.php"><span>🏠</span> Home</a></li>
+                <li><a href="/pages/destination_search.php"><span>🗺</span> Atlas</a></li>
+                <li><a href="/pages/post_a_trip.php"><span>🛫</span> Post A Trip</a></li>
+                <li><a href="/pages/inbox.php"><span>📨</span> Inbox</a></li>
+                <li><a href="/pages/matches_likes.php"><span>💓</span> Matches and Likes</a></li>
+                <?php if (($_SESSION['user_role'] ?? '') === 'ADMIN'): ?>
+                <li><a href="/pages/admin_panel.php"><span>🛠️</span> Admin</a></li>
+                <?php endif; ?>
+                <li><a href="/pages/discovery_feed.php"><span>🔎</span> Passports</a></li>
+            <?php else: ?>
+                <li><a href="/pages/about.php"><span>ℹ️</span> About</a></li>
+                <li><a href="/pages/discovery_feed.php"><span>🔎</span> Passports</a></li>
             <?php endif; ?>
-
-            
-            <li><a href="/pages/destination_search.php"><span>🗺</span> Atlas</a></li>
-            <li><a href="/pages/post_a_trip.php"><span>🛫</span> Post A Trip</a></li>
-            <li><a href="/pages/inbox.php"><span>📨</span> Inbox</a></li>
-            <li><a href="/pages/matches_likes.php"><span>💓</span> Matches and Likes</a></li>
-            <li><a href="/pages/admin_panel.php"><span>🛠️</span> Admin</a></li>
-            <li><a href="/pages/discovery_feed.php"><span>🔎</span> Passports</a></li>
             <li><a href="/pages/contact.php"><span>💌</span> Contact</a></li>
 
             <?php if (isset($_SESSION['user_id'])): ?>
@@ -85,18 +83,20 @@ document.addEventListener("DOMContentLoaded", function () {
     function openDrawer() {
         drawer.classList.add("open");
         overlay.classList.add("open");
-        hbtn.classList.add("open");
+        if (hbtn) hbtn.classList.add("open");
     }
 
     function closeDrawer() {
         drawer.classList.remove("open");
         overlay.classList.remove("open");
-        hbtn.classList.remove("open");
+        if (hbtn) hbtn.classList.remove("open");
     }
 
-    hbtn.addEventListener("click", function () {
-        drawer.classList.contains("open") ? closeDrawer() : openDrawer();
-    });
+    if (hbtn) {
+        hbtn.addEventListener("click", function () {
+            drawer.classList.contains("open") ? closeDrawer() : openDrawer();
+        });
+    }
 
     overlay.addEventListener("click", closeDrawer);
 

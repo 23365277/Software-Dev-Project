@@ -1,97 +1,37 @@
-.inbox-layout {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 0;
-    min-height: 70vh;
-    margin: 1.5rem;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+/* ── Page background ── */
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(240, 163, 21, 0.499), transparent 75%),
+        linear-gradient(#ccdceb, #a3c1d4, #7598d0);
+    font-family: Arial, sans-serif;
+    color: #18314f;
 }
 
-.inbox-sidebar {
-    background: #fff;
-    border-right: 1px solid #e0e0e0;
-    padding: 1rem;
-    min-height: 70vh;
+/* ── Page wrapper ── */
+.inbox-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 2rem;
 }
 
-.inbox-chat {
-    display: flex;
-    flex-direction: column;
-    background: #f9f9f9;
-}
-
-.inbox-chat-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.5rem;
-    background: #fff;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.inbox-chat-info h2,
-.inbox-chat-info h3 {
-    margin: 0;
-}
-
-.inbox-chat-info h2 {
-    font-size: 1.1rem;
-}
-
-.inbox-chat-info h3 {
-    font-size: 0.95rem;
-    color: #666;
-    font-weight: 400;
-}
-
-.inbox-avatar {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    flex-shrink: 0;
-}
-
-.inbox-messages {
-    flex: 1;
-    min-height: 50vh;
-    padding: 1rem 1.5rem;
-}
-
-.inbox-message-bar {
-    padding: 1rem 1.5rem;
-    background: #fff;
-    border-top: 1px solid #e0e0e0;
-}
-
-.inbox-panel-title {
-    font-size: 1.1rem;
+.inbox-page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
     font-weight: 600;
-    margin: 0 0 0.75rem 0;
     color: #1a3a5c;
+    margin: 0 0 1rem 0;
+    letter-spacing: 0.02em;
 }
 
 @media (max-width: 768px) {
-    .inbox-layout {
-        grid-template-columns: minmax(0, 1fr);
-        margin: 0.5rem;
-        min-height: unset;
+    .inbox-page {
+        padding: 0.75rem 0.5rem 1rem;
     }
 
-    .inbox-sidebar {
-        min-height: unset;
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .inbox-messages {
-        min-height: 40vh;
-    }
-
-    .inbox-avatar {
-        width: 48px;
-        height: 48px;
+    .inbox-page-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.6rem;
     }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,11 +39,12 @@
 .inbox-wrap {
     display: flex;
     gap: 0;
-    border: 0.5px solid var(--color-border-tertiary);
+    border: 1px solid #dde3ea;
     border-radius: 12px;
     overflow: hidden;
     background: #fff;
     min-height: 70vh;
+    box-shadow: 0 4px 24px rgba(30, 58, 92, 0.1);
 }
 
 /* Sidebar */
@@ -523,4 +464,147 @@
 
 #inbox-actions-menu button:hover {
     background: #f5f5f5;
+}
+
+/* ── Connections panel ── */
+.connections-panel {
+    width: 200px;
+    min-width: 160px;
+    flex-shrink: 0;
+    border-left: 0.5px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+}
+
+.conn-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.conn-box + .conn-box {
+    border-top: 0.5px solid #e0e0e0;
+}
+
+.conn-box-title {
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a3a5c;
+    letter-spacing: 0.03em;
+    background: #fff;
+    border-bottom: 0.5px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.conn-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.conn-empty {
+    font-size: 11px;
+    color: #aaa;
+    padding: 12px 14px;
+    font-style: italic;
+}
+
+.conn-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: inherit;
+    border-bottom: 0.5px solid #f2f2f2;
+    transition: background 0.1s;
+}
+
+.conn-row:hover,
+.conn-row.active {
+    background: #fff;
+    color: inherit;
+}
+
+.conn-row.active {
+    border-left: 2px solid #7F77DD;
+}
+
+.conn-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #E6F1FB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #185FA5;
+}
+
+.conn-name {
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .inbox-wrap {
+        flex-direction: column;
+        min-height: unset;
+        border-radius: 8px;
+    }
+
+    .connections-panel {
+        display: none;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: unset;
+        max-height: 38vh;
+        border-right: none;
+        border-bottom: 0.5px solid #e0e0e0;
+    }
+
+    .people-list {
+        overflow-y: auto;
+    }
+
+    .chat-panel {
+        min-height: unset;
+    }
+
+    .messages-area {
+        min-height: 40vh;
+        padding: 12px;
+    }
+
+    .chat-header {
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .chat-header-info h2 {
+        font-size: 14px;
+    }
+
+    .message-bar {
+        padding: 10px 12px;
+    }
+
+    #inbox-actions-toggle {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
 }

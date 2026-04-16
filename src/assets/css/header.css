@@ -41,6 +41,10 @@ header .logo {
     .header-spacer {
         height: 70px;
     }
+
+    .nav-links {
+        display: none;
+    }
 }
 
 /* ===== HAMBURGER BUTTON ===== */

@@ -2,6 +2,11 @@
     session_start();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
+    if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? 'USER') !== 'ADMIN') {
+        header("Location: /pages/home.php");
+        exit;
+    }
+
     if (isset($_GET['resolve_report'])) {
         resolveReport((int) $_GET['resolve_report']);
         header("Location: /pages/admin_panel.php");

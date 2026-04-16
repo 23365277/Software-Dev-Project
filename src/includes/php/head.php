@@ -10,6 +10,13 @@ if(session_status() == PHP_SESSION_NONE){
 	session_start();
 }
 
+if (isset($_SESSION['user_id']) && !isset($_SESSION['user_role'])) {
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    $roleStmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
+    $roleStmt->execute([$_SESSION['user_id']]);
+    $_SESSION['user_role'] = $roleStmt->fetchColumn() ?: 'USER';
+}
+
 if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
     $user = getUserByRememberToken($_COOKIE['remember_me']);
