@@ -42,9 +42,6 @@ header .logo {
         height: 70px;
     }
 
-    .nav-links {
-        display: none;
-    }
 }
 
 /* ===== HAMBURGER BUTTON ===== */
@@ -254,22 +251,22 @@ header .logo {
     transition: all 0.25s ease;
 }
 
-.btn-drawer-login {
+.drawer-nav .btn-drawer-login {
     background: rgba(255,255,255,0.15);
     color: #ffffff;
     border: 1px solid rgba(255,255,255,0.4);
 }
 
-.btn-drawer-login:hover {
+.drawer-nav .btn-drawer-login:hover {
     background: rgba(255,255,255,0.28);
 }
 
-.btn-drawer-signup {
+.drawer-nav .btn-drawer-signup {
     background: #ffffff;
     color: #0f3a5c;
 }
 
-.btn-drawer-signup:hover {
+.drawer-nav .btn-drawer-signup:hover {
     background: #e0f0ff;
     transform: translateY(-1px);
 }
@@ -324,4 +321,10 @@ header .logo {
     background: #e0f0ff;
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
 }

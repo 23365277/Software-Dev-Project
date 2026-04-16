@@ -5,16 +5,6 @@
         <img class="logo" src="/assets/images/Roamance v7.png" alt="Roamance Logo">
     </a>
 
-    <!-- HomePage NavBar -->
-    <?php if (!isset($_SESSION['user_id'])): ?>
-    <nav class="nav-links">
-        <a href="/pages/about.php">About</a>
-        <a href="/pages/contact.php">Contact</a>
-        <a href="/pages/create_account.php" class="btn-signup">Sign Up</a>
-        
-    </nav>
-    <?php endif; ?>
-
     <button class="hbtn" id="hbtn" aria-label="Open menu">
         <span class="hline"></span>
         <span class="hline"></span>
@@ -42,7 +32,6 @@
                 <li><a href="/pages/discovery_feed.php"><span>🔎</span> Passports</a></li>
             <?php else: ?>
                 <li><a href="/pages/about.php"><span>ℹ️</span> About</a></li>
-                <li><a href="/pages/discovery_feed.php"><span>🔎</span> Passports</a></li>
             <?php endif; ?>
             <li><a href="/pages/contact.php"><span>💌</span> Contact</a></li>
 
@@ -60,7 +49,7 @@
                     </ul>
                 </li>
 
-            <?php elseif (strpos($url, 'create_account.php') === false): ?>
+            <?php else: ?>
                 <li class="auth-btns">
                     <a href="/pages/login.php" class="btn-drawer-login">Log In</a>
                     <a href="/pages/create_account.php" class="btn-drawer-signup">Sign Up</a>
