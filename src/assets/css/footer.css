@@ -11,3 +11,11 @@ footer {
     text-align: center;
 }
 
+@media (max-width: 768px) {
+    footer {
+        position: static;
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+

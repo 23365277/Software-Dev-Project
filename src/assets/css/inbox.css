@@ -1,0 +1,96 @@
+.inbox-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: 70vh;
+    margin: 1.5rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.inbox-sidebar {
+    background: #fff;
+    border-right: 1px solid #e0e0e0;
+    padding: 1rem;
+    min-height: 70vh;
+}
+
+.inbox-chat {
+    display: flex;
+    flex-direction: column;
+    background: #f9f9f9;
+}
+
+.inbox-chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.inbox-chat-info h2,
+.inbox-chat-info h3 {
+    margin: 0;
+}
+
+.inbox-chat-info h2 {
+    font-size: 1.1rem;
+}
+
+.inbox-chat-info h3 {
+    font-size: 0.95rem;
+    color: #666;
+    font-weight: 400;
+}
+
+.inbox-avatar {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.inbox-messages {
+    flex: 1;
+    min-height: 50vh;
+    padding: 1rem 1.5rem;
+}
+
+.inbox-message-bar {
+    padding: 1rem 1.5rem;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+}
+
+.inbox-panel-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+    color: #1a3a5c;
+}
+
+@media (max-width: 768px) {
+    .inbox-layout {
+        grid-template-columns: minmax(0, 1fr);
+        margin: 0.5rem;
+        min-height: unset;
+    }
+
+    .inbox-sidebar {
+        min-height: unset;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .inbox-messages {
+        min-height: 40vh;
+    }
+
+    .inbox-avatar {
+        width: 48px;
+        height: 48px;
+    }
+}
