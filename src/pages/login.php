@@ -24,7 +24,7 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
 }
 
 $pageTitle = "Roamance - Dating for Travel Lovers";
-$pageCSS = "/assets/css/login.css";
+$pageCSS = "/assets/css/login.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/login.css');
 include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
