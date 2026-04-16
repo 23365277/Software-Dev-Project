@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	$pageCSS = "/assets/css/discovery_feed.css";
+	$pageCSS = "/assets/css/discovery_feed.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . "/assets/css/discovery_feed.css");
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 

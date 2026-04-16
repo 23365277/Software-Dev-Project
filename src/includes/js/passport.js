@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    window.passportDirection = -1400;
+    window.passportDirection = -14000;
     window.currentIndex = 0;
 
     window.peelCover = function() {

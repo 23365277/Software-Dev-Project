@@ -30,8 +30,7 @@ if (!$user) {
 <link rel="stylesheet" href="/assets/css/passport.css">
 
 <div class="passport-wrapper mx-auto">
-	<div class="cover"></div>
-		<div class="passport position-relative mx-auto">
+	<div class="passport position-relative mx-auto">
 			<div class="noProfileOverlay" id="noProfileOverlay" style="<?= $currentProfileId !== null ? 'display:none;' : 'display:flex;' ?>">
 				<p>No more profiles available</p>
 				<p>Try adjusting your preferences or check back later!</p>
@@ -112,7 +111,7 @@ if (!$user) {
 						</div>		
 				
 						<div id="stampsArea">
-							<?php if (empty($stamps)): ?>
+											<?php if (empty($stamps)): ?>
 								<div class="no-stamps">
 									<span class="no-stamps-icon">✈️</span>
 									<p class="no-stamps-text">This user has posted no trips yet</p>
@@ -133,20 +132,6 @@ if (!$user) {
 									</div>
 								</div>
 							<?php endif; ?>
-						<div class="stamps-container">
-							<div class="stamps">
-								<?php foreach($stamps as $stamp): ?>
-								<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
-									<span class="icon"><?= $stamp['icon'] ?></span>
-									<span class="country"><?= $stamp['country'] ?></span>
-									<span class="date"><?= $stamp['date'] ?></span>
-									<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
-										<span class="desc"><?= $stamp['desc'] ?></span>
-									<?php endif; ?>
-								</div>
-								<?php endforeach; ?>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>

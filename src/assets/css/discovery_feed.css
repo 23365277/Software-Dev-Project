@@ -124,8 +124,12 @@
 }
 
 @media (max-width: 768px) {
+    html {
+        overflow-x: hidden;
+    }
+
     .feed-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         grid-template-areas:
             "center"
             "left";
@@ -138,7 +142,6 @@
 .passport-and-interests {
     display: flex;
     flex-direction: column;
-    overflow-x: clip;
     overflow-y: visible;
 }
 
@@ -150,7 +153,7 @@
     display: flex;
     align-items: flex-start;
     pointer-events: none;
-    z-index: 4;
+    z-index: 2;
     transform: translateX(260px);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -281,6 +284,13 @@ body.passport-page {
 
     .action-bar {
         margin-top: 12px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .action-btns {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
 }
 
@@ -288,7 +298,6 @@ body.passport-page {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
@@ -311,6 +320,8 @@ body.passport-page {
     width: clamp(70px, 2.2vw, 100px);
     height: clamp(70px, 2.2vw, 100px);
     flex-shrink: 0;
+    position: relative;
+    z-index: 3;
 }
 
 .action-btn {
