@@ -1,9 +1,9 @@
 
     .info-box, .auth-box {
         background: rgba(255, 255, 255, 0);
-        height: 64vh;
-        width: 50vh;
-        padding: 50px;
+        width: 100%;
+        max-width: 480px;
+        padding: 30px;
         border-radius: 10px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     }
@@ -69,14 +69,31 @@
     background: #5568d3;
 }
 
- @media (max-width: 768px) {
+@media (max-width: 768px) {
     .container {
         flex-direction: column;
+        align-items: center;
+        padding: 10px;
     }
-    
-    /* .auth-box {
-        flex: 1;
-    } */
+
+    .auth-form {
+        width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .signup-Title {
+        font-size: 2em;
+    }
+
+    .auth-box input {
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .auth-box button {
+        font-size: 1.2em;
+    }
 }
 
 .bg-slide {

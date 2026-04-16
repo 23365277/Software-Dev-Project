@@ -133,11 +133,11 @@ async function submitTrip() {
         const data = await res.json();
 
         if (data.success) {
-            alert("Trip posted successfully!");
             destination.value = "";
             startDate.value = "";
             endDate.value = "";
             activity.value = "";
+            new bootstrap.Modal(document.getElementById("tripSuccessModal")).show();
         } else {
             alert("Error posting trip.");
         }

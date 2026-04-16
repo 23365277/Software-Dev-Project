@@ -33,6 +33,16 @@ header .logo {
     height: 120px;
 }
 
+@media (max-width: 768px) {
+    header .logo {
+        height: 60px;
+    }
+
+    .header-spacer {
+        height: 70px;
+    }
+}
+
 /* ===== HAMBURGER BUTTON ===== */
 .hbtn {
     display: flex;

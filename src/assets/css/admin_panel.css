@@ -93,3 +93,23 @@
     white-space: nowrap;
     font-size: 0.78rem;
 }
+
+@media (max-width: 768px) {
+    .scrollableContainer {
+        max-height: 180px;
+    }
+
+    .reportEntry {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .reportActions {
+        flex-direction: row;
+        align-self: flex-end;
+    }
+
+    .activityExtra {
+        display: none;
+    }
+}

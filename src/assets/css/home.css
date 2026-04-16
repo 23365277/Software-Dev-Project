@@ -162,6 +162,21 @@ body {
     cursor: not-allowed;
 }
 
+@media (max-width: 768px) {
+    #home-messages-panel {
+        height: 320px;
+    }
+
+    #home-contacts {
+        width: 90px;
+    }
+
+    .home-contact {
+        font-size: 11px;
+        padding: 8px 6px;
+    }
+}
+
 #home-error {
     background: #fee2e2;
     color: #b91c1c;
