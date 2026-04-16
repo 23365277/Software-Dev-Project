@@ -1035,7 +1035,7 @@ function getPreferenceInfoById($userId) {
 function getUserInterestsById($userId) {
     global $pdo;
     $stmt = $pdo->prepare("
-        SELECT interests.name
+        SELECT interests.id, interests.name
         FROM user_interests
         JOIN interests ON user_interests.interest_id = interests.id
         WHERE user_interests.user_id = ?
