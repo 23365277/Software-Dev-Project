@@ -12,7 +12,7 @@ $userId = $_SESSION["user_id"];
 $pageTitle = "Roamance - Home";
 $pageCSS = ["/assets/css/messaging.css",
             "/assets/css/connections_passport.css",
-            "/assets/css/home.css"];
+            "/assets/css/home.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/home.css')];
 include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 
 $matches = getMatches($pdo, $userId);

@@ -151,7 +151,7 @@ body {
     }
 
     .info-box {
-        display: none;
+        padding: 20px;
     }
 }
 
