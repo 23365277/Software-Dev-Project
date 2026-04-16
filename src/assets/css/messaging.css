@@ -50,7 +50,7 @@
 #chatbox-button:hover { background: #5a67d8; }
 
 #chatbox-window {
-    width: 420px;
+    width: min(420px, calc(100vw - 40px));
     height: 420px;
     background: #fff;
     border-radius: 10px 10px 0 0;
@@ -422,4 +422,24 @@
     transition: background 0.2s;
 }
 
+<<<<<<< HEAD
 #report-cancel-btn:hover { background: #cbd5e1; }
+=======
+@media (max-width: 480px) {
+    #chatbox-container {
+        bottom: 10px;
+        right: 10px;
+    }
+
+    #chatbox-window {
+        width: calc(100vw - 20px);
+        right: -10px;
+    }
+
+    #report-modal,
+    #home-report-modal {
+        width: calc(100vw - 40px);
+    }
+}
+
+>>>>>>> mobile_responsiveness

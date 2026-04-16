@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	$pageCSS = "/assets/css/discovery_feed.css";
+	$pageCSS = "/assets/css/discovery_feed.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . "/assets/css/discovery_feed.css");
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 
@@ -10,47 +10,72 @@
 <html>
 <body class="passport-page">
 
-<div class="container-fluid px-0 py-4">
-	<div class="col-4 col-lg-4">
-		<div>
-			<button type="button" class="preference" id="preferenceToggle"> Head to Preferences</button>
+<div class="feed-layout">
+
+	<!-- Left Sidebar -->
+	<aside class="feed-sidebar feed-sidebar-left">
+		<div class="sidebar-card">
+			<h4 class="sidebar-title">⚙️ Preferences</h4>
+			<button type="button" class="preference sidebar-pref-btn" id="preferenceToggle">Edit Preferences</button>
+			<?php if (!empty($selectedCountry)): ?>
+				<div class="sidebar-pref-active">
+					<span>Filtering by:</span>
+					<strong id="tripPreferenceAlert"><?= htmlspecialchars($selectedCountry) ?></strong>
+					<button class="sidebar-reset-btn" id="resetTripPreferenceBtn">✕ Reset</button>
+				</div>
+			<?php else: ?>
+				<p class="sidebar-hint">No trip filter active</p>
+			<?php endif; ?>
 		</div>
-		<div class="preference-overlay " id="preferenceOverlay">
-			<div class="preference-panel" id="preferencePanel">
-				<button type="button" class="close-overlay" id="closePreferenceOverlay">&times;</button>
 
-				<h2 class="mb-4">Edit Your Preferences</h2>
+		<div class="sidebar-card">
+			<h4 class="sidebar-title">💡 How it works</h4>
+			<ul class="sidebar-tips">
+				<li>Browse traveller passports</li>
+				<li><strong>Like</strong> someone to connect</li>
+				<li>Match when they like you back</li>
+				<li>Plan your trip together</li>
+			</ul>
+		</div>
+	</aside>
 
-				<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
+	<!-- Passport + interests panel -->
+	<div class="passport-and-interests">
+		<div class="passport-container">
+			<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
 
-				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
-
-				<?php if (!empty($selectedCountry)): ?>
-					<div class="alert alert-info mt-4" id="tripPreferenceAlert">
-						Current Trip Preference: <string><?= htmlspecialchars($selectedCountry) ?></string>
+			<div class="container col-9 action-bar">
+				<div class="row justify-content-center align-items-center g-3 action-btns">
+					<div class="col-4 col-lg-3">
+						<button class="btn action-btn like w-100" id="likeBtn">Like</button>
 					</div>
-				<?php endif; ?>
-					<button type="button" class="btn btn-outline-dark reset-preferences-btn" id="resetTripPreferenceBtn">Reset Trip Preference</button>
+					<div class="col-auto text-center">
+						<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
+					</div>
+					<div class="col-4 col-lg-3">
+						<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="passport-container">
-		<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
-		<div class="container col-9 action-bar">
-			<div class="row justify-content-center align-items-center g-3 action-btns">
-				<div class="col-4 col-lg-3">
-					<button class="btn action-btn like w-100" id="likeBtn">Like</button>
+
+	<!-- Preference overlay (unchanged) -->
+	<div class="preference-overlay" id="preferenceOverlay">
+		<div class="preference-panel" id="preferencePanel">
+			<button type="button" class="close-overlay" id="closePreferenceOverlay">&times;</button>
+			<h2 class="mb-4">Edit Your Preferences</h2>
+			<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
+			<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
+			<?php if (!empty($selectedCountry)): ?>
+				<div class="alert alert-info mt-4">
+					Current Trip Preference: <strong><?= htmlspecialchars($selectedCountry) ?></strong>
 				</div>
-				<div class="col-auto text-center">
-					<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
-				</div>
-				<div class="col-4 col-lg-3">
-					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
-				</div>
-			</div>
-			</div>
+			<?php endif; ?>
+			<button type="button" class="btn btn-outline-dark reset-preferences-btn" id="resetTripPreferenceBtn2">Reset Trip Preference</button>
 		</div>
 	</div>
+
 </div>
 
 <!-- GSAP CDN -->
@@ -62,6 +87,10 @@ const preferenceOverlay = document.getElementById("preferenceOverlay");
 const closePreferenceOverlay = document.getElementById("closePreferenceOverlay");
 const resetPreferencesBtn = document.getElementById("resetTripPreferenceBtn");
 const tripPreferenceAlert = document.getElementById("tripPreferenceAlert");
+
+document.getElementById("interestsTab").addEventListener("click", () => {
+    document.getElementById("interestsPanel").classList.toggle("open");
+});
 
 preferenceToggle.addEventListener("click", () => {
 	preferenceOverlay.classList.add("active");
@@ -171,15 +200,16 @@ function returnXY() {
 
 let selectedCountry = <?= json_encode($selectedCountry) ?>;
 
-document.getElementById("resetTripPreferenceBtn").addEventListener("click", () => {
+function resetTripPreference() {
     selectedCountry = null;
-
-	if (tripPreferenceAlert) {
-		tripPreferenceAlert.classList.add("hidden");
-	}
-
+    if (tripPreferenceAlert) tripPreferenceAlert.closest(".sidebar-pref-active")?.remove();
     history.replaceState(null, "", "/pages/discovery_feed.php");
     window.closeCover();
+}
+
+document.getElementById("resetTripPreferenceBtn")?.addEventListener("click", resetTripPreference);
+document.getElementById("resetTripPreferenceBtn2")?.addEventListener("click", () => {
+    resetTripPreference();
 });
 
 function showNoProfilesOverlay() {
@@ -240,31 +270,32 @@ function loadNextPassport() {
 				tripText.textContent = "No planned trips";
 			}
 
-			const stampsContainer = document.querySelector(".stamps");
-			stampsContainer.innerHTML = "";
-
+			const stampsArea = document.getElementById("stampsArea");
 			const passportStamps = user.stamps || [];
 
-			passportStamps.forEach(stamp => {
-				const stampDiv = document.createElement("div");
-				stampDiv.className = "stamp";
-
-				if (stamp.desc && stamp.desc !== "0") {
-					stampDiv.classList.add("has-desc");
-				}
-
-				stampDiv.innerHTML = `
-					<span class="icon">${stamp.icon}</span>
-					<span class="country">${stamp.country}</span>
-					<span class="date">${stamp.date}</span>
-					${stamp.desc && stamp.desc !== "0" ? `<span class="desc">${stamp.desc}</span>` : ""}
-				`;
-
-				const angle = (Math.random() * 10) - 5;
-				stampDiv.style.transform = `rotate(${angle}deg)`;
-
-				stampsContainer.appendChild(stampDiv);
-			});
+			if (passportStamps.length === 0) {
+				stampsArea.innerHTML = `
+					<div class="no-stamps">
+						<span class="no-stamps-icon">✈️</span>
+						<p class="no-stamps-text">This user has posted no trips yet</p>
+					</div>`;
+			} else {
+				stampsArea.innerHTML = '<div class="stamps-container"><div class="stamps"></div></div>';
+				const stampsDiv = stampsArea.querySelector(".stamps");
+				passportStamps.forEach(stamp => {
+					const stampDiv = document.createElement("div");
+					stampDiv.className = "stamp";
+					if (stamp.desc && stamp.desc !== "0") stampDiv.classList.add("has-desc");
+					stampDiv.innerHTML = `
+						<span class="icon">${stamp.icon}</span>
+						<span class="country">${stamp.country}</span>
+						<span class="date">${stamp.date}</span>
+						${stamp.desc && stamp.desc !== "0" ? `<span class="desc">${stamp.desc}</span>` : ""}
+					`;
+					stampDiv.style.transform = `rotate(${(Math.random() * 10) - 5}deg)`;
+					stampsDiv.appendChild(stampDiv);
+				});
+			}
 
 			const carouselTrack = document.getElementById("carouselTrack");
 			carouselTrack.innerHTML = "";
@@ -282,8 +313,18 @@ function loadNextPassport() {
 
 			document.getElementById("approvedStamp").classList.remove("visible");
 			document.getElementById("rejectedStamp").classList.remove("visible");
+			document.getElementById("interestsPanel").classList.remove("open");
 			likeBtn.disabled = false;
 			dislikeBtn.disabled = false;
+
+			const interestsTags = document.getElementById("interestsTags");
+			if (user.interests && user.interests.length > 0) {
+				interestsTags.innerHTML = '<div class="interests-tags">' +
+					user.interests.map(i => `<span class="interest-tag">${i.name}</span>`).join("") +
+					'</div>';
+			} else {
+				interestsTags.innerHTML = '<p class="interests-empty">This user has no interests listed.</p>';
+			}
 
 			gsap.set(".passport-wrapper", { x: 0, y: -1400 });
 			gsap.to(".passport-wrapper", { y: 0, duration: 1, ease: "power2.out", onComplete: peelCover });

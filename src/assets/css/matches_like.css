@@ -115,7 +115,22 @@
 
 @media (max-width: 950px) {
     .passport-grid {
-        grid-template-columns: 1fr; /* stack in a single column on small screens */
+        grid-template-columns: 1fr;
         justify-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .connections-tabs {
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+
+    .filter {
+        font-size: 0.9rem;
     }
 }

@@ -17,6 +17,7 @@
     background-color: #2c3e50;
     border-radius: 16px;
     z-index: 1;
+    pointer-events: none;
 }
 
 .embroidery {
@@ -29,7 +30,7 @@
     padding: 12px;
     background: #fff;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 0 0 12px #2c3e50, 0 10px 30px rgba(0,0,0,0.2);
     z-index: 2;
     width: 100%;
     box-sizing: border-box;
@@ -132,7 +133,7 @@
 
 .carousel {
     position: relative;
-    width: 420px;
+    width: 100%;
     margin: auto;
     display: flex;
     align-items: center;
@@ -140,7 +141,7 @@
 }
 
 .carousel-window {
-    width: 420px;
+    width: 100%;
     height: 400px;
     overflow: hidden;
     border-radius: 12px;
@@ -149,15 +150,16 @@
 
 .carousel-track {
     display: flex;
+    width: 100%;
     height: 400px;
     transition: transform 0.4s ease-in-out;
 }
 
 .carousel-track img {
-    width: 420px;
+    flex: 0 0 100%;
+    width: 100%;
     height: 400px;
     object-fit: cover;
-    flex-shrink: 0;
 }
 
 .arrow {
@@ -268,7 +270,7 @@
     min-width: 0;
 }
 
-.tpass-header { 
+.tpass-header {
 	display: flex;
 	gap: 0.3rem;
 	align-items: center;
@@ -300,7 +302,7 @@
 
 .header {
 	font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-                 "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", 
+                 "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
                  sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	font-size: clamp(14px, 2vw, 17.6px);
 	font-weight: 600;
@@ -422,9 +424,9 @@
 
 .stamps-container {
     width: 100%;
-    overflow-x: auto;          
-    overflow-y: visible;     
-    padding: 0 1rem;       
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 0 1rem;
     box-sizing: border-box;
 }
 
@@ -496,6 +498,33 @@
   display: block;
 }
 
+.no-stamps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    border: 2px dashed #d0d5dd;
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    background: rgba(30, 58, 95, 0.03);
+}
+
+.no-stamps-icon {
+    font-size: 2rem;
+    opacity: 0.5;
+}
+
+.no-stamps-text {
+    margin: 0;
+    font-family: "Playfair Display", serif;
+    font-size: 0.85rem;
+    color: #8B89A0;
+    text-align: center;
+    letter-spacing: 0.04em;
+}
+
 .stamp_overlay {
     position: absolute;
     opacity: 0;
@@ -525,9 +554,11 @@
 
     .passport {
         width: 100%;
-        border-radius: 0;
-        padding: 10px;
+        border-radius: 12px;
+        padding: 0;
         box-sizing: border-box;
+        overflow: clip;
+        box-shadow: none;
     }
 
     .cover,
@@ -536,28 +567,164 @@
         left: 0;
         width: 100%;
         height: 100%;
-        border-radius: 0;
+        border-radius: 12px;
     }
 
-    .top-cover::before {
-        inset: 16px;
-    }
+    .top-cover::before { inset: 16px; }
+    .top-cover::after  { inset: 8px; }
 
-    .top-cover::after {
-        inset: 8px;
-    }
-
+    /* ── Gallery becomes the full-card background ── */
     .passport-content {
+        position: relative;
         margin: 0;
     }
 
-    .carousel,
+    .passport-content > div:first-child {
+        position: absolute;
+        inset: 0;
+        padding: 0;
+        z-index: 0;
+    }
+
+    .passport-left {
+        height: 100%;
+        min-height: unset;
+    }
+
+    .gallery-title,
+    .title-line {
+        display: none;
+    }
+
+    .carousel {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
     .carousel-window {
         width: 100%;
-        max-width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 0;
+    }
+
+    .carousel-track {
+        height: 100%;
+    }
+
+    .carousel-track img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    /* Dark gradient overlay so text is readable */
+    .passport-left::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(0,0,0,0.25) 0%,
+            rgba(0,0,0,0.65) 100%
+        );
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Arrows hidden on mobile — tap left/right instead */
+    .arrow {
+        display: none;
+    }
+
+    /* ── Details panel floats on top of background ── */
+    .passport-content > div:last-child {
+        position: relative;
+        z-index: 2;
+        padding: 0;
+    }
+
+    .passport-right {
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 1rem 1rem 2.5rem;
+    }
+
+    .passport-right::before {
+        display: none;
+    }
+
+    /* White text on dark background */
+    #tpass,
+    .name-field,
+    .other-field,
+    .body-text {
+        color: #fff;
+    }
+
+    #tpass + hr {
+        background-color: rgba(255,255,255,0.35);
+    }
+
+    .header,
+    .heading {
+        color: rgba(255,255,255,0.65);
+    }
+
+    .profile-header .profile-img {
+        width: 90px;
+        height: 120px;
+        border-color: rgba(255,255,255,0.6);
+    }
+
+    .separator::before,
+    .separator::after {
+        background-image: repeating-linear-gradient(
+            to right,
+            rgba(255,255,255,0.4),
+            rgba(255,255,255,0.4) 6px,
+            transparent 6px,
+            transparent 12px
+        );
+    }
+
+    .separator span {
+        background: rgba(0,0,0,0.4);
+        color: #fff;
+        border-color: rgba(255,255,255,0.3);
+    }
+
+    .stamp {
+        background: rgba(255,255,255,0.88);
+    }
+
+    .no-stamps {
+        border-color: rgba(255,255,255,0.3);
+        background: rgba(0,0,0,0.2);
+    }
+
+    .no-stamps-text {
+        color: rgba(255,255,255,0.7);
+    }
+
+    /* Keep two-column details side by side */
+    .details {
+        flex-wrap: nowrap;
     }
 
     .BioDest {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
     }
+}
+
+#approvedStamp {
+    z-index: 3;
+}
+
+#rejectedStamp {
+    z-index: 3;
 }
