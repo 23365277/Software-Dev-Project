@@ -6,7 +6,7 @@ $lastName = $profile['last_name'] ?? '';
 $country = $profile['country'] ?? '';
 $age = $profile['age'] ?? '';
 $bio = $profile['bio'] ?? '';
-$nextTrip = getUserTrips($pdo, $profileId) ?? null;
+$nextTrip = $profile['nextTrip'] ?? getUserTrips($pdo, $profileId);
 
 $passportThemes = [
     ['#25476f', '#17304f'],
@@ -23,15 +23,7 @@ $cardLabel = $cardLabel ?? '';
 $cardHref = $cardHref ?? null;
 ?>
 
-<?php if ($cardHref): ?>
-<a href="<?= htmlspecialchars($cardHref) ?>" class="connection-card-link">
-<?php endif; ?>
-
-<div class="mini-passport-wrapper mx-auto <?= $cardMode === 'dashboard' ? 'dashboard-passport' : '' ?>">
-    <?php if (!empty($cardLabel)): ?>
-        <div class="connection-card-badge"><?= htmlspecialchars($cardLabel) ?></div>
-    <?php endif; ?>
-
+<div class="mini-passport-wrapper mx-auto <?= $cardMode === 'dashboard' ? 'dashboard-passport' : '' ?>" data-trip-country="<?= htmlspecialchars(strtolower($nextTrip['location'] ?? '')) ?>">
     <div class="mini-cover"
         style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
         <img src="/assets/images/favicon_light.ico" alt="emb">
@@ -91,7 +83,3 @@ $cardHref = $cardHref ?? null;
         </div>
     </div>
 </div>
-
-<?php if ($cardHref): ?>
-</a>
-<?php endif; ?>
