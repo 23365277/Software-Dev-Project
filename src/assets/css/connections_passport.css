@@ -1,3 +1,10 @@
+.card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
 .mini-passport-wrapper{
     position: relative;
     perspective: 1000px;
@@ -16,6 +23,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
 }
 
 .mini-passport-wrapper:hover .mini-cover {
