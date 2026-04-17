@@ -31,10 +31,6 @@ if (!$user) {
 
 <div class="passport-wrapper mx-auto">
 	<div class="passport position-relative mx-auto">
-			<div class="noProfileOverlay" id="noProfileOverlay" style="<?= $currentProfileId !== null ? 'display:none;' : 'display:flex;' ?>">
-				<p>No more profiles available</p>
-				<p>Try adjusting your preferences or check back later!</p>
-			</div>
 			<div id="approvedStamp" class="stamp_overlay approved">
 				<img src="/assets/images/approved_stamp.svg" alt="Approved Stamp">
 			</div>
@@ -163,6 +159,11 @@ if (!$user) {
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="noProfileOverlay" id="noProfileOverlay" style="<?= $currentProfileId !== null ? 'display:none;' : 'display:flex;' ?>">
+		<p>No more profiles available</p>
+		<p>Try adjusting your preferences or check back later!</p>
 	</div>
 
 	<div class="cover top-cover">

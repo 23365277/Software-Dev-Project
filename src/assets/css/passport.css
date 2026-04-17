@@ -45,7 +45,7 @@
 .noProfileOverlay {
     position: absolute;
     inset: 0;
-    z-index: 50;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     justify-content: center;
