@@ -26,13 +26,27 @@ if (!$email || !$password) {
     exit;
 }
 
-$user_id = verifyLogin($email, $password);
+$result = verifyLogin($email, $password);
 
-if (!$user_id) {
+if ($result === false) {
     http_response_code(401);
     echo json_encode(['error' => 'Incorrect email or password']);
     exit;
 }
+
+if (is_array($result)) {
+    if ($result['error'] === 'banned') {
+        echo json_encode(['error' => 'Your account has been permanently banned.']);
+    } elseif ($result['error'] === 'suspended') {
+        $msg = 'Your account has been suspended.';
+        if (!empty($result['reason']))   $msg .= ' Reason: ' . $result['reason'] . '.';
+        if (!empty($result['duration'])) $msg .= ' Duration: ' . formatSuspensionDuration($result['duration']) . '.';
+        echo json_encode(['error' => $msg]);
+    }
+    exit;
+}
+
+$user_id = $result;
 
 $_SESSION['email'] = $email;
 

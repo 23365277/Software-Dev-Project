@@ -39,7 +39,7 @@
     }
 
     $pageTitle = "Roamance - Admin Panel";
-    $pageCSS = "/assets/css/admin_panel.css";
+    $pageCSS = "/assets/css/admin_panel.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/admin_panel.css');
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
@@ -147,18 +147,34 @@
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 mb-4">
             <div class="card" style="height: 400px; display: flex; flex-direction: column;">
-                <h5 class="card-title">Banned Users</h5>
-                <div class="scrollableContainer" style="flex: 1; overflow-y: auto; max-height: unset;">
-                    <?php foreach (getBannedUsers() as $user): ?>
-                    <div class="newUserEntry">
+                <h5 class="card-title">Banned &amp; Suspended Users</h5>
+                <div class="mb-2">
+                    <input type="text" id="bannedSearch" class="form-control" placeholder="Search by email or ID...">
+                </div>
+                <div class="mb-2 d-flex gap-1">
+                    <button class="btn btn-sm btn-primary banned-tab-btn active" data-tab="all">All</button>
+                    <button class="btn btn-sm btn-outline-danger banned-tab-btn" data-tab="BANNED">Banned</button>
+                    <button class="btn btn-sm btn-outline-warning banned-tab-btn" data-tab="SUSPENDED">Suspended</button>
+                </div>
+                <div class="scrollableContainer" id="bannedList" style="flex: 1; overflow-y: auto; max-height: unset;">
+                    <?php foreach (getBannedAndSuspendedUsers() as $u): ?>
+                    <div class="newUserEntry banned-entry" data-status="<?php echo htmlspecialchars($u['status']); ?>">
                         <div class="listNewUser">
-                            <?php echo htmlspecialchars($user['email']); ?><br>
-                            Joined: <?php echo date("M d, Y", strtotime($user['created_at'])); ?><br>
-                            ID: <?php echo htmlspecialchars($user['id']); ?>
+                            <?php echo htmlspecialchars($u['email']); ?><br>
+                            Joined: <?php echo date("M d, Y", strtotime($u['created_at'])); ?><br>
+                            ID: <?php echo htmlspecialchars($u['id']); ?>
+                            <?php if ($u['status'] === 'SUSPENDED' && !empty($u['duration'])): ?>
+                                <br><small class="text-muted">Duration: <?php echo htmlspecialchars(formatSuspensionDuration($u['duration'])); ?></small>
+                            <?php endif; ?>
                         </div>
-                        <div class="userActions">
-                            <a href="/pages/profile_view.php?user_id=<?php echo $user['id']; ?>" class="btn btn-outline-primary btn-sm" title="View Profile"><i class="bi bi-person-fill"></i></a>
-                            <a href="/pages/admin_panel.php?unban_user=<?php echo $user['id']; ?>" class="btn btn-success btn-sm" title="Unban User"><i class="bi bi-check-circle"></i></a>
+                        <div class="userActions" style="align-items:flex-end;">
+                            <?php if ($u['status'] === 'BANNED'): ?>
+                                <span class="badge bg-danger mb-1">Banned</span>
+                            <?php else: ?>
+                                <span class="badge bg-warning text-dark mb-1">Suspended</span>
+                            <?php endif; ?>
+                            <a href="/pages/profile_view.php?user_id=<?php echo (int)$u['id']; ?>" class="btn btn-outline-primary btn-sm" title="View Profile"><i class="bi bi-person-fill"></i></a>
+                            <a href="/pages/admin_panel.php?unban_user=<?php echo (int)$u['id']; ?>" class="btn btn-success btn-sm" title="Lift restriction"><i class="bi bi-check-circle"></i></a>
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -324,6 +340,38 @@ document.getElementById('userSearch').addEventListener('input', function () {
         entry.style.display = text.includes(query) ? '' : 'none';
     });
 });
+</script>
+
+<script>
+(function () {
+    let activeTab = 'all';
+
+    function filterBanned() {
+        const query = document.getElementById('bannedSearch').value.toLowerCase();
+        document.querySelectorAll('#bannedList .banned-entry').forEach(entry => {
+            const status = entry.dataset.status;
+            const text   = entry.querySelector('.listNewUser').textContent.toLowerCase();
+            const tabOk  = activeTab === 'all' || status === activeTab;
+            const searchOk = text.includes(query);
+            entry.style.display = tabOk && searchOk ? '' : 'none';
+        });
+    }
+
+    document.getElementById('bannedSearch').addEventListener('input', filterBanned);
+
+    document.querySelectorAll('.banned-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('.banned-tab-btn').forEach(b => {
+                b.classList.remove('active', 'btn-primary', 'btn-danger', 'btn-warning');
+                b.classList.add(b.dataset.tab === 'BANNED' ? 'btn-outline-danger' : b.dataset.tab === 'SUSPENDED' ? 'btn-outline-warning' : 'btn-outline-primary');
+            });
+            this.classList.remove('btn-outline-danger', 'btn-outline-warning', 'btn-outline-primary');
+            this.classList.add('active', 'btn-primary');
+            activeTab = this.dataset.tab;
+            filterBanned();
+        });
+    });
+})();
 </script>
 
 <script>

@@ -4,7 +4,7 @@ require_once __DIR__ . "/../../config/database.php";
 
 function getUserByEmail($email) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id, email, password_hash FROM users WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT id, email, password_hash, account_status FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -287,14 +287,31 @@ function updateUserProfilePicture($userId, $imagePath) {
 }
 
 function verifyLogin($email, $password) {
+    global $pdo;
     $user = getUserByEmail($email);
-    if ($user && password_verify($password, $user['password_hash'])){
-        session_regenerate_id(true);
-	    $_SESSION["user_id"] = $user["id"];
-	    $_SESSION["user_email"] = $user["email"];
-        return $user["id"];
+    if (!$user || !password_verify($password, $user['password_hash'])) {
+        return false;
     }
-    return false;
+
+    if ($user['account_status'] === 'BANNED') {
+        return ['error' => 'banned'];
+    }
+
+    if ($user['account_status'] === 'SUSPENDED') {
+        $stmt = $pdo->prepare("SELECT reason, duration FROM suspended_users WHERE target_id = :id AND status = 'SUSPENDED' LIMIT 1");
+        $stmt->execute([':id' => $user['id']]);
+        $suspension = $stmt->fetch(PDO::FETCH_ASSOC);
+        return [
+            'error'    => 'suspended',
+            'reason'   => $suspension['reason'] ?? '',
+            'duration' => $suspension['duration'] ?? ''
+        ];
+    }
+
+    session_regenerate_id(true);
+    $_SESSION["user_id"]    = $user["id"];
+    $_SESSION["user_email"] = $user["email"];
+    return $user["id"];
 }
 
 function setRememberToken($userId) {
@@ -455,7 +472,7 @@ function getAllUsers() {
 function getBannedUsers() {
     global $pdo;
     $stmt = $pdo->query("
-        SELECT 
+        SELECT
             u.id,
             u.email,
             u.created_at,
@@ -463,6 +480,33 @@ function getBannedUsers() {
         FROM banned_users bu
         INNER JOIN users u ON u.id = bu.target_id
         ORDER BY u.created_at DESC
+    ");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function formatSuspensionDuration($raw) {
+    if (!$raw) return '';
+    $parts = explode(':', $raw);
+    $totalHours = (int)($parts[0] ?? 0);
+    $days  = intdiv($totalHours, 24);
+    $hours = $totalHours % 24;
+    $str = $days > 0 ? "{$days} day" . ($days !== 1 ? 's' : '') : '';
+    if ($hours > 0) $str .= ($str ? ', ' : '') . "{$hours} hour" . ($hours !== 1 ? 's' : '');
+    return $str ?: $raw;
+}
+
+function getBannedAndSuspendedUsers() {
+    global $pdo;
+    $stmt = $pdo->query("
+        SELECT u.id, u.email, u.created_at, 'BANNED' AS status, NULL AS reason, NULL AS duration
+        FROM banned_users bu
+        INNER JOIN users u ON u.id = bu.target_id
+        UNION
+        SELECT u.id, u.email, u.created_at, 'SUSPENDED' AS status, su.reason, su.duration
+        FROM suspended_users su
+        INNER JOIN users u ON u.id = su.target_id
+        WHERE su.status = 'SUSPENDED'
+        ORDER BY created_at DESC
     ");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -979,7 +1023,7 @@ function banUser($targetId) {
     }
 }
 
-function suspendUser($targetId, $days) {
+function suspendUser($targetId, $days, $reason = 'Administrative suspension') {
     global $pdo;
     $adminId = $_SESSION['user_id'];
 
@@ -990,6 +1034,15 @@ function suspendUser($targetId, $days) {
     try {
         $stmt = $pdo->prepare("UPDATE users SET account_status = 'SUSPENDED' WHERE id = :id");
         $stmt->execute([':id' => $targetId]);
+
+        $duration = sprintf('%d:00:00', $days * 24);
+        $stmt = $pdo->prepare("
+            INSERT INTO suspended_users (target_id, admin_id, reason, duration, status)
+            VALUES (?, ?, ?, ?, 'SUSPENDED')
+            ON DUPLICATE KEY UPDATE admin_id = ?, reason = ?, duration = ?, status = 'SUSPENDED'
+        ");
+        $stmt->execute([$targetId, $adminId, $reason, $duration, $adminId, $reason, $duration]);
+
         return ['success' => true];
     } catch (PDOException $e) {
         return ['success' => false, 'error' => $e->getMessage()];
@@ -1004,6 +1057,9 @@ function unbanUser($targetId) {
         $stmt->execute([':id' => $targetId]);
 
         $stmt = $pdo->prepare("DELETE FROM banned_users WHERE target_id = :id");
+        $stmt->execute([':id' => $targetId]);
+
+        $stmt = $pdo->prepare("UPDATE suspended_users SET status = 'ACTIVE' WHERE target_id = :id");
         $stmt->execute([':id' => $targetId]);
 
         return ['success' => true];
