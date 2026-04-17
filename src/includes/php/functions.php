@@ -896,7 +896,9 @@ function getCountryFlag(string $country): string {
 
 
 function getMatches(PDO $pdo, $userId): array {
-	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio, m.matched_at
+	$stmt = $pdo->prepare("
+		SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, 
+			   p.profile_picture, p.bio, m.matched_at
 		FROM matches m
 		JOIN profiles p 
 			ON p.user_id = CASE 
@@ -904,7 +906,8 @@ function getMatches(PDO $pdo, $userId): array {
 				ELSE m.user1_id 
 			END
 		WHERE m.user1_id = :userId OR m.user2_id = :userId
-		ORDER BY m.matched_at DESC");
+		ORDER BY m.matched_at DESC
+	");
 	$stmt->execute(['userId' => $userId]);
 	$today = new DateTime();
 	$matches = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -916,7 +919,9 @@ function getMatches(PDO $pdo, $userId): array {
 
 
 function getLikes(PDO $pdo, $userId): array {
-	$stmt = $pdo->prepare("SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, p.profile_picture, p.bio, l.created_at
+	$stmt = $pdo->prepare("
+		SELECT p.user_id, p.first_name, p.last_name, p.country,
+		       p.date_of_birth, p.profile_picture, p.bio, l.created_at
 		FROM likes l
 		JOIN profiles p ON p.user_id = l.receiver_id
 		WHERE l.sender_id = :userId
@@ -925,8 +930,9 @@ function getLikes(PDO $pdo, $userId): array {
 			FROM matches m
 			WHERE (m.user1_id = :userId AND m.user2_id = l.receiver_id)
 			   OR (m.user2_id = :userId AND m.user1_id = l.receiver_id)
-		ORDER BY l.created_at DESC)"
-	);
+		)
+		ORDER BY l.created_at DESC
+	");
 	$stmt->execute(['userId' => $userId]);
 	$today = new DateTime();
 	$likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
