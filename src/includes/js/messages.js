@@ -1,256 +1,438 @@
-// myUserId is injected by PHP in chatbox.php as:
-// <script>const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;</script>
+/**
+ * messaging.js — Unified Roamance Messaging Module
+ */
 
-let currentContact = null;
+const RoamanceMessaging = (() => {
 
-// FIX: was getElementById("messageBox") — HTML input has id="chatbox-input"
-const input = document.getElementById("chatbox-input");
-const chatBox = document.getElementById("chatbox-messages");
-const contactsContainer = document.getElementById("chatbox-contacts");
-const sendBtn = document.getElementById("chatbox-send");
-const actionsContainer  = document.getElementById("chatbox-actions");
-const actionsToggle     = document.getElementById("chatbox-actions-toggle");
-const actionsMenu       = document.getElementById("chatbox-actions-menu");
-const reportBtn         = document.getElementById("chatbox-report-btn");
-const blockBtn          = document.getElementById("chatbox-block-btn");
-const reportModalOverlay = document.getElementById("report-modal-overlay");
-const reportReasonInput = document.getElementById("report-reason");
-const reportModalError  = document.getElementById("report-modal-error");
-const reportSubmitBtn   = document.getElementById("report-submit-btn");
-const reportCancelBtn   = document.getElementById("report-cancel-btn");
+    const PHONE_RE      = /(\+?\d[\s\-.()\[\]]{0,3}){7,}/;
+    const POLL_INTERVAL = 3000;
 
+    const EP = {
+        contacts : '/includes/php/get_contacts.php',
+        messages : '/includes/php/get_message.php',
+        send     : '/includes/php/send_message.php',
+        report   : '/includes/php/report_user.php',
+        block    : '/includes/php/block_user.php',
+    };
 
-async function loadContacts() {
-    try {
-        const res = await fetch("/includes/php/get_contacts.php");
-        const contacts = await res.json();
+    function qs(selector, root = document) {
+        if (!selector) return null;
+        return typeof selector === 'string' ? root.querySelector(selector) : selector;
+    }
 
-        const existingContacts = contactsContainer.querySelectorAll('.contact');
-        existingContacts.forEach(c => c.remove());
+    function showError(el, msg, duration = 3000) {
+        if (!el) return;
+        el.textContent = msg;
+        el.classList.add('visible');
+        setTimeout(() => el.classList.remove('visible'), duration);
+    }
 
-        if (contacts.length === 0) {
-            const span = document.createElement('span');
-            span.textContent = 'No contacts yet';
-            span.style.padding = '10px';
-            span.style.fontSize = '0.85em';
-            contactsContainer.appendChild(span);
-            return;
+    function init(opts = {}) {
+
+        const el = {
+            contacts      : qs(opts.contactsEl),
+            messages      : qs(opts.messagesEl),
+            input         : qs(opts.inputEl),
+            sendBtn       : qs(opts.sendBtnEl),
+            error         : qs(opts.errorEl),
+            actions       : qs(opts.actionsEl),
+            actionsToggle : qs(opts.actionsToggleEl),
+            actionsMenu   : qs(opts.actionsMenuEl),
+            reportBtn     : qs(opts.reportBtnEl),
+            blockBtn      : qs(opts.blockBtnEl),
+            reportOverlay : qs(opts.reportOverlayEl),
+            reportReason  : qs(opts.reportReasonEl),
+            reportError   : qs(opts.reportErrorEl),
+            reportSubmit  : qs(opts.reportSubmitEl),
+            reportCancel  : qs(opts.reportCancelEl),
+        };
+
+        const myUserId = opts.myUserId;
+        const mode     = opts.mode || 'chatbox';
+
+        let currentContact = null;
+        let currentMatchId = null;
+        let pollTimer      = null;
+
+        // ── FIX 1: In inbox mode, set currentContact from otherUserId immediately ──
+        if (mode === 'inbox' && opts.otherUserId) {
+            currentContact = opts.otherUserId;
         }
 
-        contacts.forEach(contact => {
-            const div = document.createElement('div');
-            div.classList.add('contact');
-            div.dataset.userid = contact.id;
-            div.textContent = contact.email; 
-            div.addEventListener('click', () => selectContact(contact.id, div));
-            contactsContainer.appendChild(div);
-        });
-    } catch (err) {
-        console.error('loadContacts error:', err);
-        contactsContainer.innerHTML = '<span style="padding:10px">Error loading contacts</span>';
-    }
-}
+        /* ── loadContacts ── */
+        async function loadContacts() {
+            if (mode === 'inbox') return;
+            if (!el.contacts) return;
 
+            try {
+                const res      = await fetch(EP.contacts);
+                const contacts = await res.json();
 
-function selectContact(contactId, contactElement) {
-    currentContact = contactId;
+                el.contacts.querySelectorAll('.rm-contact').forEach(c => c.remove());
 
-    // Enable input and send button
-    if (input) input.disabled = false;
-    if (sendBtn) sendBtn.disabled = false;
+                if (!contacts.length) {
+                    const span = document.createElement('span');
+                    span.className   = 'rm-contact rm-no-contacts';
+                    span.textContent = 'No contacts yet';
+                    el.contacts.appendChild(span);
+                    return;
+                }
 
-    // Show actions dropdown
-    if (actionsContainer) actionsContainer.style.display = 'block';
+                contacts.forEach(contact => {
+                    const div           = document.createElement('div');
+                    div.className       = 'rm-contact contact';
+                    div.dataset.userid  = contact.id;
+                    div.dataset.matchid = contact.match_id;
 
-    // Highlight active contact
-    document.querySelectorAll('#chatbox-contacts .contact').forEach(c => c.classList.remove('active'));
-    contactElement.classList.add('active');
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = contact.name || contact.email;
+                    div.appendChild(nameSpan);
 
-    // Load messages for this contact
-    fetchMessages();
-}
+                    if (parseInt(contact.unread_count) > 0) {
+                        const dot = document.createElement('span');
+                        dot.className = 'unread-dot';
+                        div.appendChild(dot);
+                    }
 
-// get ussers past messages with this contact
-function fetchMessages() {
-    if (!currentContact) return;
+                    div.addEventListener('click', () => selectContact(contact.id, contact.match_id, div));
+                    el.contacts.appendChild(div);
+                });
 
-    fetch("/includes/php/get_message.php?other_user=" + currentContact)
-        .then(res => res.json())
-        .then(messages => {
-            chatBox.classList.remove('centered-message');
-            chatBox.innerHTML = '';
+            } catch (err) {
+                console.error('[RoamanceMessaging] loadContacts:', err);
+                if (el.contacts) {
+                    el.contacts.innerHTML = '<span class="rm-contact">Error loading contacts</span>';
+                }
+            }
+        }
 
-            if (!messages.length) {
-                chatBox.classList.add('centered-message');
-                chatBox.innerHTML = '<span>No messages yet</span>';
+        /* ── selectContact ── */
+        function selectContact(contactId, matchId, contactEl) {
+            currentContact = contactId;
+            currentMatchId = matchId;
+
+            if (el.input)   el.input.disabled   = false;
+            if (el.sendBtn) el.sendBtn.disabled  = false;
+            if (el.actions) el.actions.style.display = 'block';
+
+            if (el.contacts) {
+                el.contacts.querySelectorAll('.rm-contact, .contact').forEach(c => c.classList.remove('active'));
+            }
+            if (contactEl) contactEl.classList.add('active');
+
+            fetchMessages();
+            opts.onContactSelected && opts.onContactSelected(contactId);
+        }
+
+        /* ── selectMatch ── */
+        function selectMatch(matchId) {
+            currentMatchId = matchId;
+            fetchMessages();
+            opts.onContactSelected && opts.onContactSelected(matchId);
+        }
+
+        /* ── fetchMessages ── */
+        function fetchMessages() {
+            if (!el.messages) return;
+
+            let url;
+            if (currentMatchId) {
+                url = `${EP.messages}?match_id=${currentMatchId}`;
+            } else if (currentContact) {
+                url = `${EP.messages}?other_user=${currentContact}`;
+            } else {
                 return;
             }
 
-            messages.forEach(msg => {
-                const div = document.createElement('div');
-                div.classList.add('chatbox-message');
-                
-                const isMine = String(msg.sender_id) === String(myUserId);
-                if (isMine) div.classList.add('sent');
-                div.textContent = (isMine ? "You: " : "") + msg.message;
-                chatBox.appendChild(div);
+            fetch(url)
+                .then(r => r.json())
+                .then(messages => {
+                    // ── FIX 2: guard against error responses ──
+                    if (!Array.isArray(messages)) {
+                        console.error('[RoamanceMessaging] fetchMessages unexpected response:', messages);
+                        return;
+                    }
+
+                    el.messages.classList.remove('centered-message');
+                    el.messages.innerHTML = '';
+
+                    if (!messages.length) {
+                        el.messages.classList.add('centered-message');
+                        el.messages.innerHTML = '<span>No messages yet</span>';
+                        return;
+                    }
+
+                    let lastDate = null;
+
+                    messages.forEach(msg => {
+                        const isMine  = String(msg.sender_id) === String(myUserId);
+                        const sentAt  = msg.sent_at ? new Date(msg.sent_at) : null;
+                        const msgDate = sentAt ? sentAt.toISOString().slice(0, 10) : null;
+
+                        // ── Date divider ──
+                        if (mode === 'inbox' && msgDate && msgDate !== lastDate) {
+                            lastDate = msgDate;
+                            const divider = document.createElement('div');
+                            divider.className = 'date-divider';
+                            const today = new Date().toISOString().slice(0, 10);
+                            divider.textContent = msgDate === today
+                                ? 'Today'
+                                : sentAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                            el.messages.appendChild(divider);
+                        }
+
+                        // ── FIX 3: inbox render now matches PHP-rendered HTML structure ──
+                        if (mode === 'inbox') {
+                            const wrap = document.createElement('div');
+                            wrap.className = `msg${isMine ? ' sent' : ''}`;
+
+                            if (!isMine) {
+                                // Other person's avatar (initials)
+                                const avatar = document.createElement('div');
+                                avatar.className   = 'msg-avatar';
+                                avatar.textContent = opts.otherInitials || '?';
+                                wrap.appendChild(avatar);
+                            }
+
+                            const inner = document.createElement('div');
+
+                            const bubble = document.createElement('div');
+                            bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
+                            bubble.textContent = msg.message;
+                            inner.appendChild(bubble);
+
+                            const timeEl = document.createElement('div');
+                            timeEl.className   = `msg-time${isMine ? ' text-end' : ''}`;
+                            timeEl.textContent = sentAt
+                                ? sentAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+                                : '';
+                            inner.appendChild(timeEl);
+
+                            wrap.appendChild(inner);
+
+                            if (isMine) {
+                                const avatar = document.createElement('div');
+                                avatar.className         = 'msg-avatar';
+                                avatar.style.background  = '#534AB7';
+                                avatar.style.color       = '#fff';
+                                avatar.textContent       = 'Me';
+                                wrap.appendChild(avatar);
+                            }
+
+                            el.messages.appendChild(wrap);
+
+                        } else {
+                            // Compact layout for chatbox / home
+                            const wrap   = document.createElement('div');
+                            wrap.className = `rm-msg msg${isMine ? ' sent' : ''}`;
+
+                            const bubble = document.createElement('div');
+                            bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
+                            bubble.textContent = (isMine ? 'You: ' : '') + msg.message;
+                            wrap.appendChild(bubble);
+
+                            el.messages.appendChild(wrap);
+                        }
+                    });
+
+                    el.messages.scrollTop = el.messages.scrollHeight;
+                })
+                .catch(err => console.error('[RoamanceMessaging] fetchMessages:', err));
+        }
+
+        /* ── sendMessage ── */
+        function sendMessage() {
+            const message = el.input ? el.input.value.trim() : '';
+            if (!message) return;
+
+            if (PHONE_RE.test(message)) {
+                showError(el.error, 'Phone numbers are not allowed in messages.');
+                return;
+            }
+
+            const body = new URLSearchParams({ message });
+
+            if (currentMatchId) {
+                body.set('match_id', currentMatchId);
+            } else if (currentContact) {
+                body.set('receiver_id', currentContact);
+            } else {
+                console.warn('[RoamanceMessaging] sendMessage: no match or contact selected');
+                return;
+            }
+
+            // ── FIX 4: disable input while sending to prevent double-sends ──
+            if (el.input)   el.input.disabled   = true;
+            if (el.sendBtn) el.sendBtn.disabled  = true;
+
+            fetch(EP.send, {
+                method  : 'POST',
+                headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body,
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    if (el.input) el.input.value = '';
+                    fetchMessages();
+                } else {
+                    console.error('[RoamanceMessaging] send error:', data.error);
+                    showError(el.error, data.error || 'Failed to send message.');
+                }
+            })
+            .catch(err => {
+                console.error('[RoamanceMessaging] sendMessage network:', err);
+                showError(el.error, 'Network error. Please try again.');
+            })
+            .finally(() => {
+                // Re-enable input after send completes
+                if (el.input)   el.input.disabled   = false;
+                if (el.sendBtn) el.sendBtn.disabled  = false;
+                if (el.input)   el.input.focus();
             });
+        }
 
-            chatBox.scrollTop = chatBox.scrollHeight;
-        })
-        .catch(err => console.error('fetchMessages error:', err));
-}
+        /* ── Actions dropdown ── */
+        if (el.actionsToggle && el.actionsMenu) {
+            el.actionsToggle.addEventListener('click', e => {
+                e.stopPropagation();
+                el.actionsMenu.style.display =
+                    el.actionsMenu.style.display === 'block' ? 'none' : 'block';
+            });
+            document.addEventListener('click', () => {
+                if (el.actionsMenu) el.actionsMenu.style.display = 'none';
+            });
+        }
 
+        /* ── Report ── */
+        if (el.reportBtn && el.reportOverlay) {
+            el.reportBtn.addEventListener('click', () => {
+                if (el.actionsMenu) el.actionsMenu.style.display = 'none';
+                // ── FIX 5: inbox mode uses currentContact set from otherUserId ──
+                if (!currentContact && !currentMatchId) return;
+                if (el.reportReason) el.reportReason.value = '';
+                if (el.reportError)  el.reportError.textContent = '';
+                el.reportOverlay.style.display = 'flex';
+            });
+        }
 
-const PHONE_REGEX = /(\+?\d[\s\-.()\[\]]{0,3}){7,}/;
-const errorDiv = document.getElementById("chatbox-error");
-let errorTimeout = null;
+        if (el.reportCancel) {
+            el.reportCancel.addEventListener('click', () => {
+                el.reportOverlay.style.display = 'none';
+            });
+        }
 
-function showError(msg) {
-    errorDiv.textContent = msg;
-    errorDiv.classList.add("visible");
-    clearTimeout(errorTimeout);
-    errorTimeout = setTimeout(() => errorDiv.classList.remove("visible"), 3000);
-}
+        if (el.reportOverlay) {
+            el.reportOverlay.addEventListener('click', e => {
+                if (e.target === el.reportOverlay) el.reportOverlay.style.display = 'none';
+            });
+        }
 
-function collect_message() {
-    if (!currentContact) return;
-    const message = input.value.trim();
-    if (!message) return;
+        if (el.reportSubmit) {
+            el.reportSubmit.addEventListener('click', () => {
+                const reason = el.reportReason ? el.reportReason.value.trim() : '';
+                if (!reason) {
+                    if (el.reportError) el.reportError.textContent = 'Please enter a reason.';
+                    return;
+                }
+                el.reportSubmit.disabled = true;
 
-    if (PHONE_REGEX.test(message)) {
-        showError("Phone numbers are not allowed in messages.");
-        return;
+                // FIX 6: was using currentContact twice (copy-paste bug) — now correct
+                const reportedId = currentContact;
+
+                fetch(EP.report, {
+                    method  : 'POST',
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body    : new URLSearchParams({ reported_id: reportedId, reason }),
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        el.reportOverlay.style.display = 'none';
+                        showError(el.error, 'User reported successfully.');
+                    } else {
+                        if (el.reportError)
+                            el.reportError.textContent = data.error || 'Failed to submit report.';
+                    }
+                })
+                .catch(() => {
+                    if (el.reportError) el.reportError.textContent = 'Network error. Please try again.';
+                })
+                .finally(() => { el.reportSubmit.disabled = false; });
+            });
+        }
+
+        /* ── Block ── */
+        if (el.blockBtn) {
+            el.blockBtn.addEventListener('click', () => {
+                if (el.actionsMenu) el.actionsMenu.style.display = 'none';
+
+                // FIX 7: was bailing out immediately in inbox mode because currentContact was null
+                const blockId = currentContact;
+                if (!blockId) {
+                    console.warn('[RoamanceMessaging] blockBtn: no currentContact to block');
+                    return;
+                }
+
+                fetch(EP.block, {
+                    method  : 'POST',
+                    headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body    : new URLSearchParams({ block_id: blockId }),
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        showError(el.error, 'User blocked successfully.');
+                        if (el.actions) el.actions.style.display = 'none';
+                        currentContact = null;
+                        currentMatchId = null;
+                        if (el.input)    el.input.disabled    = true;
+                        if (el.sendBtn)  el.sendBtn.disabled  = true;
+                        if (el.messages) {
+                            el.messages.classList.add('centered-message');
+                            el.messages.innerHTML = '<span>Select a conversation to start messaging</span>';
+                        }
+                        loadContacts();
+                        opts.onBlocked && opts.onBlocked(blockId);
+                    } else {
+                        showError(el.error, data.error || 'Failed to block user.');
+                    }
+                })
+                .catch(() => showError(el.error, 'Network error. Please try again.'));
+            });
+        }
+
+        /* ── Input event listeners ── */
+        if (el.sendBtn) el.sendBtn.addEventListener('click', sendMessage);
+        if (el.input) {
+            el.input.addEventListener('keypress', e => {
+                if (e.key === 'Enter') sendMessage();
+            });
+        }
+
+        /* ── Polling ── */
+        pollTimer = setInterval(fetchMessages, POLL_INTERVAL);
+
+        /* ── Auto-init for inbox mode ── */
+        if (mode === 'inbox' && opts.initialMatchId) {
+            currentMatchId = opts.initialMatchId;
+            fetchMessages();
+        }
+
+        /* ── Load contacts for chatbox / home ── */
+        if (mode !== 'inbox') {
+            loadContacts();
+        }
+
+        return {
+            loadContacts,
+            selectContact,
+            selectMatch,
+            fetchMessages,
+            sendMessage,
+            destroy() { clearInterval(pollTimer); },
+        };
     }
 
-    fetch("/includes/php/send_message.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-            message: message,
-            receiver_id: currentContact
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            input.value = "";
-            fetchMessages();
-        } else {
-            console.error('Send error:', data.error);
-        }
-    })
-    .catch(err => console.error("Network error", err));
-}
-
-
-if (sendBtn) {
-    sendBtn.addEventListener("click", collect_message);
-}
-if (input) {
-    input.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") collect_message();
-    });
-}
-
-
-setInterval(fetchMessages, 3000);
-
-
-loadContacts();
-
-
-// --- Actions dropdown ---
-
-if (actionsToggle) {
-    actionsToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const isOpen = actionsMenu.style.display === 'block';
-        actionsMenu.style.display = isOpen ? 'none' : 'block';
-    });
-}
-
-document.addEventListener('click', () => {
-    if (actionsMenu) actionsMenu.style.display = 'none';
-});
-
-// --- Report ---
-
-if (reportBtn) {
-    reportBtn.addEventListener('click', () => {
-        actionsMenu.style.display = 'none';
-        if (!currentContact) return;
-        reportReasonInput.value = '';
-        reportModalError.textContent = '';
-        reportModalOverlay.style.display = 'flex';
-    });
-}
-
-if (reportCancelBtn) {
-    reportCancelBtn.addEventListener('click', () => {
-        reportModalOverlay.style.display = 'none';
-    });
-}
-
-if (reportModalOverlay) {
-    reportModalOverlay.addEventListener('click', (e) => {
-        if (e.target === reportModalOverlay) reportModalOverlay.style.display = 'none';
-    });
-}
-
-if (reportSubmitBtn) {
-    reportSubmitBtn.addEventListener('click', () => {
-        const reason = reportReasonInput.value.trim();
-        if (!reason) {
-            reportModalError.textContent = 'Please enter a reason.';
-            return;
-        }
-        reportSubmitBtn.disabled = true;
-        fetch('/includes/php/report_user.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ reported_id: currentContact, reason: reason })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                reportModalOverlay.style.display = 'none';
-                showError('User reported successfully.');
-            } else {
-                reportModalError.textContent = data.error || 'Failed to submit report.';
-            }
-        })
-        .catch(() => { reportModalError.textContent = 'Network error. Please try again.'; })
-        .finally(() => { reportSubmitBtn.disabled = false; });
-    });
-}
-
-// --- Block ---
-
-if (blockBtn) {
-    blockBtn.addEventListener('click', () => {
-        actionsMenu.style.display = 'none';
-        if (!currentContact) return;
-        fetch('/includes/php/block_user.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ block_id: currentContact })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                showError('User blocked successfully.');
-                actionsContainer.style.display = 'none';
-                currentContact = null;
-                input.disabled = true;
-                sendBtn.disabled = true;
-                chatBox.classList.add('centered-message');
-                chatBox.innerHTML = '<span>Select a contact to start chatting</span>';
-                loadContacts();
-            } else {
-                showError(data.error || 'Failed to block user.');
-            }
-        })
-        .catch(() => { showError('Network error. Please try again.'); });
-    });
-}
+    return { init };
+})();

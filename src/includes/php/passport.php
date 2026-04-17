@@ -11,6 +11,7 @@ if (!$user) {
     $age = "";
     $bio = "";
     $galleryImages = [];
+	$nextTrip = null;
 	$stamps = [];
 } else {
 	$currentProfileId = $user['user_id'];
@@ -20,18 +21,8 @@ if (!$user) {
 	$country = $user['country'];
 	$age = $user['age'];
 	$bio = $user['bio'];
-	$stamps = [
-		["country" => "France", "icon" => "🇫🇷", "date" => "2024-06-12", "desc" => "0"],
-		["country" => "Japan", "icon" => "🇯🇵", "date" => "2025-03-08", "desc" => "6"],
-		["country" => "Brazil", "icon" => "🇧🇷", "date" => "2023-12-25", "desc" => "1"],
-	["country" => "Canada", "icon" => "🇨🇦", "date" => "2023-09-10"],
-	["country" => "Italy", "icon" => "🇮🇹", "date" => "2024-02-18"],
-		["country" => "Australia", "icon" => "🇦🇺", "date" => "2025-01-22"],
-	["country" => "Germany", "icon" => "🇩🇪", "date" => "2024-07-04"],
-	["country" => "Spain", "icon" => "🇪🇸", "date" => "2023-11-15"],
-		["country" => "South Korea", "icon" => "🇰🇷", "date" => "2025-05-30"],
-		["country" => "Mexico", "icon" => "🇲🇽", "date" => "2024-08-12"]
-	];
+	$stamps = $user['stamps'] ?? [];
+	$nextTrip = $user['nextTrip'];
 	$galleryImages = $user['galleryImages'];
 }
 ?>
@@ -39,12 +30,7 @@ if (!$user) {
 <link rel="stylesheet" href="/assets/css/passport.css">
 
 <div class="passport-wrapper mx-auto">
-	<div class="cover"></div>
-		<div class="passport position-relative mx-auto">
-			<div class="noProfileOverlay" id="noProfileOverlay" style="<?= $currentProfileId !== null ? 'display:none;' : 'display:flex;' ?>">
-				<p>No more profiles available</p>
-				<p>Try adjusting your preferences or check back later!</p>
-			</div>
+	<div class="passport position-relative mx-auto">
 			<div id="approvedStamp" class="stamp_overlay approved">
 				<img src="/assets/images/approved_stamp.svg" alt="Approved Stamp">
 			</div>
@@ -104,8 +90,14 @@ if (!$user) {
 										<p class="body-text"><?= $bio ?></p>
 									</div>
 									<div class="dest">
-											<p class="heading">PLANNED TRIPS</p>
-											<p class="body-text">France • 6 Months</p>
+											<p class="heading">NEXT PLANNED TRIP</p>
+											<?php if ($nextTrip): ?>
+												<p class="body-text">
+													<?= htmlspecialchars($nextTrip['location']) ?> • <?= date('d M Y', strtotime($nextTrip['start_date'])) ?>
+												</p>
+											<?php else: ?>
+												<p class="body-text">No planned trips</p>
+											<?php endif; ?>
 									</div>	
 								</div>
 							</div>
@@ -114,26 +106,66 @@ if (!$user) {
 							<span>VISA STAMPS</span>
 						</div>		
 				
-						<div class="stamps-container">
-								<div class="stamps">
-									<?php foreach($stamps as $stamp): ?>
-								<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
-										<span class="icon"><?= $stamp['icon'] ?></span>
-										<span class="country"><?= $stamp['country'] ?></span>
-									<span class="date"><?= $stamp['date'] ?></span>
-									
-									<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
-										<span class="desc"><?= $stamp['desc'] ?></span>
-									<?php endif; ?>
-									
+						<div id="stampsArea">
+											<?php if (empty($stamps)): ?>
+								<div class="no-stamps">
+									<span class="no-stamps-icon">✈️</span>
+									<p class="no-stamps-text">This user has posted no trips yet</p>
+								</div>
+							<?php else: ?>
+								<div class="stamps-container">
+									<div class="stamps">
+										<?php foreach($stamps as $stamp): ?>
+											<div class="stamp <?= isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0' ? 'has-desc' : '' ?>">
+												<span class="icon"><?= $stamp['icon'] ?></span>
+												<span class="country"><?= $stamp['country'] ?></span>
+												<span class="date"><?= $stamp['date'] ?></span>
+												<?php if(isset($stamp['desc']) && $stamp['desc'] !== '' && $stamp['desc'] !== '0'): ?>
+													<span class="desc"><?= $stamp['desc'] ?></span>
+												<?php endif; ?>
+											</div>
+										<?php endforeach; ?>
 									</div>
-									<?php endforeach; ?>
-							</div>
-						</div>
+								</div>
+							<?php endif; ?>
 					</div>
 				</div>
 			</div>
 		</div>
+	<!-- Interests slide-out panel — lives inside passport-wrapper so it animates with it -->
+	<div class="interests-panel" id="interestsPanel">
+		<button class="interests-tab" id="interestsTab" aria-label="Toggle interests">
+			<span>Interests</span>
+		</button>
+		<div class="interests-page-wrapper">
+			<div class="interests-page">
+				<div class="interests-page-header">
+					<div class="tpass-header" style="border-bottom: #1e3a5f 2px solid; margin-bottom: 1rem; padding-bottom: 0.5rem;">
+						<img src="/assets/images/TPassIcon.png" alt="TPassIcon" style="width:23px;height:23px;">
+						<p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:450;color:#1e3a5f;margin:0;">Interests</p>
+					</div>
+				</div>
+				<div id="interestsTags">
+					<?php $interests = $user['interests'] ?? []; ?>
+					<?php if (empty($interests)): ?>
+						<p class="interests-empty">This user has no interests listed.</p>
+					<?php else: ?>
+						<div class="interests-tags">
+							<?php foreach ($interests as $interest): ?>
+								<span class="interest-tag"><?= htmlspecialchars($interest['name']) ?></span>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="noProfileOverlay" id="noProfileOverlay" style="<?= $currentProfileId !== null ? 'display:none;' : 'display:flex;' ?>">
+		<p>No more profiles available</p>
+		<p>Try adjusting your preferences or check back later!</p>
+	</div>
+
 	<div class="cover top-cover">
 		<img src="/assets/images/favicon_light.ico" alt="emb">
 	</div>

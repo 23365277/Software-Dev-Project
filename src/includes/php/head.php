@@ -10,6 +10,13 @@ if(session_status() == PHP_SESSION_NONE){
 	session_start();
 }
 
+$publicPages = ['login', 'create_account', 'about', 'contact'];
+$currentPage = basename($_SERVER['PHP_SELF'] ?? '', '.php');
+if (!isset($_SESSION['user_id']) && !isset($_COOKIE['remember_me']) && !in_array($currentPage, $publicPages)) {
+    header('Location: /pages/login.php');
+    exit();
+}
+
 if (isset($_SESSION['user_id'])) {
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
@@ -83,15 +90,20 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon_dark.ico" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon_light.ico" media="(prefers-color-scheme: light)">
 
-    <link rel="stylesheet" href="/assets/css/header.css">
-    <link rel="stylesheet" href="/assets/css/footer.css">
+    <link rel="stylesheet" href="/assets/css/header.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/header.css') ?>">
+    <link rel="stylesheet" href="/assets/css/footer.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/footer.css') ?>">
 
 
 
 	<!-- For Page Specific CSS-->
 	<?php if (isset($pageCSS)): ?>
-    <link rel="stylesheet" href="<?php echo $pageCSS; ?>">
-
+        <?php if (is_array($pageCSS) ): ?>
+            <?php foreach ($pageCSS as $css): ?>
+                <link rel="stylesheet" href="<?php echo $css; ?>">
+            <?php endforeach; ?>
+        <?php else: ?>
+            <link rel="stylesheet" href="<?php echo $pageCSS; ?>">
+        <?php endif; ?>
     <?php endif; ?>
 </head>
 <body>

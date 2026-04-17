@@ -2,6 +2,8 @@
 
     session_start();
 
+    ini_set('upload_max_filesize', '10M');
+    ini_set('post_max_size', '10M');
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -12,29 +14,44 @@
         $date_of_birth = $_POST['date_of_birth'] ?? '';
         $gender = $_POST['gender'] ?? '';
         $Pgender = $_POST['preferredGender'] ?? '';
-        $age = $_POST['preferredAge'] ?? '';
+        $min_age = $_POST['min_Age'] ?? '';
+        $max_age = $_POST['max_Age'] ?? '';
         $looking_for = $_POST['lookingFor'] ?? '';
         $bio = $_POST['bio'] ?? '';
         $height_cm = $_POST['height_cm'] ?? '';
         $country = $_POST['country'] ?? '';
         $city = $_POST['city'] ?? '';
+        $profile_picture = '';
+
+        if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0) {
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+            
+            // Create folder if it doesn't exist
+            if (!file_exists($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+
+            $fileName = uniqid() . "_" . basename($_FILES["profile_picture"]["name"]);
+            $targetFile = $targetDir . $fileName;
+
+            if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
+                // This is the path you store in DB
+                $profile_picture = '/assets/images/' . $fileName;
+            }
+        }
         $interest1 = $_POST['interest1'] ?? '';
         $interest2 = $_POST['interest2'] ?? '';
         $interest3 = $_POST['interest3'] ?? '';
         $interest4 = $_POST['interest4'] ?? '';
         $interest5 = $_POST['interest5'] ?? '';
         $userId = registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
-                        $age, $looking_for, $country, $city, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
+                        $min_age, $max_age, $looking_for, $country, $city, $profile_picture, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
 
         $_SESSION["user_id"] = $userId;
         if(isset($_SESSION['user_id'])){
           header("Location: /pages/home.php");
           exit();
         }
-        // $_SESSION['email'] = $email;
-    
-        
-        // exit();
     }
     
 
@@ -53,12 +70,14 @@
     
 <div class="row justify-content-center" >
 <div class="col-3">
-<form id="regForm" class="auth-form" method="POST" action="" onsubmit="return validateAllTabs()" novalidate>
+<form id="regForm" class="auth-form" method="POST" action="" enctype="multipart/form-data" onsubmit="return validateAllTabs()" novalidate>
   
   <div class="tab">
   <h2 class="signup-Title">Create Account</h2>
-    <input type="text" name="email" placeholder="Email" required>
-    <input type="text" name="password" placeholder="Password" required>
+    <input type="text" name="email" id="email" placeholder="Email" required>
+    <input type="text" name="emailConfirm" id="emailConfirm" placeholder="Confirm Email" required>
+    <input type="text" name="password" id="password" placeholder="Password" required>
+    <input type="text" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm Password" required>
     <input type="text" name="first_name" placeholder="First Name" required>
     <input type="text" name="last_name" placeholder="Last Name" required>
     <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" required>
@@ -72,10 +91,12 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <textarea type="text" name="bio" placeholder="bio" required></textarea>
+    <!-- <textarea type="text" name="bio" placeholder="bio" required></textarea> -->
+    <input type="text" name="bio" placeholder="bio" required>
     <input type="number" name="height_cm" placeholder="Height cm" required>
     <input type="text" name="country" placeholder="Country" required>
     <input type="text" name="city" placeholder="City" required>
+    <input type="file" name="profile_picture" accept="image/*">
   </div>
 
   <div class="tab">
@@ -95,7 +116,8 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <input type="number" name="preferredAge" placeholder="Preferred Age" required>
+    <input type="number" name="min_Age" placeholder=" Min Age" required>
+    <input type="number" name="max_Age" placeholder=" Max Age" required>
     <select name="lookingFor" placeholder="looking For" required>
         <option value="" disabled selected hidden>Looking For</option>
         <option value="Casual">Casual</option>
