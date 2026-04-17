@@ -88,6 +88,7 @@ $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
             </div>
         </div>
     </div>
+    <?php if ($cardMode !== 'dashboard'): ?>
     <div class="gallery-btn-row">
         <?php if (!empty($galleryImages)): ?>
             <button class="view-gallery-btn"
@@ -99,4 +100,5 @@ $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
             <span class="no-gallery-text">No photos yet</span>
         <?php endif; ?>
     </div>
+    <?php endif; ?>
 </div>

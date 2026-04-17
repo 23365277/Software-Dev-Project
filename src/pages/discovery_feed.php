@@ -32,7 +32,7 @@
 			<h4 class="sidebar-title">💡 How it works</h4>
 			<ul class="sidebar-tips">
 				<li>Browse traveller passports</li>
-				<li><strong>Like</strong> someone to connect</li>
+				<li><b>Like</b> someone to connect</li>
 				<li>Match when they like you back</li>
 				<li>Plan your trip together</li>
 			</ul>
