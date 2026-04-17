@@ -10,6 +10,13 @@ if(session_status() == PHP_SESSION_NONE){
 	session_start();
 }
 
+$publicPages = ['login', 'create_account', 'about', 'contact'];
+$currentPage = basename($_SERVER['PHP_SELF'] ?? '', '.php');
+if (!isset($_SESSION['user_id']) && !isset($_COOKIE['remember_me']) && !in_array($currentPage, $publicPages)) {
+    header('Location: /pages/login.php');
+    exit();
+}
+
 if (isset($_SESSION['user_id'])) {
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 

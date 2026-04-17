@@ -385,6 +385,7 @@ const RoamanceMessaging = (() => {
                         showError(el.error, 'User blocked successfully.');
                         if (el.actions) el.actions.style.display = 'none';
                         currentContact = null;
+                        currentMatchId = null;
                         if (el.input)    el.input.disabled    = true;
                         if (el.sendBtn)  el.sendBtn.disabled  = true;
                         if (el.messages) {

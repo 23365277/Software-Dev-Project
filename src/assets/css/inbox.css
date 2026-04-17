@@ -60,11 +60,37 @@ body {
 .sidebar-header {
     padding: 16px;
     border-bottom: 0.5px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .sidebar-header h2 {
     font-size: 15px;
     font-weight: 500;
+}
+
+.sidebar-blocked-btn {
+    display: none;
+    background: none;
+    border: 1px solid #c5cedc;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #1a3a5c;
+    cursor: pointer;
+}
+
+.sidebar-blocked-btn.active {
+    background: #1a3a5c;
+    color: #fff;
+    border-color: #1a3a5c;
+}
+
+@media (max-width: 768px) {
+    .sidebar-blocked-btn {
+        display: block;
+    }
 }
 
 .search-box {

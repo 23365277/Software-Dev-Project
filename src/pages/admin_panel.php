@@ -167,14 +167,16 @@
                                 <br><small class="text-muted">Duration: <?php echo htmlspecialchars(formatSuspensionDuration($u['duration'])); ?></small>
                             <?php endif; ?>
                         </div>
-                        <div class="userActions" style="align-items:flex-end;">
+                        <div class="userActions" style="align-items:flex-end; flex-direction:column;">
                             <?php if ($u['status'] === 'BANNED'): ?>
                                 <span class="badge bg-danger mb-1">Banned</span>
                             <?php else: ?>
                                 <span class="badge bg-warning text-dark mb-1">Suspended</span>
                             <?php endif; ?>
-                            <a href="/pages/profile_view.php?user_id=<?php echo (int)$u['id']; ?>" class="btn btn-outline-primary btn-sm" title="View Profile"><i class="bi bi-person-fill"></i></a>
-                            <a href="/pages/admin_panel.php?unban_user=<?php echo (int)$u['id']; ?>" class="btn btn-success btn-sm" title="Lift restriction"><i class="bi bi-check-circle"></i></a>
+                            <div class="d-flex gap-1">
+                                <a href="/pages/profile_view.php?user_id=<?php echo (int)$u['id']; ?>" class="btn btn-outline-primary btn-sm" title="View Profile"><i class="bi bi-person-fill"></i></a>
+                                <a href="/pages/admin_panel.php?unban_user=<?php echo (int)$u['id']; ?>" class="btn btn-success btn-sm" title="Lift restriction"><i class="bi bi-check-circle"></i></a>
+                            </div>
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -349,9 +351,9 @@ document.getElementById('userSearch').addEventListener('input', function () {
     function filterBanned() {
         const query = document.getElementById('bannedSearch').value.toLowerCase();
         document.querySelectorAll('#bannedList .banned-entry').forEach(entry => {
-            const status = entry.dataset.status;
-            const text   = entry.querySelector('.listNewUser').textContent.toLowerCase();
-            const tabOk  = activeTab === 'all' || status === activeTab;
+            const status  = entry.dataset.status;
+            const text    = entry.querySelector('.listNewUser').textContent.toLowerCase();
+            const tabOk   = activeTab === 'all' || status === activeTab;
             const searchOk = text.includes(query);
             entry.style.display = tabOk && searchOk ? '' : 'none';
         });

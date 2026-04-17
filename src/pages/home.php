@@ -1,19 +1,11 @@
 <?php
-session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
-if (isset($login_successful) && $login_successful) {
-    $_SESSION['logged_in'] = true;
-    $_SESSION['email'] = $user_email;
-    header("Location: dashboard.php");
-    exit();
-}
-
-$userId = $_SESSION["user_id"];
 $pageTitle = "Roamance - Home";
 $pageCSS = ["/assets/css/messaging.css",
             "/assets/css/connections_passport.css",
             "/assets/css/home.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/home.css')];
 include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
+
+$userId = $_SESSION["user_id"];
 
 $matches = getMatches($pdo, $userId);
 $likes = getLikes($pdo, $userId);

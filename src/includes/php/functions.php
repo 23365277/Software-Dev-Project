@@ -289,25 +289,14 @@ function updateUserProfilePicture($userId, $imagePath) {
 function verifyLogin($email, $password) {
     global $pdo;
     $user = getUserByEmail($email);
-    if (!$user || !password_verify($password, $user['password_hash'])) {
-        return false;
-    }
-
-    if ($user['account_status'] === 'BANNED') {
-        return ['error' => 'banned'];
-    }
-
+    if (!$user || !password_verify($password, $user['password_hash'])) return false;
+    if ($user['account_status'] === 'BANNED') return ['error' => 'banned'];
     if ($user['account_status'] === 'SUSPENDED') {
         $stmt = $pdo->prepare("SELECT reason, duration FROM suspended_users WHERE target_id = :id AND status = 'SUSPENDED' LIMIT 1");
         $stmt->execute([':id' => $user['id']]);
         $suspension = $stmt->fetch(PDO::FETCH_ASSOC);
-        return [
-            'error'    => 'suspended',
-            'reason'   => $suspension['reason'] ?? '',
-            'duration' => $suspension['duration'] ?? ''
-        ];
+        return ['error' => 'suspended', 'reason' => $suspension['reason'] ?? '', 'duration' => $suspension['duration'] ?? ''];
     }
-
     session_regenerate_id(true);
     $_SESSION["user_id"]    = $user["id"];
     $_SESSION["user_email"] = $user["email"];
@@ -405,6 +394,27 @@ function blockUser($user_id) {
 	} catch (PDOException $e) {
 		return ['success' => false, 'error' => $e->getMessage()];
 	}
+}
+
+function getBlockedUsers($userId) {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT b.blocked_id AS id, p.first_name, p.last_name, p.profile_picture, b.blocked_at
+        FROM blocks b
+        JOIN profiles p ON p.user_id = b.blocked_id
+        WHERE b.blocker_id = ?
+        ORDER BY b.blocked_at DESC
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function unblockUser($blockedId) {
+    global $pdo;
+    $loggedInUser = $_SESSION['user_id'];
+    $stmt = $pdo->prepare("DELETE FROM blocks WHERE blocker_id = ? AND blocked_id = ?");
+    $stmt->execute([$loggedInUser, $blockedId]);
+    return ['success' => true];
 }
 
 function reportUser($reported_id, $reason) {
@@ -1066,6 +1076,33 @@ function unbanUser($targetId) {
     } catch (PDOException $e) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
+}
+
+function formatSuspensionDuration($raw) {
+    if (!$raw) return '';
+    $parts = explode(':', $raw);
+    $totalHours = (int)($parts[0] ?? 0);
+    $days  = intdiv($totalHours, 24);
+    $hours = $totalHours % 24;
+    $str = $days > 0 ? "{$days} day" . ($days !== 1 ? 's' : '') : '';
+    if ($hours > 0) $str .= ($str ? ', ' : '') . "{$hours} hour" . ($hours !== 1 ? 's' : '');
+    return $str ?: $raw;
+}
+
+function getBannedAndSuspendedUsers() {
+    global $pdo;
+    $stmt = $pdo->query("
+        SELECT u.id, u.email, u.created_at, 'BANNED' AS status, NULL AS reason, NULL AS duration
+        FROM banned_users bu
+        INNER JOIN users u ON u.id = bu.target_id
+        UNION
+        SELECT u.id, u.email, u.created_at, 'SUSPENDED' AS status, su.reason, su.duration
+        FROM suspended_users su
+        INNER JOIN users u ON u.id = su.target_id
+        WHERE su.status = 'SUSPENDED'
+        ORDER BY created_at DESC
+    ");
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function resolveReport($reportId) {
