@@ -1,5 +1,8 @@
 <?php
 
+if (defined('FUNCTIONS_LOADED')) return;
+define('FUNCTIONS_LOADED', true);
+
 require_once __DIR__ . "/../../config/database.php";
 
 function getUserByEmail($email) {
@@ -1076,33 +1079,6 @@ function unbanUser($targetId) {
     } catch (PDOException $e) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
-}
-
-function formatSuspensionDuration($raw) {
-    if (!$raw) return '';
-    $parts = explode(':', $raw);
-    $totalHours = (int)($parts[0] ?? 0);
-    $days  = intdiv($totalHours, 24);
-    $hours = $totalHours % 24;
-    $str = $days > 0 ? "{$days} day" . ($days !== 1 ? 's' : '') : '';
-    if ($hours > 0) $str .= ($str ? ', ' : '') . "{$hours} hour" . ($hours !== 1 ? 's' : '');
-    return $str ?: $raw;
-}
-
-function getBannedAndSuspendedUsers() {
-    global $pdo;
-    $stmt = $pdo->query("
-        SELECT u.id, u.email, u.created_at, 'BANNED' AS status, NULL AS reason, NULL AS duration
-        FROM banned_users bu
-        INNER JOIN users u ON u.id = bu.target_id
-        UNION
-        SELECT u.id, u.email, u.created_at, 'SUSPENDED' AS status, su.reason, su.duration
-        FROM suspended_users su
-        INNER JOIN users u ON u.id = su.target_id
-        WHERE su.status = 'SUSPENDED'
-        ORDER BY created_at DESC
-    ");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function resolveReport($reportId) {

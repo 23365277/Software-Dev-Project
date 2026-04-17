@@ -501,14 +501,13 @@ body {
     display: flex;
     flex-direction: column;
     background: #fafafa;
+    overflow-y: auto;
 }
 
 .conn-box {
-    flex: 1;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    min-height: 0;
 }
 
 .conn-box + .conn-box {
@@ -527,7 +526,7 @@ body {
 }
 
 .conn-list {
-    flex: 1;
+    max-height: 180px;
     overflow-y: auto;
 }
 

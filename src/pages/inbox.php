@@ -1,16 +1,18 @@
 <?php
-    $pageTitle = "Roamance - Inbox";
-    $pageCSS   = "/assets/css/inbox.css";
-    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+    if (session_status() === PHP_SESSION_NONE) session_start();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
-
-    $currentUserId = $_SESSION['user_id'];
 
     if (isset($_GET['unblock_user'])) {
         unblockUser((int) $_GET['unblock_user']);
         header("Location: /pages/inbox.php");
         exit;
     }
+
+    $pageTitle = "Roamance - Inbox";
+    $pageCSS   = "/assets/css/inbox.css";
+    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
+
+    $currentUserId = $_SESSION['user_id'];
 
     // ── Fetch all matches ─────────────────────────────────────────────────────
     $matchesQuery = $pdo->prepare("
@@ -29,10 +31,15 @@
             (SELECT COUNT(*) FROM messages WHERE match_id = m.match_id AND receiver_id = ? AND seen = 0) AS unread_count
         FROM matches m
         JOIN profiles p ON p.user_id = CASE WHEN m.user1_id = ? THEN m.user2_id ELSE m.user1_id END
-        WHERE m.user1_id = ? OR m.user2_id = ?
+        WHERE (m.user1_id = ? OR m.user2_id = ?)
+          AND NOT EXISTS (
+              SELECT 1 FROM blocks
+              WHERE blocker_id = ?
+                AND blocked_id = CASE WHEN m.user1_id = ? THEN m.user2_id ELSE m.user1_id END
+          )
         ORDER BY last_message_at DESC
     ");
-    $matchesQuery->execute([$currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId]);
+    $matchesQuery->execute([$currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId]);
     $matches = $matchesQuery->fetchAll(PDO::FETCH_ASSOC);
 
     // ── Selected match ────────────────────────────────────────────────────────

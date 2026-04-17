@@ -4,7 +4,7 @@
     $pageCSS = "/assets/css/matches_like.css";
 	$pageTitle = "Roamance - Matches/Likes";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
-    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
 
     $userId = $_SESSION['user_id'];
