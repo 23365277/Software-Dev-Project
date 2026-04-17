@@ -1,36 +1,102 @@
+/* ── Page ───────────────────────────────────────────────────── */
+body {
+    background: #f0f2f5;
+}
+
+h1 {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+
+h3 {
+    color: #555;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+/* ── Dashboard cards ────────────────────────────────────────── */
+.card {
+    background: #fff;
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 1.1rem 1.2rem;
+}
+
+.card-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #1e3a5f;
+    border-bottom: 2px solid #e8edf3;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* ── User entries ───────────────────────────────────────────── */
 .newUserEntry {
-    background-color: #fff;          /* White background for card */
-    border: 1px solid #ddd;          /* Light border */
-    border-radius: 8px;              /* Rounded corners */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
-    padding: 12px 16px;              /* Internal padding */
-    margin-bottom: 12px;             /* Space between cards */
-    transition: transform 0.2s, box-shadow 0.2s;
+    background: #f8f9fb;
+    border: 1px solid #e8edf3;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.15s;
+}
+
+.newUserEntry:hover {
+    box-shadow: 0 3px 10px rgba(30,58,95,0.1);
+}
+
+.listNewUser {
+    font-size: 0.83rem;
+    color: #333;
+    line-height: 1.5;
 }
 
 .cardSignUps {
-    
     margin-right: 4px;
 }
 
 .scrollableContainer {
     padding: 4px;
-    max-height: 230px;              /* Set a max height for the container */
-    overflow-y: auto;               /* Enable vertical scrolling */
-    padding-right: 8px;             /* Add some padding to prevent content from being hidden behind the scrollbar */
+    max-height: 230px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.scrollableContainer::-webkit-scrollbar {
+    width: 5px;
+}
+
+.scrollableContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollableContainer::-webkit-scrollbar-thumb {
+    background: #c5cedc;
+    border-radius: 4px;
 }
 
 .reportEntry {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background: #f8f9fb;
+    border: 1px solid #e8edf3;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    padding: 12px 16px;
-    margin-bottom: 12px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 8px;
+    transition: box-shadow 0.15s;
+}
+
+.reportEntry:hover {
+    box-shadow: 0 3px 10px rgba(30,58,95,0.1);
 }
 
 .listReport {
@@ -49,12 +115,6 @@
     align-self: center;
 }
 
-.newUserEntry {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .userActions {
     flex-shrink: 0;
     display: flex;
@@ -66,9 +126,9 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 4px;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 0.85rem;
+    padding: 7px 4px;
+    border-bottom: 1px solid #eef1f6;
+    font-size: 0.83rem;
 }
 
 .activityEntry:last-child {
@@ -92,4 +152,24 @@
     color: #999;
     white-space: nowrap;
     font-size: 0.78rem;
+}
+
+@media (max-width: 768px) {
+    .scrollableContainer {
+        max-height: 180px;
+    }
+
+    .reportEntry {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .reportActions {
+        flex-direction: row;
+        align-self: flex-end;
+    }
+
+    .activityExtra {
+        display: none;
+    }
 }
