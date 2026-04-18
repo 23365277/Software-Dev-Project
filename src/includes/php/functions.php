@@ -273,7 +273,7 @@ function getUserProfilePicture($userId) {
 function saveUserGalleryImage($userId, $imagePath) {
     global $pdo;
 
-    $stmt = $conn->prepare("
+    $stmt = $pdo->prepare("
         INSERT INTO user_gallery (user_id, image_url, is_primary)
         VALUES (?, ?, 0)
     ");
