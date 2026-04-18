@@ -1,5 +1,4 @@
 <?php
-
     session_start();
 
     ini_set('upload_max_filesize', '10M');
@@ -170,6 +169,7 @@
   </div>
 
   <div style="text-align:center;margin-top:20px;">
+    <span class="step"></span>
     <span class="step"></span>
     <span class="step"></span>
     <span class="step"></span>
