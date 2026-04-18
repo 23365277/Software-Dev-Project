@@ -4,7 +4,7 @@
 
     ini_set('upload_max_filesize', '10M');
     ini_set('post_max_size', '10M');
-    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $email = $_POST['email'] ?? '';

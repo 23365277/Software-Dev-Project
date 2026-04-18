@@ -1,19 +1,11 @@
 <?php
-session_start();
-require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
-if (isset($login_successful) && $login_successful) {
-    $_SESSION['logged_in'] = true;
-    $_SESSION['email'] = $user_email;
-    header("Location: dashboard.php");
-    exit();
-}
-
-$userId = $_SESSION["user_id"];
 $pageTitle = "Roamance - Home";
 $pageCSS = ["/assets/css/messaging.css",
             "/assets/css/connections_passport.css",
             "/assets/css/home.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/home.css')];
 include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
+
+$userId = $_SESSION["user_id"];
 
 $matches = getMatches($pdo, $userId);
 $likes = getLikes($pdo, $userId);
@@ -90,6 +82,9 @@ $latestLike = $likes[0] ?? null;
             <div id="home-report-modal">
                 <h3>Report User</h3>
                 <p>Please describe the reason for this report:</p>
+                <p style="font-size:12px;color:#888;background:#f5f5f5;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+                    &#9432; When a report is submitted, admins may review the conversation between you and this user as part of their investigation.
+                </p>
                 <textarea id="home-report-reason" placeholder="Enter reason..." rows="4"></textarea>
                 <div id="home-report-modal-error"></div>
                 <div id="home-report-modal-actions">

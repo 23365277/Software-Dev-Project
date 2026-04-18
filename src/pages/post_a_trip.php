@@ -65,10 +65,25 @@
             </div>
         </div>
     </div>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
-</body>
+    <div id="tripToast" style="
+        position:fixed; bottom:2rem; left:50%; transform:translateX(-50%);
+        background:#1a3a5c; color:#fff; padding:1rem 2rem; border-radius:8px;
+        font-size:1rem; z-index:9999; box-shadow:0 4px 16px rgba(0,0,0,0.2);
+        opacity:0; pointer-events:none; transition:opacity 0.3s;">
+        ✈️ Trip posted successfully!
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <div id="tripErrorToast" style="
+        position:fixed; bottom:2rem; left:50%; transform:translateX(-50%);
+        background:#c0392b; color:#fff; padding:1rem 2rem; border-radius:8px;
+        font-size:1rem; z-index:9999; box-shadow:0 4px 16px rgba(0,0,0,0.2);
+        opacity:0; pointer-events:none; transition:opacity 0.3s;
+        display:flex; align-items:center; gap:0.6rem;">
+        ⚠️ <span class="toast-msg"></span>
+    </div>
+
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
+
 <script src="/includes/js/post_a_trip.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2QU_U5Ck0fQvEFTE2RGDSEQAm1ITlcZU&libraries=places&callback=initAutocomplete" async defer></script>
 </body>

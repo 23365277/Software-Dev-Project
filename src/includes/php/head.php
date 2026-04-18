@@ -10,11 +10,44 @@ if(session_status() == PHP_SESSION_NONE){
 	session_start();
 }
 
-if (isset($_SESSION['user_id']) && !isset($_SESSION['user_role'])) {
+$publicPages = ['login', 'create_account', 'about', 'contact'];
+$currentPage = basename($_SERVER['PHP_SELF'] ?? '', '.php');
+if (!isset($_SESSION['user_id']) && !isset($_COOKIE['remember_me']) && !in_array($currentPage, $publicPages)) {
+    header('Location: /pages/login.php');
+    exit();
+}
+
+if (isset($_SESSION['user_id'])) {
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
-    $roleStmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
-    $roleStmt->execute([$_SESSION['user_id']]);
-    $_SESSION['user_role'] = $roleStmt->fetchColumn() ?: 'USER';
+
+    $userStmt = $pdo->prepare("SELECT role, account_status FROM users WHERE id = ?");
+    $userStmt->execute([$_SESSION['user_id']]);
+    $userRow = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+    $_SESSION['user_role'] = $userRow['role'] ?? 'USER';
+
+    $accountStatus = $userRow['account_status'] ?? 'ACTIVE';
+    if ($accountStatus === 'BANNED' || $accountStatus === 'SUSPENDED') {
+        $redirectQuery = 'blocked=' . strtolower($accountStatus);
+
+        if ($accountStatus === 'SUSPENDED') {
+            $suspStmt = $pdo->prepare("SELECT duration FROM suspended_users WHERE target_id = ? AND status = 'SUSPENDED' LIMIT 1");
+            $suspStmt->execute([$_SESSION['user_id']]);
+            $duration = $suspStmt->fetchColumn();
+            if ($duration) {
+                $redirectQuery .= '&duration=' . urlencode(formatSuspensionDuration($duration));
+            }
+        }
+
+        session_unset();
+        session_destroy();
+        setcookie('remember_me', '', time() - 1, '/', '', true, true);
+        $isLoginPage = strpos($_SERVER['PHP_SELF'] ?? '', 'login') !== false;
+        if (!$isLoginPage) {
+            header('Location: /pages/login.php?' . $redirectQuery);
+            exit();
+        }
+    }
 }
 
 if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {

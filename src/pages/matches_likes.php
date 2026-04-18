@@ -4,7 +4,7 @@
     $pageCSS = "/assets/css/matches_like.css";
 	$pageTitle = "Roamance - Matches/Likes";
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
-    include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/config/database.php';
 
     $userId = $_SESSION['user_id'];
@@ -88,6 +88,21 @@
     </div>
 </div>
 
+<div id="galleryModal" class="gallery-modal-overlay">
+    <div class="gallery-modal-box">
+        <div class="gallery-modal-header">
+            <h3 id="galleryModalTitle"></h3>
+            <button class="gallery-modal-close" id="galleryModalClose">&times;</button>
+        </div>
+        <div class="gallery-modal-carousel">
+            <button class="gallery-nav" id="galleryPrev">&#10094;</button>
+            <img id="galleryModalImg" src="" alt="Travel Photo">
+            <button class="gallery-nav" id="galleryNext">&#10095;</button>
+        </div>
+        <p class="gallery-modal-count" id="galleryModalCount"></p>
+    </div>
+</div>
+
 <script src="/includes/js/passport.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -108,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.querySelectorAll(".mini-passport-wrapper").forEach(wrapper => {
+    document.querySelectorAll(".card-container").forEach(wrapper => {
         const cover = wrapper.querySelector(".mini-cover");
 
         wrapper.addEventListener("mouseenter", () => {
@@ -142,10 +157,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tripFilter.addEventListener("change", () => {
         const selectedTrip = tripFilter.value;
-        const cards = document.querySelectorAll(".mini-passport-wrapper");
+        const cards = document.querySelectorAll(".card-container");
 
         cards.forEach(card => {
-            const cardTrip = (card.dataset.tripCountry || "").toLowerCase();
+            const cardTrip = (card.querySelector(".mini-passport-wrapper")?.dataset.tripCountry || "").toLowerCase();
 
             if (selectedTrip === "" || cardTrip === selectedTrip) {
                 card.style.display = "";
@@ -155,10 +170,53 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Gallery modal
+    let galleryImages = [];
+    let galleryIndex = 0;
+
+    function showGalleryImage() {
+        document.getElementById("galleryModalImg").src = galleryImages[galleryIndex];
+        document.getElementById("galleryModalCount").textContent = (galleryIndex + 1) + " / " + galleryImages.length;
+    }
+
+    function closeGalleryModal() {
+        document.getElementById("galleryModal").classList.remove("active");
+    }
+
+    document.addEventListener("click", e => {
+        const btn = e.target.closest(".view-gallery-btn");
+        if (!btn) return;
+        e.stopPropagation();
+        galleryImages = JSON.parse(btn.dataset.gallery);
+        galleryIndex = 0;
+        document.getElementById("galleryModalTitle").textContent = btn.dataset.name + "'s Photos";
+        showGalleryImage();
+        document.getElementById("galleryModal").classList.add("active");
+    });
+
+    document.getElementById("galleryModal").addEventListener("click", e => {
+        if (e.target === document.getElementById("galleryModal")) closeGalleryModal();
+    });
+    document.getElementById("galleryModalClose").addEventListener("click", closeGalleryModal);
+    document.getElementById("galleryPrev").addEventListener("click", () => {
+        galleryIndex = (galleryIndex - 1 + galleryImages.length) % galleryImages.length;
+        showGalleryImage();
+    });
+    document.getElementById("galleryNext").addEventListener("click", () => {
+        galleryIndex = (galleryIndex + 1) % galleryImages.length;
+        showGalleryImage();
+    });
+    document.addEventListener("keydown", e => {
+        if (!document.getElementById("galleryModal").classList.contains("active")) return;
+        if (e.key === "ArrowLeft") { galleryIndex = (galleryIndex - 1 + galleryImages.length) % galleryImages.length; showGalleryImage(); }
+        if (e.key === "ArrowRight") { galleryIndex = (galleryIndex + 1) % galleryImages.length; showGalleryImage(); }
+        if (e.key === "Escape") closeGalleryModal();
+    });
+
     const searchInput = document.getElementById("searchInput");
     searchInput.addEventListener("input", () => {
         const query = searchInput.value.toLowerCase();
-        const cards = document.querySelectorAll(".mini-passport-wrapper");
+        const cards = document.querySelectorAll(".card-container");
 
         cards.forEach(card => {
             const forenameField = card.querySelector(".details-left .forename");

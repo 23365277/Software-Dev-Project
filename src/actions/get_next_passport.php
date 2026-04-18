@@ -1,7 +1,7 @@
 <?php
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . "/config/database.php";
-include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/includes/php/functions.php";
 
 header('Content-Type: application/json');
 

@@ -69,7 +69,7 @@ async function initAutocomplete() {
     });
 
     const autocomplete = new google.maps.places.Autocomplete(destination, {
-        types: ["(regions)"],
+        types: ["country"],
         fields: ["name", "geometry", "types"]
     });
 
@@ -80,13 +80,19 @@ async function initAutocomplete() {
             return;
         }
 
+        const placeTypes = place.types || [];
+        if (!placeTypes.includes("country")) {
+            destination.value = "";
+            showErrorToast("Please select a country from the suggestions.");
+            return;
+        }
 
         const rawName = place.name ? place.name.trim() : "";
         const countryName = nameMap[rawName] ?? rawName;
 
         if (!allowedCountries.includes(countryName.toLowerCase())) {
-            alert("That destination is not available in our list. Please select a country if not already done.");
             destination.value = "";
+            showErrorToast("That country isn't available as a destination yet.");
             return;
         }
         
@@ -118,6 +124,11 @@ async function submitTrip() {
     const endDateVal = endDate.value;
     const activityVal = activity.value.trim();
 
+    if (startDateVal && endDateVal && endDateVal < startDateVal) {
+        showErrorToast("Return date cannot be before departure date.");
+        return;
+    }
+
     try {
         const res = await fetch("/includes/php/post_trip.php", {
             method: "POST",
@@ -137,12 +148,33 @@ async function submitTrip() {
             startDate.value = "";
             endDate.value = "";
             activity.value = "";
-            new bootstrap.Modal(document.getElementById("tripSuccessModal")).show();
+            showTripToast();
         } else {
-            alert("Error posting trip.");
+            alert("Error posting trip: " + (data.error || "Unknown error"));
         }
     } catch (err) {
         console.error("submitTrip error:", err);
         alert("An error occurred while submitting the trip.");
     }
+}
+
+function showTripToast() {
+    showToast(document.getElementById("tripToast"), 3000);
+}
+
+function showErrorToast(message) {
+    let toast = document.getElementById("tripErrorToast");
+    if (!toast) return;
+    toast.querySelector(".toast-msg").textContent = message;
+    showToast(toast, 4000);
+}
+
+function showToast(el, duration) {
+    if (!el) return;
+    el.style.opacity = "1";
+    el.style.pointerEvents = "auto";
+    setTimeout(() => {
+        el.style.opacity = "0";
+        el.style.pointerEvents = "none";
+    }, duration);
 }

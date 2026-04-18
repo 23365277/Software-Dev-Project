@@ -1,3 +1,10 @@
+.card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
 .mini-passport-wrapper{
     position: relative;
     perspective: 1000px;
@@ -16,6 +23,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
 }
 
 .mini-passport-wrapper:hover .mini-cover {
@@ -174,6 +182,36 @@
 
 .mini-passport-wrapper[data-href] {
     cursor: pointer;
+}
+
+/* ── Gallery button ─────────────────────────────────────────── */
+.gallery-btn-row {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.view-gallery-btn {
+    background: linear-gradient(135deg, #25476f, #17304f);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.view-gallery-btn:hover {
+    background: linear-gradient(135deg, #2d5585, #1e3a5f);
+    transform: translateY(-1px);
+}
+
+.no-gallery-text {
+    font-size: 0.8rem;
+    color: #aaa;
+    font-style: italic;
 }
 
 .mini-passport-wrapper.is-flipped .mini-cover {

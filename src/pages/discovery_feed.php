@@ -2,7 +2,7 @@
 	session_start();
 	$pageCSS = "/assets/css/discovery_feed.css?v=" . filemtime($_SERVER['DOCUMENT_ROOT'] . "/assets/css/discovery_feed.css");
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
-	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 
 	$selectedCountry = $_GET['trip_country'] ?? null;
 ?>
@@ -32,7 +32,7 @@
 			<h4 class="sidebar-title">💡 How it works</h4>
 			<ul class="sidebar-tips">
 				<li>Browse traveller passports</li>
-				<li><strong>Like</strong> someone to connect</li>
+				<li><b>Like</b> someone to connect</li>
 				<li>Match when they like you back</li>
 				<li>Plan your trip together</li>
 			</ul>
@@ -43,18 +43,18 @@
 	<div class="passport-and-interests">
 		<div class="passport-container">
 			<?php include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/passport.php"; ?>
+		</div>
 
-			<div class="container col-9 action-bar">
-				<div class="row justify-content-center align-items-center g-3 action-btns">
-					<div class="col-4 col-lg-3">
-						<button class="btn action-btn like w-100" id="likeBtn">Like</button>
-					</div>
-					<div class="col-auto text-center">
-						<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
-					</div>
-					<div class="col-4 col-lg-3">
-						<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
-					</div>
+		<div class="container col-9 action-bar">
+			<div class="row justify-content-center align-items-center g-3 action-btns">
+				<div class="col-4 col-lg-3">
+					<button class="btn action-btn like w-100" id="likeBtn">Like</button>
+				</div>
+				<div class="col-auto text-center">
+					<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
+				</div>
+				<div class="col-4 col-lg-3">
+					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>
 				</div>
 			</div>
 		</div>
@@ -247,8 +247,15 @@ function loadNextPassport() {
 		.then(res => res.json())
 		.then(user => {
 
-			if (!user.user_id) {
+			if (!user || !user.user_id) {
 					showNoProfilesOverlay();
+					likeBtn.disabled = true;
+					dislikeBtn.disabled = true;
+					document.getElementById("approvedStamp").classList.remove("visible");
+					document.getElementById("rejectedStamp").classList.remove("visible");
+					document.getElementById("interestsPanel").classList.remove("open");
+					gsap.set(".passport-wrapper", { x: 0, y: -1400 });
+					gsap.to(".passport-wrapper", { y: 0, duration: 1, ease: "power2.out", onComplete: peelCover });
 					return;
 				}
 

@@ -48,6 +48,19 @@ include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
     <div class="auth-box mt-4">
         <h2>Join Roamance</h2>
         <hr>
+        <?php if (isset($_GET['blocked'])): ?>
+            <div style="background:#fee2e2; color:#b91c1c; padding:10px; border-radius:5px; font-size:0.9em; margin-bottom:10px;">
+                <?php if ($_GET['blocked'] === 'banned'): ?>
+                    Your account has been permanently banned.
+                <?php elseif ($_GET['blocked'] === 'suspended'): ?>
+                    Your account has been suspended.
+                    <?php if (!empty($_GET['duration'])): ?>
+                        Duration: <?= htmlspecialchars($_GET['duration']) ?>.
+                    <?php endif; ?>
+                    Please contact support.
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
         <form id="login-form">
             <div id="login-error" style="display:none; background:#fee2e2; color:#b91c1c; padding:10px; border-radius:5px; font-size:0.9em;"></div>
             <input type="email" name="email" placeholder="Email" required>

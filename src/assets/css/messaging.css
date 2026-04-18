@@ -422,9 +422,8 @@
     transition: background 0.2s;
 }
 
-<<<<<<< HEAD
 #report-cancel-btn:hover { background: #cbd5e1; }
-=======
+
 @media (max-width: 480px) {
     #chatbox-container {
         bottom: 10px;
@@ -441,5 +440,3 @@
         width: calc(100vw - 40px);
     }
 }
-
->>>>>>> mobile_responsiveness

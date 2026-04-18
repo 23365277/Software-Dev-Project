@@ -1,4 +1,13 @@
 <?php
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
+
+    if (isset($_GET['unblock_user'])) {
+        unblockUser((int) $_GET['unblock_user']);
+        header("Location: /pages/inbox.php");
+        exit;
+    }
+
     $pageTitle = "Roamance - Inbox";
     $pageCSS   = "/assets/css/inbox.css";
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
@@ -22,10 +31,15 @@
             (SELECT COUNT(*) FROM messages WHERE match_id = m.match_id AND receiver_id = ? AND seen = 0) AS unread_count
         FROM matches m
         JOIN profiles p ON p.user_id = CASE WHEN m.user1_id = ? THEN m.user2_id ELSE m.user1_id END
-        WHERE m.user1_id = ? OR m.user2_id = ?
+        WHERE (m.user1_id = ? OR m.user2_id = ?)
+          AND NOT EXISTS (
+              SELECT 1 FROM blocks
+              WHERE blocker_id = ?
+                AND blocked_id = CASE WHEN m.user1_id = ? THEN m.user2_id ELSE m.user1_id END
+          )
         ORDER BY last_message_at DESC
     ");
-    $matchesQuery->execute([$currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId]);
+    $matchesQuery->execute([$currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId, $currentUserId]);
     $matches = $matchesQuery->fetchAll(PDO::FETCH_ASSOC);
 
     // ── Selected match ────────────────────────────────────────────────────────
@@ -76,6 +90,35 @@
     $incomingLikesQ->execute([$currentUserId, $currentUserId, $currentUserId]);
     $incomingLikes = $incomingLikesQ->fetchAll(PDO::FETCH_ASSOC);
 
+    // ── Selected user extra data ──────────────────────────────────────────────
+    $otherUserPhotos = [];
+    $otherUserNextTrip = null;
+    $sharedDestinations = [];
+
+    if ($selectedMatch) {
+        $otherId = (int)$selectedMatch['other_user_id'];
+
+        $photosQ = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ? ORDER BY is_primary DESC, uploaded_at DESC LIMIT 6");
+        $photosQ->execute([$otherId]);
+        $otherUserPhotos = $photosQ->fetchAll(PDO::FETCH_COLUMN);
+
+        $otherUserNextTrip = getUserTrips($pdo, $otherId);
+
+        $sharedQ = $pdo->prepare("
+            SELECT d.location
+            FROM user_destinations ud1
+            JOIN user_destinations ud2 ON ud1.destination_id = ud2.destination_id
+            JOIN destinations d ON d.id = ud1.destination_id
+            WHERE ud1.user_id = ? AND ud2.user_id = ?
+            ORDER BY d.location ASC
+        ");
+        $sharedQ->execute([$currentUserId, $otherId]);
+        $sharedDestinations = $sharedQ->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    // ── Blocked users ─────────────────────────────────────────────────────────
+    $blockedUsers = getBlockedUsers($currentUserId);
+
     // ── Helpers ───────────────────────────────────────────────────────────────
     function getAge($dob) {
         return (new DateTime($dob))->diff(new DateTime())->y;
@@ -97,11 +140,14 @@
 
     <!-- ── Sidebar ── -->
     <div class="sidebar">
-        <div class="sidebar-header"><h2>Messages</h2></div>
+        <div class="sidebar-header">
+            <h2>Messages</h2>
+            <button id="sidebar-blocked-toggle" class="sidebar-blocked-btn" onclick="toggleBlockedPanel()">&#128683; Blocked</button>
+        </div>
         <div class="search-box">
             <input type="text" placeholder="Search conversations...">
         </div>
-        <div class="people-list">
+        <div class="people-list" id="sidebar-people-list">
             <?php foreach ($matches as $match): ?>
                 <a href="?match_id=<?= $match['match_id'] ?>"
                    class="person-row <?= $match['match_id'] == $selectedMatchId ? 'active' : '' ?>">
@@ -127,6 +173,27 @@
                     </div>
                 </a>
             <?php endforeach; ?>
+        </div>
+
+        <!-- Mobile blocked users panel -->
+        <div id="sidebar-blocked-panel" style="display:none; flex:1; overflow-y:auto;">
+            <?php if (empty($blockedUsers)): ?>
+                <p style="font-size:12px; color:#aaa; padding:14px; font-style:italic;">No blocked users</p>
+            <?php else: ?>
+                <?php foreach ($blockedUsers as $bu): ?>
+                <div style="display:flex; align-items:center; gap:8px; padding:10px 14px; border-bottom:0.5px solid #f0f0f0;">
+                    <?php if ($bu['profile_picture']): ?>
+                        <img src="<?= htmlspecialchars($bu['profile_picture']) ?>" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="">
+                    <?php else: ?>
+                        <div style="width:36px;height:36px;border-radius:50%;background:#c5cedc;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;">
+                            <?= strtoupper(substr($bu['first_name'],0,1).substr($bu['last_name'],0,1)) ?>
+                        </div>
+                    <?php endif; ?>
+                    <span style="flex:1;font-size:13px;"><?= htmlspecialchars($bu['first_name'].' '.$bu['last_name']) ?></span>
+                    <a href="/pages/inbox.php?unblock_user=<?= (int)$bu['id'] ?>" style="font-size:11px;padding:3px 8px;border-radius:6px;background:#22c55e;color:#fff;text-decoration:none;white-space:nowrap;">Unblock</a>
+                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -205,6 +272,9 @@
                 <div id="inbox-report-modal">
                     <h3>Report User</h3>
                     <p>Please describe the reason for this report:</p>
+                    <p style="font-size:12px;color:#888;background:#f5f5f5;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+                        &#9432; When a report is submitted, admins may review the conversation between you and this user as part of their investigation.
+                    </p>
                     <textarea id="inbox-report-reason" placeholder="Enter reason..." rows="4"></textarea>
                     <div id="inbox-report-modal-error"></div>
                     <div id="inbox-report-modal-actions">
@@ -265,6 +335,62 @@
     <!-- ── Connections panel ── -->
     <div class="connections-panel">
 
+        <?php if ($selectedMatch): ?>
+
+            <!-- Photos -->
+            <div class="conn-box">
+                <h3 class="conn-box-title">📸 Photos</h3>
+                <div class="conn-photos-grid">
+                    <?php
+                        $displayPhotos = $otherUserPhotos;
+                        if (empty($displayPhotos) && $selectedMatch['profile_picture']) {
+                            $displayPhotos = [$selectedMatch['profile_picture']];
+                        }
+                    ?>
+                    <?php if (empty($displayPhotos)): ?>
+                        <p class="conn-empty">No photos uploaded</p>
+                    <?php else: ?>
+                        <?php foreach ($displayPhotos as $photo): ?>
+                            <img src="<?= htmlspecialchars($photo) ?>" class="conn-photo-thumb" alt="Photo" onclick="openPhotoLightbox(this.src)">
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Next Trip -->
+            <div class="conn-box">
+                <h3 class="conn-box-title">✈️ Next Trip</h3>
+                <div style="padding: 10px 14px;">
+                    <?php if ($otherUserNextTrip): ?>
+                        <div class="conn-trip">
+                            <span class="conn-trip-location"><?= htmlspecialchars($otherUserNextTrip['location']) ?></span>
+                            <span class="conn-trip-dates">
+                                <?= date('d M', strtotime($otherUserNextTrip['start_date'])) ?>
+                                – <?= date('d M Y', strtotime($otherUserNextTrip['end_date'])) ?>
+                            </span>
+                        </div>
+                    <?php else: ?>
+                        <p class="conn-empty">No upcoming trips</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Shared Destinations -->
+            <div class="conn-box">
+                <h3 class="conn-box-title">🗺️ In Common</h3>
+                <div class="conn-list">
+                    <?php if (empty($sharedDestinations)): ?>
+                        <p class="conn-empty">No shared destinations</p>
+                    <?php else: ?>
+                        <?php foreach ($sharedDestinations as $dest): ?>
+                            <div class="conn-dest-row">📍 <?= htmlspecialchars($dest) ?></div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        <?php endif; ?>
+
         <div class="conn-box">
             <h3 class="conn-box-title">💓 Matches</h3>
             <div class="conn-list">
@@ -305,7 +431,61 @@
             </div>
         </div>
 
+        <div class="conn-box">
+            <h3 class="conn-box-title">&#128683; Blocked</h3>
+            <div class="conn-list">
+                <?php if (empty($blockedUsers)): ?>
+                    <p class="conn-empty">No blocked users</p>
+                <?php else: ?>
+                    <?php foreach ($blockedUsers as $bu): ?>
+                        <div class="conn-row" style="justify-content:space-between;">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <?php if ($bu['profile_picture']): ?>
+                                    <img src="<?= htmlspecialchars($bu['profile_picture']) ?>" class="conn-avatar" alt="">
+                                <?php else: ?>
+                                    <div class="conn-avatar"><?= strtoupper(substr($bu['first_name'],0,1).substr($bu['last_name'],0,1)) ?></div>
+                                <?php endif; ?>
+                                <span class="conn-name"><?= htmlspecialchars($bu['first_name'].' '.$bu['last_name']) ?></span>
+                            </div>
+                            <a href="/pages/inbox.php?unblock_user=<?= (int)$bu['id'] ?>" class="btn btn-success btn-sm" style="font-size:0.75rem; padding:2px 8px;">Unblock</a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+
     </div>
 
 </div><!-- /.inbox-wrap -->
 </div><!-- /.inbox-page -->
+
+<!-- Photo lightbox -->
+<div id="photo-lightbox" onclick="closePhotoLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;">
+    <img id="photo-lightbox-img" src="" alt="" style="max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.6);">
+</div>
+
+<script>
+function toggleBlockedPanel() {
+    const people  = document.getElementById('sidebar-people-list');
+    const blocked = document.getElementById('sidebar-blocked-panel');
+    const btn     = document.getElementById('sidebar-blocked-toggle');
+    const showing = blocked.style.display !== 'none';
+    blocked.style.display = showing ? 'none' : 'block';
+    people.style.display  = showing ? ''     : 'none';
+    btn.classList.toggle('active', !showing);
+}
+</script>
+
+<script>
+function openPhotoLightbox(src) {
+    const lb = document.getElementById('photo-lightbox');
+    document.getElementById('photo-lightbox-img').src = src;
+    lb.style.display = 'flex';
+}
+function closePhotoLightbox() {
+    document.getElementById('photo-lightbox').style.display = 'none';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePhotoLightbox();
+});
+</script>
