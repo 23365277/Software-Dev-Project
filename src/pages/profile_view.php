@@ -11,12 +11,6 @@
     $allInterests = getAllInterests();
     $userInterestIds = array_column($interests ?? [], 'id');
 
-    // if ($profile && $preferences && $interests) {
-    //     $_SESSION['profile'] = $profile;
-    //     $_SESSION['preferences'] = $preferences;
-    //     $_SESSION['interests'] = $interests;
-    // }
-
         $interestNames = array_column($interests ?? [], 'name');
         $interestString = !empty($interestNames) ? implode(', ', $interestNames) : 'No interests added';
 
@@ -230,7 +224,7 @@
         </form>
     </div>
 
-    <div class="row profile-info mt-4">
+    <div class="row profile-info mt-4 gy-4">
 
         <div class="col-md-4">
             <div class="info-box">
@@ -293,26 +287,6 @@
     </div>
 
 </div>
-
-<!-- <div class="container py-4">
-    <div class="gallery-section col-12">
-        <h3 class="mb-3">Gallery</h3> <button type="button" onclick="onEdit('editImages', 'height_cm')">Edit</button>
-
-        <?php if (!empty($gallery)): ?>
-            <div class="row g-4">
-                <?php foreach ($gallery as $img): ?>
-                    <div class="col-7 col-md-5 col-lg-4">
-                        <div class="gallery-item">
-                            <img src="<?= htmlspecialchars($img['image_url']) ?>" class="gallery-img" alt="Gallery Image">
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php else: ?>
-            <p class="text-muted">No gallery images yet</p>
-        <?php endif; ?>
-    </div>
-</div> -->
 
 <div class="container py-4">
     <div class="gallery-section col-12">
