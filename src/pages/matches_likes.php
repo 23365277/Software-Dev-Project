@@ -34,54 +34,57 @@
 
 <link rel="stylesheet" href="/assets/css/connections_passport.css">
 <div class="container py-4 matches-likes-page">
-    <h1>Your Connections</h1>
-    <h5>Your matches and likes are displayed here</h5>
-    
-    <div class="row mt-4 g-2 align-items-stretch search-filter-row">
-        <div class="col-lg-10 col-md-10 col-sm-10 mt-4">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search by name, age, nationality or planned trip...">
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 mt-4">
-            <button type="button" id="filter-Toggle" class="filter">Trip Filter</button>
-        </div>
+    <div class="connections-header">
+        <h1>Your Connections</h1>
+        <h5>Your matches and likes are displayed here</h5>
     </div>
-    <div class="filter-panel" id="filterPanel">
-        <label for="tripFilter">Trip</label>
-        <select id="tripFilter">
-            <option value="">All Trips</option>
-            <?php foreach ($countries as $country): ?>
-                <option value="<?= htmlspecialchars(strtolower($country)) ?>">
-                    <?= htmlspecialchars($country) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="connections-tabs">
-                <button class="tab-btn active" data-tab="matches">Matches</button>
-                <button class="tab-btn" data-tab="likes">Likes</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-2 mt-4">
-        <div class="col-12">
-            <div id="matches" class="tab-content active">
-                <div class="passport-grid">
-                    <?php foreach($matches as $profile):
-                        include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
-                    endforeach; ?>
+    <div class="connections-wrapper">
+        <div class="row mt-4 g-2 align-items-stretch search-filter-row">
+            <div class="col-lg-10 col-md-10 col-sm-10 mt-4">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by name, age, nationality or planned trip...">
                 </div>
             </div>
-            <div id="likes" class="tab-content">
-                <div class="passport-grid">
-                    <?php foreach($likes as $profile):
-                        include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
-                    endforeach; ?>
+            <div class="col-lg-2 col-md-2 col-sm-2 mt-4">
+                <button type="button" id="filter-Toggle" class="filter">Trip Filter</button>
+            </div>
+        </div>
+        <div class="filter-panel" id="filterPanel">
+            <label for="tripFilter">Trip</label>
+            <select id="tripFilter">
+                <option value="">All Trips</option>
+                <?php foreach ($countries as $country): ?>
+                    <option value="<?= htmlspecialchars(strtolower($country)) ?>">
+                        <?= htmlspecialchars($country) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="connections-tabs">
+                    <button class="tab-btn active" data-tab="matches">Matches</button>
+                    <button class="tab-btn" data-tab="likes">Likes</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-2 mt-4">
+            <div class="col-12">
+                <div id="matches" class="tab-content active">
+                    <div class="passport-grid">
+                        <?php foreach($matches as $profile):
+                            include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
+                        endforeach; ?>
+                    </div>
+                </div>
+                <div id="likes" class="tab-content">
+                    <div class="passport-grid">
+                        <?php foreach($likes as $profile):
+                            include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
+                        endforeach; ?>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,3 +1,63 @@
+body {
+    background: radial-gradient(circle at top right, rgba(240, 163, 21, 0.499), transparent 75%),
+        linear-gradient(#ccdceb, #a3c1d4, #7598d0);
+}
+
+.matches-likes-page h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 2.2rem;
+    color: #1e3a5f;
+    text-align: center;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.5px;
+}
+
+.matches-likes-page h5 {
+    text-align: center;
+    color: #6c7a89;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+}
+
+.connections-header {
+    position: relative;
+    padding: 1.2rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 20px;
+    border: 3px solid #0f2a44;
+    border-left: 14px solid #0f2a44;
+    box-shadow: 0 14px 30px rgba(15, 42, 68, 0.4);
+    background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.8), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(240,163,21,0.40), transparent 50%),
+    linear-gradient(145deg, #fffdf7 0%, #f7f0df 45%, #efe4c7 100%); 
+    overflow: hidden;
+
+}
+
+.connections-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("/assets/images/connections_header.svg");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 100%;
+    opacity: 0.175;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.connections-wrapper {
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.7), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(240,163,21,0.16), transparent 42%),
+        linear-gradient(145deg, #fffaf0 0%, #f5ecd9 48%, #ead9b8 100%);
+    border-radius: 18px;
+    padding: 1.5rem 1.8rem;
+    box-shadow: 0 14px 30px rgba(15, 42, 68, 0.4);
+    border: 5px solid rgba(24, 49, 79, 0.75);
+}
+
 .tab-content {
     display: none;
 }
