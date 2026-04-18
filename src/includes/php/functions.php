@@ -274,20 +274,35 @@ function saveUserGalleryImage($userId, $imagePath) {
     global $pdo;
 
     $stmt = $pdo->prepare("
-        INSERT INTO user_gallery (user_id, image_url, is_primary)
+        INSERT INTO photos (user_id, image_url, is_primary)
         VALUES (?, ?, 0)
     ");
 
     $stmt->execute([$userId, $imagePath]);
 }
 
+// function getUserGalleryImages($userId) {
+//     global $pdo;
+
+//     $stmt = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ?");
+//     $stmt->execute([$userId]);
+
+//     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+// }
+
 function getUserGalleryImages($userId) {
     global $pdo;
 
-    $stmt = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ?");
+    $stmt = $pdo->prepare("
+        SELECT photo_id, image_url
+        FROM photos
+        WHERE user_id = ?
+        ORDER BY uploaded_at DESC
+    ");
+
     $stmt->execute([$userId]);
 
-    return $stmt->fetchColumn();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function deleteUserProfilePicture($imagePath) {
@@ -299,6 +314,36 @@ function deleteUserProfilePicture($imagePath) {
         if (file_exists($fullPath)) {
             unlink($fullPath);
         }
+    }
+}
+
+function replaceGalleryImage($photoId, $file) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("SELECT image_url FROM photos WHERE photo_id = ?");
+    $stmt->execute([$photoId]);
+    $oldImage = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$oldImage) return;
+
+    $oldPath = $_SERVER['DOCUMENT_ROOT'] . $oldImage['image_url'];
+    if (file_exists($oldPath)) {
+        unlink($oldPath);
+    }
+
+    $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+    if (!file_exists($targetDir)) {
+        mkdir($targetDir, 0777, true);
+    }
+
+    $fileName = uniqid('', true) . "_" . basename($file['name']);
+    $targetFile = $targetDir . $fileName;
+
+    if (move_uploaded_file($file['tmp_name'], $targetFile)) {
+        $newPath = '/assets/images/' . $fileName;
+
+        $stmt = $pdo->prepare("UPDATE photos SET image_url = ? WHERE photo_id = ?");
+        $stmt->execute([$newPath, $photoId]);
     }
 }
 

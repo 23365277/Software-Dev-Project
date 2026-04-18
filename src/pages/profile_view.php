@@ -7,6 +7,7 @@
     $profile = getProfileInfoById($viewUserId);
     $preferences = getPreferenceInfoById($viewUserId);
     $interests = getUserInterestsById($viewUserId);
+    $gallery = getUserGalleryImages($viewUserId);
     $allInterests = getAllInterests();
     $userInterestIds = array_column($interests ?? [], 'id');
 
@@ -53,6 +54,17 @@
                 die("Failed to upload image");
             }
         }
+
+        if (isset($_POST['replace_photo_id']) && isset($_FILES['replacement_image'])) {
+            $photoId = (int) $_POST['replace_photo_id'];
+        
+            if ($_FILES['replacement_image']['error'] === 0) {
+                replaceGalleryImage($photoId, $_FILES['replacement_image']);
+            }
+        
+            header("Location: profile_view.php?user_id=" . $viewUserId);
+            exit;
+        }
         
         if(isset($_POST['interests'])) {
             $interestIds = $_POST['interests'];
@@ -81,7 +93,7 @@
     $img = $profile['profile_picture'] ?? '/assets/images/default.png';
     ?>
 
-    <img src="<?= $img ?>" alt="Profile Picture bitch bitch bitch bitch">
+    <img src="<?= $img ?>" alt="Profile Picture">
 </div>
             <div class="edit-btn">
             <button type="button" onclick="onEditProfilePic()">Edit</button>
@@ -282,29 +294,58 @@
 
 </div>
 
-<div class="gallery col-12">
-    <h3>Gallery</h3>
-    <div class="row">
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <img src="/assets/images/gallery-pic.jpg" class="img-fluid rounded" alt="Gallery Image 1">
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <img src="/assets/images/gallery-pic.jpg" class="img-fluid rounded" alt="Gallery Image 2">
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">`
-            <img src="/assets/images/gallery-pic3.jpg" class="img-fluid rounded" alt="Gallery Image 3">
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <img src="/assets/images/gallery-pic4.jpg" class="img-fluid rounded" alt="Gallery Image 4">
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <img src="/assets/images/gallery-pic5.jpg" class="img-fluid rounded" alt="Gallery Image 5">
-        </div>
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <img src="/assets/images/gallery-pic6.jpg" class="img-fluid rounded" alt="Gallery Image 6">
-        </div>
+<!-- <div class="container py-4">
+    <div class="gallery-section col-12">
+        <h3 class="mb-3">Gallery</h3> <button type="button" onclick="onEdit('editImages', 'height_cm')">Edit</button>
+
+        <?php if (!empty($gallery)): ?>
+            <div class="row g-4">
+                <?php foreach ($gallery as $img): ?>
+                    <div class="col-7 col-md-5 col-lg-4">
+                        <div class="gallery-item">
+                            <img src="<?= htmlspecialchars($img['image_url']) ?>" class="gallery-img" alt="Gallery Image">
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="text-muted">No gallery images yet</p>
+        <?php endif; ?>
     </div>
-        </div>
+</div> -->
+
+<div class="container py-4">
+    <div class="gallery-section col-12">
+        <h3 class="mb-3">
+            Gallery
+        </h3>
+
+        <?php if (!empty($gallery)): ?>
+            <div class="row g-4">
+                <?php foreach ($gallery as $img): ?>
+                    <div class="col-7 col-md-5 col-lg-4">
+                        <div class="gallery-item">
+
+                            <img src="<?= htmlspecialchars($img['image_url']) ?>" class="gallery-img" alt="Gallery Image">
+
+                            <form method="POST" enctype="multipart/form-data" class="replace-form">
+                                <input type="hidden" name="replace_photo_id" value="<?= $img['photo_id'] ?>">
+                                
+                                <label class="replace-btn">
+                                    ✏️
+                                    <input type="file" name="replacement_image" accept="image/*" onchange="this.form.submit()">
+                                </label>
+                            </form>
+
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="text-muted">No gallery images yet</p>
+        <?php endif; ?>
+    </div>
+</div>
         
 </div>
 

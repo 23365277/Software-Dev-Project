@@ -442,3 +442,68 @@ button[onclick^="onEdit"]:hover,
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0,123,255,0.25);
 }
+
+/* .gallery-section {
+    margin-top: 30px;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #fff;
+}
+
+.gallery-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.gallery-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+} */
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+}
+
+/* Replace button overlay */
+.replace-form {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.replace-btn {
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 6px 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Hide actual file input */
+.replace-btn input[type="file"] {
+    display: none;
+}
+
+/* Hover effect */
+.gallery-item:hover .replace-btn {
+    background: rgba(0,0,0,0.8);
+}
