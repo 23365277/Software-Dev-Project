@@ -259,9 +259,26 @@ function updateUserInterests($userId, $interestIds) {
 }
 
 function getUserProfilePicture($userId) {
-    global $pdo; // or your DB connection
+    global $pdo;
 
     $stmt = $pdo->prepare("SELECT profile_picture FROM profiles WHERE user_id = ?");
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchColumn();
+}
+
+function saveUserGalleryImage($userId, $imagePath) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("INSERT INTO photos (user_id, image_path, is_primary) VALUES (?, ?, 0)");
+    $stmt->bind_param("is", $userId, $imagePath);
+    $stmt->execute();
+}
+
+function getUserGalleryImages($userId) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ?");
     $stmt->execute([$userId]);
 
     return $stmt->fetchColumn();

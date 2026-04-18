@@ -1,0 +1,1 @@
+{"logtail":{"client_time":"2026-04-18T12:58:52.463431255Z","proc_id":1032000508,"proc_seq":212},"v":1,"text":"control: new network map (periodic):\nnetmap: self: [Qgk3F] auth=machine-authorized u=howleykai7@gmail.com [100.86.152.96/32 fd7a:115c:a1e0::7c3a:9860/128]\n"}

@@ -39,13 +39,40 @@
                 $profile_picture = '/assets/images/' . $fileName;
             }
         }
+
+        $galleryImages = [];
+
+        for ($i = 1; $i <= 5; $i++) {
+            $inputName = 'gallery' . $i;
+
+            if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
+
+                $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+
+                if (!file_exists($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
+
+                $fileName = uniqid('', true) . "_" . basename($_FILES[$inputName]['name']);
+                $targetFile = $targetDir . $fileName;
+
+                if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetFile)) {
+                    $galleryImages[] = '/assets/images/' . $fileName;
+                }
+            }
+        }
         $interest1 = $_POST['interest1'] ?? '';
         $interest2 = $_POST['interest2'] ?? '';
         $interest3 = $_POST['interest3'] ?? '';
         $interest4 = $_POST['interest4'] ?? '';
         $interest5 = $_POST['interest5'] ?? '';
         $userId = registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
-                        $min_age, $max_age, $looking_for, $country, $city, $profile_picture, $height_cm, $bio, $interest1, $interest2, $interest3, $interest4, $interest5);
+                        $min_age, $max_age, $looking_for, $country, $city, $profile_picture, $height_cm, $bio,
+                        $interest1, $interest2, $interest3, $interest4, $interest5);
+        
+        foreach ($galleryImages as $imagePath) {
+          saveUserGalleryImage($userId, $imagePath, 0);
+        }
 
         $_SESSION["user_id"] = $userId;
         if(isset($_SESSION['user_id'])){
@@ -97,6 +124,15 @@
     <input type="text" name="country" placeholder="Country" required>
     <input type="text" name="city" placeholder="City" required>
     <input type="file" name="profile_picture" accept="image/*">
+  </div>
+
+  <div class="tab">
+  <h2 class="signup-Title">Photos</h2>
+    <input type="file" name="gallery1" placeholder="Image 1">
+    <input type="file" name="gallery2" placeholder="Image 2">
+    <input type="file" name="gallery3" placeholder="Image 3">
+    <input type="file" name="gallery4" placeholder="Image 4">
+    <input type="file" name="gallery5" placeholder="Image 5">
   </div>
 
   <div class="tab">
