@@ -41,7 +41,7 @@
 
         $galleryImages = [];
 
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $inputName = 'gallery' . $i;
 
             if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
@@ -125,14 +125,14 @@
     <input type="file" name="profile_picture" accept="image/*">
   </div>
 
-  <!-- <div class="tab">
+  <div class="tab">
   <h2 class="signup-Title">Photos</h2>
     <input type="file" name="gallery1" placeholder="Image 1" required>
     <input type="file" name="gallery2" placeholder="Image 2" required>
-    <input type="file" name="gallery3" placeholder="Image 3" required>
+    <!-- <input type="file" name="gallery3" placeholder="Image 3" required>
     <input type="file" name="gallery4" placeholder="Image 4" required>
-    <input type="file" name="gallery5" placeholder="Image 5" required>
-  </div> -->
+    <input type="file" name="gallery5" placeholder="Image 5" required> -->
+  </div>
 
   <div class="tab">
   <h2 class="signup-Title">Interest Form</h2>
@@ -173,7 +173,7 @@
     <span class="step"></span>
     <span class="step"></span>
     <span class="step"></span>
-    <!-- <span class="step"></span> -->
+    <span class="step"></span>
   </div>
 </form>
 </div>
