@@ -39,27 +39,27 @@
             }
         }
 
-        // $galleryImages = [];
+        $galleryImages = [];
 
-        // for ($i = 1; $i <= 5; $i++) {
-        //     $inputName = 'gallery' . $i;
+        for ($i = 1; $i <= 5; $i++) {
+            $inputName = 'gallery' . $i;
 
-        //     if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
+            if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
 
-        //         $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+                $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
 
-        //         if (!file_exists($targetDir)) {
-        //             mkdir($targetDir, 0777, true);
-        //         }
+                if (!file_exists($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
 
-        //         $fileName = uniqid('', true) . "_" . basename($_FILES[$inputName]['name']);
-        //         $targetFile = $targetDir . $fileName;
+                $fileName = uniqid('', true) . "_" . basename($_FILES[$inputName]['name']);
+                $targetFile = $targetDir . $fileName;
 
-        //         if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetFile)) {
-        //             $galleryImages[] = '/assets/images/' . $fileName;
-        //         }
-        //     }
-        // }
+                if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetFile)) {
+                    $galleryImages[] = '/assets/images/' . $fileName;
+                }
+            }
+        }
         $interest1 = $_POST['interest1'] ?? '';
         $interest2 = $_POST['interest2'] ?? '';
         $interest3 = $_POST['interest3'] ?? '';
@@ -69,13 +69,14 @@
                         $min_age, $max_age, $looking_for, $country, $city, $profile_picture, $height_cm, $bio,
                         $interest1, $interest2, $interest3, $interest4, $interest5);
         
-        // foreach ($galleryImages as $imagePath) {
-        //   saveUserGalleryImage($userId, $imagePath, 0);
-        // }
+        foreach ($galleryImages as $imagePath) {
+          saveUserGalleryImage($userId, $imagePath, 0);
+        }
 
         $_SESSION["user_id"] = $userId;
         if(isset($_SESSION['user_id'])){
-          header("Location: /pages/add_images.php");
+          //header("Location: /pages/add_images.php");
+          header("Location: /pages/home.php");
           exit();
         }
     }
