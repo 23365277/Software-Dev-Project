@@ -281,15 +281,6 @@ function saveUserGalleryImage($userId, $imagePath) {
     $stmt->execute([$userId, $imagePath]);
 }
 
-// function getUserGalleryImages($userId) {
-//     global $pdo;
-
-//     $stmt = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ?");
-//     $stmt->execute([$userId]);
-
-//     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-// }
-
 function getUserGalleryImages($userId) {
     global $pdo;
 
