@@ -34,10 +34,20 @@ try {
         exit;
     }
 
-    if ($action === 'dislike') {
-        echo json_encode([
-            'success' => true
+    if ($action === "dislike") {
+
+        $stmt = $pdo->prepare("
+            INSERT INTO dislikes (sender_id, receiver_id, cooldown_until)
+            VALUES (:sender_id, :receiver_id, DATE_ADD(NOW(), INTERVAL 3 MINUTE))
+            ON DUPLICATE KEY UPDATE cooldown_until = DATE_ADD(NOW(), INTERVAL 3 MINUTE)
+        ");
+
+        $stmt->execute([
+            ':sender_id' => $senderId,
+            ':receiver_id' => $receiverId,
         ]);
+
+        echo json_encode(['success' => true]);
         exit;
     }
 } catch (PDOException $e) {
