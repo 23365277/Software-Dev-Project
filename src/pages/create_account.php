@@ -41,7 +41,7 @@
 
         $galleryImages = [];
 
-        for ($i = 1; $i <= 6; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $inputName = 'gallery' . $i;
 
             if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
@@ -86,7 +86,7 @@
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
-<div class="container-fluid d-flex flex-column min-vh-100">
+<div class="container-fluid d-flex flex-column min-vh-93">
 
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
@@ -131,7 +131,6 @@
     <input type="file" name="gallery3" placeholder="Image 3" required>
     <input type="file" name="gallery4" placeholder="Image 4" required>
     <input type="file" name="gallery5" placeholder="Image 5" required>
-    <input type="file" name="gallery6" placeholder="Image 6" required>
   </div>
 
   <div class="tab">
