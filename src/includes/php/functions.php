@@ -756,6 +756,14 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		];
 	}
 
+	$pdo->prepare("
+		DELETE FROM dislikes
+		WHERE sender_id = :userId
+		AND cooldown_until <= NOW()
+	")->execute([
+		':userId' => $userId
+	]);
+
 	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio, p.gender
 	FROM profiles p 
 	WHERE p.user_id != :userId 
@@ -767,6 +775,13 @@ function getNextPassport(PDO $pdo, $userId, $tripCountry = null) {
 		SELECT b.blocked_id 
 		FROM blocks b 
 		WHERE b.blocker_id = :userId)
+	AND NOT EXISTS (
+		SELECT 1
+		FROM dislikes d
+		WHERE d.sender_id = :userId
+		AND d.receiver_id = p.user_id
+		AND d.cooldown_until > NOW()
+	)
 	AND (:trip_country IS NULL OR EXISTS 
 		(SELECT 1
 		FROM trips t
