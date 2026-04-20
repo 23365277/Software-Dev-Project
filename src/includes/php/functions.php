@@ -340,6 +340,17 @@ function replaceGalleryImage($photoId, $file) {
     }
 }
 
+function deleteGalleryImage($userId, $photoId){
+    global $pdo;
+
+    $stmt = $pdo->prepare("
+        DELETE FROM photos
+        WHERE user_id = ? AND photo_id = ?
+    ");
+
+    $stmt->execute([$userId, $photoId]);
+}
+
 function updateUserProfilePicture($userId, $imagePath) {
     global $pdo;
 
