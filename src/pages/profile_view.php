@@ -63,8 +63,8 @@
             exit;
         }
 
-        if ($_POST['action'] === 'gallery_upload'){
         $galleryImages = [];
+        if (isset($_POST['action']) && $_POST['action'] === 'gallery_upload') {
 
         for ($i = 1; $i <= 6; $i++) {
             $inputName = 'gallery' . $i;
