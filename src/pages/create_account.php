@@ -1,8 +1,8 @@
 <?php
     session_start();
 
-    // ini_set('upload_max_filesize', '10M');
-    // ini_set('post_max_size', '10M');
+    ini_set('upload_max_filesize', '20M');
+    ini_set('post_max_size', '25M');
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -41,7 +41,7 @@
 
         $galleryImages = [];
 
-        for ($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $inputName = 'gallery' . $i;
 
             if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
@@ -60,6 +60,7 @@
                 }
             }
         }
+
         $interest1 = $_POST['interest1'] ?? '';
         $interest2 = $_POST['interest2'] ?? '';
         $interest3 = $_POST['interest3'] ?? '';
