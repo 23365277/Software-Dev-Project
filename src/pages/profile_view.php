@@ -10,6 +10,7 @@
     $preferences = getPreferenceInfoById($viewUserId);
     $interests = getUserInterestsById($viewUserId);
     $gallery = getUserGalleryImages($viewUserId);
+
     $allInterests = getAllInterests();
     $userInterestIds = array_column($interests ?? [], 'id');
 
@@ -58,6 +59,11 @@
             $photoId = (int) $_POST['photo_id'];
         
             deleteGalleryImage($viewUserId, $photoId);
+
+            if(isset($_GET['image_url'])){
+                deleteUserProfilePicture($_GET['image_url']);
+                
+            }
         
             header("Location: profile_view.php?user_id=" . $viewUserId);
             exit;
@@ -384,8 +390,8 @@
                                 <input type="hidden" name="action" value="delete_gallery">
                                 <input type="hidden" name="photo_id" value="<?= $img['photo_id'] ?>">
 
-                                <button type="submit" class="delete-btn">
-                                    🗑️ Delete
+                                <button type="submit" class="delete-btn" formaction="/pages/profile_view.php?image_url=<?php echo htmlspecialchars($img['image_url']); ?>">
+                                🗑️ Delete
                                 </button>
                             </form>
 
