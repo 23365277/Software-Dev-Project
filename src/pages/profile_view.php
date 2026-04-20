@@ -1,10 +1,10 @@
 <?php
-    session_start();
+    session_start();    
 
     ini_set('upload_max_filesize', '20M');
     ini_set('post_max_size', '25M');
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
-    $viewUserId = isset($_GET['user_id']) ? (int) $_GET['user_id'] : $_SESSION['user_id'];
+    $viewUserId = isset($_GET['user_id']) && $_SESSION['role'] === 'ADMIN' ? (int) $_GET['user_id'] : $_SESSION['user_id'];
 
     $profile = getProfileInfoById($viewUserId);
     $preferences = getPreferenceInfoById($viewUserId);

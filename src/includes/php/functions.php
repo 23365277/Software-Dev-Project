@@ -7,7 +7,7 @@ require_once __DIR__ . "/../../config/database.php";
 
 function getUserByEmail($email) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id, email, password_hash, account_status FROM users WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -373,7 +373,6 @@ function verifyLogin($email, $password) {
     $_SESSION["user_id"]    = $user["id"];
     $_SESSION["user_email"] = $user["email"];
 	$_SESSION["role"] = $user["role"];
-	var_dump($user["role"]);
     return $user["id"];
 }
 

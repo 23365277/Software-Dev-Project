@@ -12,6 +12,7 @@ $likes = getLikes($pdo, $userId);
 
 $latestMatch = $matches[0] ?? null;
 $latestLike = $likes[0] ?? null;
+
 ?>
 
 <?php if (isset($_SESSION['user_id']) && !empty($_COOKIE['user_name'])): ?>

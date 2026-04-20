@@ -51,7 +51,7 @@ $user_id = $result;
 $_SESSION['email'] = $email;
 
 $profile   = getProfileInfoById($user_id);
-$firstName = $profile['first_name'] ?? '';
+$firstName = is_array($profile) ? ($profile['first_name'] ?? '') : '';
 if ($firstName) {
     setcookie('user_name', $firstName, time() + (30 * 24 * 60 * 60), '/', '', true, false);
 }
@@ -62,3 +62,4 @@ if (!empty($_POST['remember_me'])) {
 }
 
 echo json_encode(['success' => true]);
+exit;
