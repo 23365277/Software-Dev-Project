@@ -26,6 +26,9 @@
         
             $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
         
+            var_dump($newProfilePicture);
+            exit;
+
             if (!file_exists($targetDir)) {
                 mkdir($targetDir, 0777, true);
             }
@@ -37,8 +40,6 @@
             if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
         
                 $newProfilePicture = '/assets/images/' . $fileName;
-                var_dump($newProfilePicture);
-                exit;
         
                 // 1. Get old image
                 $oldImage = getUserProfilePicture($userId);
