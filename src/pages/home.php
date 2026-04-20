@@ -46,12 +46,16 @@ $latestLike = $likes[0] ?? null;
         </a>
     </div>
 
+
     <div class="col-lg-6 col-md-6 col-sm-12">
+
+        <!-- ── Messaging panel ── -->
 
         <!-- ── Messaging panel ── -->
         <div id="home-messages-panel">
             <h2 style="display:flex; justify-content:space-between; align-items:center;">
                 Messages
+                <?php if (isset($_SESSION['user_id'])): ?>
                 <?php if (isset($_SESSION['user_id'])): ?>
                 <div id="home-actions" style="display:none; position:relative;">
                     <button id="home-actions-toggle">Actions &#9662;</button>
@@ -68,6 +72,7 @@ $latestLike = $likes[0] ?? null;
                     <span><?php echo isset($_SESSION['user_id']) ? 'Select a conversation' : 'Log in to view your messages'; ?></span>
                 </div>
             </div>
+            <?php if (isset($_SESSION['user_id'])): ?>
             <?php if (isset($_SESSION['user_id'])): ?>
             <div id="home-error"></div>
             <div id="home-input-area">
@@ -99,6 +104,7 @@ $latestLike = $likes[0] ?? null;
                 <a href="/pages/discovery_feed.php" class="page-link">
                     <div class="page-card page-card-discovery-feed">
                         <div class="page-card-overlay"></div>
+                        <div class="page-card-content">
                         <div class="page-card-content">
                             <h3>Passports</h3>
                             <p>
@@ -176,7 +182,31 @@ $latestLike = $likes[0] ?? null;
 </div>
 
 <?php if (isset($_SESSION['user_id'])): ?>
+<?php if (isset($_SESSION['user_id'])): ?>
 <script>
+    const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
+</script>
+<script src="/includes/js/messages.js"></script>
+<script>
+    RoamanceMessaging.init({
+        myUserId        : myUserId,
+        mode            : 'home',
+        contactsEl      : '#home-contacts',
+        messagesEl      : '#home-messages-area',
+        inputEl         : '#home-msg-input',
+        sendBtnEl       : '#home-msg-send',
+        errorEl         : '#home-error',
+        actionsEl       : '#home-actions',
+        actionsToggleEl : '#home-actions-toggle',
+        actionsMenuEl   : '#home-actions-menu',
+        reportBtnEl     : '#home-report-btn',
+        blockBtnEl      : '#home-block-btn',
+        reportOverlayEl : '#home-report-modal-overlay',
+        reportReasonEl  : '#home-report-reason',
+        reportErrorEl   : '#home-report-modal-error',
+        reportSubmitEl  : '#home-report-submit-btn',
+        reportCancelEl  : '#home-report-cancel-btn',
+    });
     const myUserId = <?php echo json_encode($_SESSION['user_id']); ?>;
 </script>
 <script src="/includes/js/messages.js"></script>
