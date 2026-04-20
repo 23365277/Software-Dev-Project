@@ -13,7 +13,7 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $galleryImages = [];
 
-        for ($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 1; $i++) {
             $inputName = 'gallery' . $i;
 
             if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
@@ -63,7 +63,6 @@
   <div class="tab">
   <h2 class="signup-Title">Photos</h2>
     <input type="file" name="gallery1" placeholder="Image 1" required>
-    <input type="file" name="gallery2" placeholder="Image 2" required>
   </div>
 
   <div style="overflow:auto;">

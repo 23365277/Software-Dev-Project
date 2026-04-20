@@ -75,7 +75,6 @@
 
         $_SESSION["user_id"] = $userId;
         if(isset($_SESSION['user_id'])){
-          //header("Location: /pages/add_images.php");
           header("Location: /pages/home.php");
           exit();
         }
@@ -127,11 +126,11 @@
 
   <div class="tab">
   <h2 class="signup-Title">Photos</h2>
-    <input type="file" name="gallery1" placeholder="Image 1" required>
-    <!-- <input type="file" name="gallery2" placeholder="Image 2" required>
-    <input type="file" name="gallery3" placeholder="Image 3" required>
-    <input type="file" name="gallery4" placeholder="Image 4" required>
-    <input type="file" name="gallery5" placeholder="Image 5" required> -->
+    <input type="file" name="gallery1" placeholder="Image 1" onchange="checkSize(this)">
+    <input type="file" name="gallery2" placeholder="Image 2" onchange="checkSize(this)">
+    <input type="file" name="gallery3" placeholder="Image 3" onchange="checkSize(this)">
+    <input type="file" name="gallery4" placeholder="Image 4" onchange="checkSize(this)">
+    <input type="file" name="gallery5" placeholder="Image 5" onchange="checkSize(this)">
   </div>
 
   <div class="tab">

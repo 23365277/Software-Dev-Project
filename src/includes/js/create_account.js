@@ -130,3 +130,11 @@ function validateAllTabs() {
 
     return valid;
 }
+
+function checkSize(input) {
+    const file = input.files[0];
+    if (file && file.size > 2 * 1024 * 1024) { // 2MB
+        alert("File too large (max 2MB)");
+        input.value = "";
+    }
+}
