@@ -118,7 +118,7 @@
         <option value="Other">Other</option>
     </select>
     <input type="text" name="bio" placeholder="bio" required>
-    <input type="number" name="height_cm" placeholder="Height cm" required>
+    <input type="number" name="height_cm" placeholder="Height cm" min="54" required>
     <input type="text" name="country" placeholder="Country" required>
     <input type="text" name="city" placeholder="City" required>
     <input type="file" name="profile_picture" accept="image/*">
@@ -150,8 +150,8 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <input type="number" name="min_Age" placeholder=" Min Age" required>
-    <input type="number" name="max_Age" placeholder=" Max Age" required>
+    <input type="number" name="min_Age" placeholder=" Min Age" min="18" max="99" required>
+    <input type="number" name="max_Age" placeholder=" Max Age" min="18" max="99" required>
     <select name="lookingFor" placeholder="looking For" required>
         <option value="" disabled selected hidden>Looking For</option>
         <option value="Casual">Casual</option>
