@@ -76,6 +76,8 @@ function profile($userId, $first_name, $last_name, $date_of_birth, $gender, $loo
 		':profile_picture' => $profile_picture,
 		':looking_for' => $looking_for
     ]);
+
+	return ['success' => false, 'error' => 'Message is empty'];
 }
 
 function interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5){
