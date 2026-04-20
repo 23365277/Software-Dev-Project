@@ -48,12 +48,11 @@
                 // 3. Save new image in DB
                 updateUserProfilePicture($userId, $newProfilePicture);
             } else {
-                die("Failed to upload image");
+                var_dump($newProfilePicture);
+                exit;
             }
         }
 
-        var_dump($newProfilePicture);
-        exit;
 
         if (isset($_POST['replace_photo_id']) && isset($_FILES['replacement_image'])) {
             $photoId = (int) $_POST['replace_photo_id'];
