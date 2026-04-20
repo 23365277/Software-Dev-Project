@@ -10,12 +10,10 @@
 
     $pageTitle = "Roamance - Inbox";
     $pageCSS   = "/assets/css/inbox.css";
-    $pageCSS   = "/assets/css/inbox.css";
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 
     $currentUserId = $_SESSION['user_id'];
 
-    // ── Fetch all matches ─────────────────────────────────────────────────────
     // ── Fetch all matches ─────────────────────────────────────────────────────
     $matchesQuery = $pdo->prepare("
         SELECT 
@@ -28,9 +26,6 @@
             p.date_of_birth,
             p.city,
             p.country,
-            (SELECT message  FROM messages WHERE match_id = m.match_id ORDER BY sent_at DESC LIMIT 1) AS last_message,
-            (SELECT sent_at  FROM messages WHERE match_id = m.match_id ORDER BY sent_at DESC LIMIT 1) AS last_message_at,
-            (SELECT COUNT(*) FROM messages WHERE match_id = m.match_id AND receiver_id = ? AND seen = 0) AS unread_count
             (SELECT message  FROM messages WHERE match_id = m.match_id ORDER BY sent_at DESC LIMIT 1) AS last_message,
             (SELECT sent_at  FROM messages WHERE match_id = m.match_id ORDER BY sent_at DESC LIMIT 1) AS last_message_at,
             (SELECT COUNT(*) FROM messages WHERE match_id = m.match_id AND receiver_id = ? AND seen = 0) AS unread_count
@@ -48,7 +43,6 @@
     $matches = $matchesQuery->fetchAll(PDO::FETCH_ASSOC);
 
     // ── Selected match ────────────────────────────────────────────────────────
-    // ── Selected match ────────────────────────────────────────────────────────
     $selectedMatchId = $_GET['match_id'] ?? ($matches[0]['match_id'] ?? null);
 
     $selectedMatch = null;
@@ -60,23 +54,15 @@
     }
 
     // ── Fetch messages and mark seen ──────────────────────────────────────────
-    // ── Fetch messages and mark seen ──────────────────────────────────────────
     $messages = [];
     if ($selectedMatchId) {
         $pdo->prepare("UPDATE messages SET seen = 1 WHERE match_id = ? AND receiver_id = ?")
             ->execute([$selectedMatchId, $currentUserId]);
-        $pdo->prepare("UPDATE messages SET seen = 1 WHERE match_id = ? AND receiver_id = ?")
-            ->execute([$selectedMatchId, $currentUserId]);
 
         $msgQ = $pdo->prepare("
-        $msgQ = $pdo->prepare("
-            SELECT sender_id, message, sent_at 
-            FROM messages 
+            SELECT sender_id, message, sent_at
+            FROM messages
             WHERE match_id = ?
-              AND (
-                    (sender_id   = ? AND deleted_sender   = 0) OR
-                    (receiver_id = ? AND deleted_receiver = 0)
-                  )
               AND (
                     (sender_id   = ? AND deleted_sender   = 0) OR
                     (receiver_id = ? AND deleted_receiver = 0)
@@ -143,8 +129,6 @@
         $diff = time() - strtotime($datetime);
         if ($diff < 3600)   return round($diff / 60) . 'm';
         if ($diff < 86400)  return round($diff / 3600) . 'h';
-        if ($diff < 3600)   return round($diff / 60) . 'm';
-        if ($diff < 86400)  return round($diff / 3600) . 'h';
         if ($diff < 604800) return date('D', strtotime($datetime));
         return date('d M', strtotime($datetime));
     }
@@ -154,7 +138,6 @@
 <h1 class="inbox-page-title">Messages</h1>
 <div class="inbox-wrap">
 
-    <!-- ── Sidebar ── -->
     <!-- ── Sidebar ── -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -166,9 +149,6 @@
         </div>
         <div class="people-list" id="sidebar-people-list">
             <?php foreach ($matches as $match): ?>
-                <a href="?match_id=<?= $match['match_id'] ?>"
-                   class="person-row <?= $match['match_id'] == $selectedMatchId ? 'active' : '' ?>">
-
                 <a href="?match_id=<?= $match['match_id'] ?>"
                    class="person-row <?= $match['match_id'] == $selectedMatchId ? 'active' : '' ?>">
 
@@ -243,19 +223,8 @@
                         <button id="inbox-block-btn">&#128683; Block User</button>
                     </div>
                 </div>
-                <!-- Actions dropdown (report/block) -->
-                <div id="inbox-actions" style="margin-left:auto; position:relative;">
-                    <button id="inbox-actions-toggle">Actions &#9662;</button>
-                    <div id="inbox-actions-menu" style="display:none;">
-                        <button id="inbox-report-btn">&#9872; Report User</button>
-                        <button id="inbox-block-btn">&#128683; Block User</button>
-                    </div>
-                </div>
             </div>
 
-            <!-- Messages are rendered server-side on initial load for performance,
-                 then the JS module takes over polling for new ones. -->
-            <div class="messages-area" id="inbox-messages">
             <!-- Messages are rendered server-side on initial load for performance,
                  then the JS module takes over polling for new ones. -->
             <div class="messages-area" id="inbox-messages">
@@ -264,13 +233,9 @@
                 foreach ($messages as $msg):
                     $msgDate = date('Y-m-d', strtotime($msg['sent_at']));
                     $isSent  = $msg['sender_id'] == $currentUserId;
-                    $isSent  = $msg['sender_id'] == $currentUserId;
                 ?>
                     <?php if ($msgDate !== $lastDate): $lastDate = $msgDate; ?>
                         <div class="date-divider">
-                            <?= $msgDate === date('Y-m-d')
-                                ? 'Today'
-                                : date('d M Y', strtotime($msg['sent_at'])) ?>
                             <?= $msgDate === date('Y-m-d')
                                 ? 'Today'
                                 : date('d M Y', strtotime($msg['sent_at'])) ?>
@@ -320,47 +285,6 @@
                     </div>
                 </div>
             </div>
-
-            <script>
-                if (typeof myUserId === 'undefined') {
-                    var myUserId = <?= json_encode($currentUserId) ?>;
-                }
-            </script>
-            <script src="/includes/js/messages.js"></script>
-            <script>
-                // The other_user_id is needed for report/block — store it on the instance.
-                const inboxOtherUserId = <?= json_encode((int)$selectedMatch['other_user_id']) ?>;
-
-                const inboxMs = RoamanceMessaging.init({
-                    myUserId        : myUserId,
-                    mode            : 'inbox',
-                    initialMatchId  : <?= json_encode((int)$selectedMatchId) ?>,
-                    otherUserId     : <?= json_encode((int)$selectedMatch['other_user_id']) ?>,   // ← ADD
-                    otherInitials   : <?= json_encode(strtoupper(substr($selectedMatch['first_name'],0,1).substr($selectedMatch['last_name'],0,1))) ?>,  // ← ADD
-                    messagesEl      : '#inbox-messages',
-                    inputEl         : '#inbox-msg-input',
-                    sendBtnEl       : '#inbox-send-btn',
-                    actionsEl       : '#inbox-actions',
-                    actionsToggleEl : '#inbox-actions-toggle',
-                    actionsMenuEl   : '#inbox-actions-menu',
-                    reportBtnEl     : '#inbox-report-btn',
-                    blockBtnEl      : '#inbox-block-btn',
-                    reportOverlayEl : '#inbox-report-modal-overlay',
-                    reportReasonEl  : '#inbox-report-reason',
-                    reportErrorEl   : '#inbox-report-modal-error',
-                    reportSubmitEl  : '#inbox-report-submit-btn',
-                    reportCancelEl  : '#inbox-report-cancel-btn',
-                    onBlocked() {
-                        window.location.href = '/pages/inbox.php';
-                    },
-                });
-
-                // Scroll to bottom of pre-rendered messages on first load
-                document.addEventListener('DOMContentLoaded', () => {
-                    const area = document.getElementById('inbox-messages');
-                    if (area) area.scrollTop = area.scrollHeight;
-                });
-            </script>
 
             <script>
                 if (typeof myUserId === 'undefined') {

@@ -1,7 +1,5 @@
 /* ── Chatbox container (fixed bottom-right, appears on all pages) ── */
 
-/* ── Chatbox container (fixed bottom-right, appears on all pages) ── */
-
 #chatbox-container {
     position: fixed;
     bottom: 20px;
@@ -10,7 +8,6 @@
     font-family: Arial, sans-serif;
     color: black;
 }
-
 
 #chatbox-arrow-btn {
     background: #667eea;
@@ -31,15 +28,11 @@
 
 #chatbox-arrow-btn:hover { background: #5a67d8; }
 
-
-#chatbox-arrow-btn:hover { background: #5a67d8; }
-
 #chatbox-toggle:checked ~ #chatbox-window {
     opacity: 1;
     pointer-events: auto;
     transform: translateY(0) scale(1);
 }
-
 
 #chatbox-button {
     background: #667eea;
@@ -53,9 +46,6 @@
     cursor: pointer;
     transition: background 0.2s;
 }
-
-#chatbox-button:hover { background: #5a67d8; }
-
 
 #chatbox-button:hover { background: #5a67d8; }
 
@@ -76,7 +66,6 @@
     transition: opacity 0.3s, transform 0.3s;
 }
 
-
 #chatbox-header {
     background: #667eea;
     color: #fff;
@@ -87,7 +76,6 @@
     align-items: center;
     font-weight: bold;
 }
-
 
 #chatbox-header button {
     background: none;
@@ -113,7 +101,6 @@
     overflow-y: auto;
 }
 
-
 #contact-search {
     padding: 6px;
     border: 1px solid #ccc;
@@ -121,7 +108,6 @@
     margin: 6px;
     font-size: 0.85em;
 }
-
 
 #contact-search-btn {
     background: #667eea;
@@ -167,42 +153,7 @@
     text-align: center;
     padding: 16px 8px;
     cursor: default;
-
-#contact-search-btn:hover { background: #5a67d8; }
-
-/* ── Shared contact row class (rendered by JS in both chatbox and home) ── */
-.rm-contact {
-    padding: 10px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 13px;
-    word-break: break-all;
-    color: #555;
-    transition: background 0.15s;
 }
-
-.rm-contact:hover {
-    background: #edf0fb;
-    color: #333;
-}
-
-.rm-contact.active {
-    background: #eef0fd;
-    color: #4a4fb5;
-    font-weight: 500;
-    border-left: 3px solid #667eea;
-    padding-left: 9px;
-}
-
-.rm-no-contacts {
-    color: #aaa;
-    font-size: 12px;
-    text-align: center;
-    padding: 16px 8px;
-    cursor: default;
-}
-
-/* .contact is the older class used by chatbox contacts */
 
 /* .contact is the older class used by chatbox contacts */
 .contact {
@@ -228,36 +179,16 @@
 }
 
 /* ── Chatbox messages area ── */
-
-.contact:hover { background: #e2e8f0; }
-.contact.active { background: #e2e8f0; }
-
-.unread-dot {
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #667eea;
-    margin-left: 6px;
-    vertical-align: middle;
-    flex-shrink: 0;
-}
-
-/* ── Chatbox messages area ── */
 #chatbox-messages {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    overflow-x: hidden;
     padding: 12px;
     background: #f4f4f4;
     gap: 8px;
-    background: #f4f4f4;
-    gap: 8px;
 }
-
 
 #chatbox-messages.centered-message {
     align-items: center;
@@ -290,38 +221,7 @@
 }
 
 #chatbox-messages .bubble {
-    color: #aaa;
-    font-size: 13px;
-}
-
-#chatbox-messages .rm-msg {
-    display: flex;
-    align-items: flex-end;
-    gap: 6px;
-    width: 100%;
-    min-width: 0;
-}
-
-#chatbox-messages .rm-msg.sent {
-    flex-direction: row-reverse;
-}
-
-#chatbox-messages .rm-msg > div {
-    display: flex;
-    flex-direction: column;
-    max-width: 75%;
-    min-width: 0;
-}
-
-#chatbox-messages .rm-msg.sent > div {
-    align-items: flex-end;
-}
-
-#chatbox-messages .bubble {
     padding: 8px 12px;
-    border-radius: 14px;
-    font-size: 13px;
-    line-height: 1.5;
     border-radius: 14px;
     font-size: 13px;
     line-height: 1.5;
@@ -335,26 +235,13 @@
     color: #222;
     border: 0.5px solid #e0e0e0;
     border-bottom-left-radius: 4px;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
 }
-
-#chatbox-messages .bubble.received {
-    background: #fff;
-    color: #222;
-    border: 0.5px solid #e0e0e0;
-    border-bottom-left-radius: 4px;
-}
-
-#chatbox-messages .bubble.sent {
 
 #chatbox-messages .bubble.sent {
     background: #667eea;
     color: #fff;
     border-bottom-right-radius: 4px;
-    border-bottom-right-radius: 4px;
 }
-
 
 #chatbox-error {
     background: #fee2e2;
@@ -366,12 +253,10 @@
     transition: max-height 0.2s ease, padding 0.2s ease;
 }
 
-
 #chatbox-error.visible {
     max-height: 40px;
     padding: 6px 10px;
 }
-
 
 #chatbox-input-area {
     display: flex;
@@ -379,7 +264,6 @@
     padding: 8px;
     background: #fff;
 }
-
 
 #chatbox-input {
     flex: 1;
@@ -389,7 +273,6 @@
     font-size: 1em;
     outline: none;
 }
-
 
 #chatbox-send {
     background: #667eea;
@@ -405,10 +288,6 @@
 
 #chatbox-send:hover { background: #5a67d8; }
 
-#chatbox-send:hover { background: #5a67d8; }
-
-/* ── Actions dropdown (chatbox) ── */
-#chatbox-actions-toggle {
 /* ── Actions dropdown (chatbox) ── */
 #chatbox-actions-toggle {
     background: rgba(255,255,255,0.2);
@@ -425,9 +304,6 @@
 
 #chatbox-actions-toggle:hover { background: rgba(255,255,255,0.35); }
 
-#chatbox-actions-toggle:hover { background: rgba(255,255,255,0.35); }
-
-#chatbox-actions-menu {
 #chatbox-actions-menu {
     position: absolute;
     top: calc(100% + 4px);
@@ -440,8 +316,6 @@
     z-index: 10001;
     overflow: hidden;
 }
-
-#chatbox-actions-menu button {
 
 #chatbox-actions-menu button {
     display: block;
@@ -459,21 +333,14 @@
 #chatbox-actions-menu button:hover { background: #f7f7fa; }
 
 #chatbox-block-btn {
-
-#chatbox-actions-menu button:hover { background: #f7f7fa; }
-
-#chatbox-block-btn {
     color: #e53e3e !important;
     border-top: 1px solid #e2e8f0 !important;
 }
 
 /* ── Report modal (chatbox) ── */
 #report-modal-overlay {
-/* ── Report modal (chatbox) ── */
-#report-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
     background: rgba(0,0,0,0.5);
     z-index: 10000;
     display: flex;
@@ -482,20 +349,15 @@
 }
 
 #report-modal {
-
-#report-modal {
     background: #fff;
     border-radius: 10px;
     padding: 24px;
     width: 340px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
-
-#report-modal h3 {
 
 #report-modal h3 {
     margin: 0;
@@ -504,14 +366,10 @@
 }
 
 #report-modal p {
-
-#report-modal p {
     margin: 0;
     font-size: 0.9em;
     color: #4a5568;
 }
-
-#report-reason {
 
 #report-reason {
     width: 100%;
@@ -527,24 +385,16 @@
 #report-reason:focus { border-color: #667eea; }
 
 #report-modal-error {
-
-#report-reason:focus { border-color: #667eea; }
-
-#report-modal-error {
     color: #e53e3e;
     font-size: 0.85em;
     min-height: 16px;
 }
 
 #report-modal-actions {
-
-#report-modal-actions {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
 }
-
-#report-submit-btn {
 
 #report-submit-btn {
     background: #e53e3e;
@@ -557,11 +407,6 @@
     cursor: pointer;
     transition: background 0.2s;
 }
-
-#report-submit-btn:hover { background: #c53030; }
-#report-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-#report-cancel-btn {
 
 #report-submit-btn:hover { background: #c53030; }
 #report-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -586,7 +431,7 @@
     }
 
     #chatbox-window {
-        width: calc(100vw - 20px);
+        width: calc(100vw - 40px);
         right: -10px;
     }
 

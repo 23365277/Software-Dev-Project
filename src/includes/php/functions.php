@@ -372,6 +372,8 @@ function verifyLogin($email, $password) {
     session_regenerate_id(true);
     $_SESSION["user_id"]    = $user["id"];
     $_SESSION["user_email"] = $user["email"];
+	$_SESSION["role"] = $user["role"];
+	var_dump($user["role"]);
     return $user["id"];
 }
 
