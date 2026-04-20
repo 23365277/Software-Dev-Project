@@ -1,6 +1,8 @@
 <?php
     session_start();
 
+    ini_set('upload_max_filesize', '20M');
+    ini_set('post_max_size', '25M');
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
     $viewUserId = isset($_GET['user_id']) ? (int) $_GET['user_id'] : $_SESSION['user_id'];
 
@@ -35,6 +37,7 @@
             if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
         
                 $newProfilePicture = '/assets/images/' . $fileName;
+                
         
                 // 1. Get old image
                 $oldImage = getUserProfilePicture($userId);
@@ -45,9 +48,48 @@
                 // 3. Save new image in DB
                 updateUserProfilePicture($userId, $newProfilePicture);
             } else {
-                die("Failed to upload image");
+                var_dump($newProfilePicture);
+                exit;
             }
         }
+
+        if (isset($_POST['action']) && $_POST['action'] === 'delete_gallery') {
+
+            $photoId = (int) $_POST['photo_id'];
+        
+            deleteGalleryImage($viewUserId, $photoId);
+        
+            header("Location: profile_view.php?user_id=" . $viewUserId);
+            exit;
+        }
+
+        $galleryImages = [];
+        if (isset($_POST['action']) && $_POST['action'] === 'gallery_upload') {
+
+        for ($i = 1; $i <= 6; $i++) {
+            $inputName = 'gallery' . $i;
+
+            if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
+
+                $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+
+                if (!file_exists($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
+
+                $fileName = uniqid('', true) . "_" . basename($_FILES[$inputName]['name']);
+                $targetFile = $targetDir . $fileName;
+
+                if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetFile)) {
+                    $galleryImages[] = '/assets/images/' . $fileName;
+                }
+            }
+        }
+    }
+
+    foreach ($galleryImages as $imagePath) {
+        saveUserGalleryImage($userId, $imagePath, 0);
+      }
 
         if (isset($_POST['replace_photo_id']) && isset($_FILES['replacement_image'])) {
             $photoId = (int) $_POST['replace_photo_id'];
@@ -183,6 +225,21 @@
         </form>
     </div>
 
+    <div class="tab" id="addGalleryImages">
+    <form class="auth-form" method="POST" enctype="multipart/form-data">
+
+        <div class="form-header">
+            <h2>Add Gallery Images</h2>
+            <button type="button" class="cancel-btn" onclick="cancel('addGalleryImages')">X</button>
+        </div>
+
+        <input type="hidden" name="action" value="gallery_upload">
+        <input type="file" name="gallery1" accept="image/*">
+
+        <button type="submit">Upload</button>
+    </form>
+</div>
+
     <div class="tab" id="editPrefGender">
         <form class="auth-form" method="POST" action="">
             <div class="form-header">
@@ -219,8 +276,18 @@
         </label><br>
     <?php endforeach; ?>
 </div>
-
             <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <div class="tab" id="addGalleryImages">
+        <form class="auth-form" method="POST" action="" enctype="multipart/form-data">
+            <div class="form-header">
+                <h2>Add</h2>
+                <button type="button" class="cancel-btn" onclick="cancel('addGalleryImages')">X</button>
+            </div>
+            <input type="file" name="profile_picture" accept="image/*">
+            <button type="submit">Add</button>
         </form>
     </div>
 
@@ -292,6 +359,9 @@
     <div class="gallery-section col-12">
         <h3 class="mb-3">
             Gallery
+            <?php if (count($gallery) < 6): ?>
+            <button type="button" onclick="onEdit('addGalleryImages')">Edit</button>
+            <?php endif; ?>
         </h3>
 
         <?php if (!empty($gallery)): ?>
@@ -309,6 +379,14 @@
                                     ✏️
                                     <input type="file" name="replacement_image" accept="image/*" onchange="this.form.submit()">
                                 </label>
+                            </form>
+                            <form method="POST" class="delete-form">
+                                <input type="hidden" name="action" value="delete_gallery">
+                                <input type="hidden" name="photo_id" value="<?= $img['photo_id'] ?>">
+
+                                <button type="submit" class="delete-btn">
+                                    🗑️ Delete
+                                </button>
                             </form>
 
                         </div>

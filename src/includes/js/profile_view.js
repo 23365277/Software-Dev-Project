@@ -19,6 +19,12 @@ function onEditProfilePic() {
     if (modal) modal.style.display = "flex";
 }
 
+function onAddGalleryImages(){
+    closeAllTabs();
+    const modal = document.getElementById('addGalleryImages');
+    if (modal) modal.style.display = "flex";
+}
+
 function cancel(id) {
     const modal = document.getElementById(id);
     if (modal) modal.style.display = "none";
