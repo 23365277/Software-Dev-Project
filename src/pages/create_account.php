@@ -127,11 +127,11 @@
 
   <div class="tab">
   <h2 class="signup-Title">Photos</h2>
-    <input type="file" name="gallery1" placeholder="Image 1" onchange="checkSize(this)">
-    <input type="file" name="gallery2" placeholder="Image 2" onchange="checkSize(this)">
-    <input type="file" name="gallery3" placeholder="Image 3" onchange="checkSize(this)">
-    <input type="file" name="gallery4" placeholder="Image 4" onchange="checkSize(this)">
-    <input type="file" name="gallery5" placeholder="Image 5" onchange="checkSize(this)">
+    <input type="file" name="gallery1" placeholder="Image 1">
+    <input type="file" name="gallery2" placeholder="Image 2">
+    <input type="file" name="gallery3" placeholder="Image 3">
+    <input type="file" name="gallery4" placeholder="Image 4">
+    <input type="file" name="gallery5" placeholder="Image 5">
   </div>
 
   <div class="tab">
