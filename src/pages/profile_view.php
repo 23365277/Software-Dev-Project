@@ -26,9 +26,6 @@
         
             $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
         
-            var_dump($newProfilePicture);
-            exit;
-
             if (!file_exists($targetDir)) {
                 mkdir($targetDir, 0777, true);
             }
@@ -40,6 +37,7 @@
             if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
         
                 $newProfilePicture = '/assets/images/' . $fileName;
+                
         
                 // 1. Get old image
                 $oldImage = getUserProfilePicture($userId);
@@ -53,6 +51,9 @@
                 die("Failed to upload image");
             }
         }
+
+        var_dump($newProfilePicture);
+        exit;
 
         if (isset($_POST['replace_photo_id']) && isset($_FILES['replacement_image'])) {
             $photoId = (int) $_POST['replace_photo_id'];
