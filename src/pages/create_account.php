@@ -66,6 +66,8 @@
         $interest3 = $_POST['interest3'] ?? '';
         $interest4 = $_POST['interest4'] ?? '';
         $interest5 = $_POST['interest5'] ?? '';
+        var_dump($profile_picture);
+        exit;
         $userId = registerNewUser($email, $password, $first_name, $last_name, $date_of_birth, $gender, $Pgender,
                         $min_age, $max_age, $looking_for, $country, $city, $profile_picture, $height_cm, $bio,
                         $interest1, $interest2, $interest3, $interest4, $interest5);
