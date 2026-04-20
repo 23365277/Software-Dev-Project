@@ -1,8 +1,8 @@
 <?php
     session_start();
 
-    ini_set('upload_max_filesize', '10M');
-    ini_set('post_max_size', '10M');
+    ini_set('upload_max_filesize', '20M');
+    ini_set('post_max_size', '25M');
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -60,6 +60,7 @@
                 }
             }
         }
+
         $interest1 = $_POST['interest1'] ?? '';
         $interest2 = $_POST['interest2'] ?? '';
         $interest3 = $_POST['interest3'] ?? '';
@@ -86,7 +87,7 @@
 	include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
-<div class="container-liquid d-flex-column min-vh-75">
+<div class="container-fluid d-flex flex-column min-vh-93">
 
     <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
     <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
@@ -94,8 +95,8 @@
     <div class="bg-overlay"></div>
 
     
-<div class="row justify-content-center" >
-<div class="col-3">
+<div class="row justify-content-center align-items-center flex-grow-1">
+<div class="col-lg-4 col-md-6 col-sm-10 col-12">
 <form id="regForm" class="auth-form" method="POST" action="" enctype="multipart/form-data" onsubmit="return validateAllTabs()" novalidate>
   
   <div class="tab">
@@ -117,9 +118,8 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <!-- <textarea type="text" name="bio" placeholder="bio" required></textarea> -->
     <input type="text" name="bio" placeholder="bio" required>
-    <input type="number" name="height_cm" placeholder="Height cm" required>
+    <input type="number" name="height_cm" placeholder="Height cm" min="54" required>
     <input type="text" name="country" placeholder="Country" required>
     <input type="text" name="city" placeholder="City" required>
     <input type="file" name="profile_picture" accept="image/*">
@@ -127,11 +127,11 @@
 
   <div class="tab">
   <h2 class="signup-Title">Photos</h2>
-    <input type="file" name="gallery1" placeholder="Image 1">
-    <input type="file" name="gallery2" placeholder="Image 2">
-    <input type="file" name="gallery3" placeholder="Image 3">
-    <input type="file" name="gallery4" placeholder="Image 4">
-    <input type="file" name="gallery5" placeholder="Image 5">
+    <input type="file" name="gallery1" placeholder="Image 1" onchange="checkSize(this)">
+    <input type="file" name="gallery2" placeholder="Image 2" onchange="checkSize(this)">
+    <input type="file" name="gallery3" placeholder="Image 3" onchange="checkSize(this)">
+    <input type="file" name="gallery4" placeholder="Image 4" onchange="checkSize(this)">
+    <input type="file" name="gallery5" placeholder="Image 5" onchange="checkSize(this)">
   </div>
 
   <div class="tab">
@@ -151,8 +151,8 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <input type="number" name="min_Age" placeholder=" Min Age" required>
-    <input type="number" name="max_Age" placeholder=" Max Age" required>
+    <input type="number" name="min_Age" placeholder=" Min Age" min="18" max="99" required>
+    <input type="number" name="max_Age" placeholder=" Max Age" min="18" max="99" required>
     <select name="lookingFor" placeholder="looking For" required>
         <option value="" disabled selected hidden>Looking For</option>
         <option value="Casual">Casual</option>

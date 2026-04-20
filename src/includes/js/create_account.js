@@ -41,11 +41,12 @@ async function validateForm() {
     const inputs = x[currentTab].querySelectorAll("input, select, textarea");
 
     inputs.forEach(input => {
+        input.classList.remove("invalid");
+
         if (input.hasAttribute("required") && input.value.trim() === "") {
             input.classList.add("invalid");
             valid = false;
-        } else {
-            input.classList.remove("invalid");
+            return;
         }
 
         if (input.type === "date" && input.id === "dob") {
@@ -59,6 +60,16 @@ async function validateForm() {
 
             if (age < 18) {
                 alert("You must be at least 18 years old to register.");
+                input.classList.add("invalid");
+                valid = false;
+            }
+        }
+
+        if (input.name === "height_cm") {
+            const height = parseInt(input.value);
+
+            if (isNaN(height) || height < 54 || height > 272) {
+                alert("Height must be between 54cm and 272cm.");
                 input.classList.add("invalid");
                 valid = false;
             }
@@ -115,11 +126,38 @@ function validateAllTabs() {
         const inputs = tabs[i].querySelectorAll("input, select, textarea");
 
         inputs.forEach(input => {
+
+            input.classList.remove("invalid");
+
             if (input.hasAttribute("required") && input.value.trim() === "") {
                 input.classList.add("invalid");
                 valid = false;
-            } else {
-                input.classList.remove("invalid");
+                return;
+            }
+
+            const minAgeInput = document.querySelector('[name="min_Age"]');
+            const maxAgeInput = document.querySelector('[name="max_Age"]');
+
+            if (minAgeInput && maxAgeInput) {
+                const minAge = parseInt(minAgeInput.value);
+                const maxAge = parseInt(maxAgeInput.value);
+
+                if (!isNaN(minAge) && !isNaN(maxAge)) {
+
+                    if (minAge < 18 || minAge > 99 || maxAge < 18 || maxAge > 99) {
+                        alert("Age must be between 18 and 99.");
+                        minAgeInput.classList.add("invalid");
+                        maxAgeInput.classList.add("invalid");
+                        valid = false;
+                    }
+
+                    if (minAge > maxAge) {
+                        alert("Min age cannot be greater than max age.");
+                        minAgeInput.classList.add("invalid");
+                        maxAgeInput.classList.add("invalid");
+                        valid = false;
+                    }
+                }
             }
         });
     }
@@ -130,3 +168,11 @@ function validateAllTabs() {
 
     return valid;
 }
+
+// function checkSize(input) {
+//     const file = input.files[0];
+//     if (file && file.size > 2 * 1024 * 1024) { // 2MB
+//         alert("File too large (max 2MB)");
+//         input.value = "";
+//     }
+// }

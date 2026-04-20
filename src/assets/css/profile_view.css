@@ -235,3 +235,31 @@ button[onclick^="onEdit"]:hover {
     padding: 10px;
     border-radius: 8px;
 }
+
+.delete-btn {
+    background: rgba(255, 59, 48, 0.9);
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+/* hover effect */
+.delete-btn:hover {
+    background: #ff3b30;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+}
+
+.delete-form {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+}

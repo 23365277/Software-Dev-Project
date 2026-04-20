@@ -76,6 +76,8 @@ function profile($userId, $first_name, $last_name, $date_of_birth, $gender, $loo
 		':profile_picture' => $profile_picture,
 		':looking_for' => $looking_for
     ]);
+
+	return ['success' => false, 'error' => 'Message is empty'];
 }
 
 function interests($userId, $interest1, $interest2, $interest3, $interest4, $interest5){
@@ -281,15 +283,6 @@ function saveUserGalleryImage($userId, $imagePath) {
     $stmt->execute([$userId, $imagePath]);
 }
 
-// function getUserGalleryImages($userId) {
-//     global $pdo;
-
-//     $stmt = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ?");
-//     $stmt->execute([$userId]);
-
-//     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-// }
-
 function getUserGalleryImages($userId) {
     global $pdo;
 
@@ -345,6 +338,17 @@ function replaceGalleryImage($photoId, $file) {
         $stmt = $pdo->prepare("UPDATE photos SET image_url = ? WHERE photo_id = ?");
         $stmt->execute([$newPath, $photoId]);
     }
+}
+
+function deleteGalleryImage($userId, $photoId){
+    global $pdo;
+
+    $stmt = $pdo->prepare("
+        DELETE FROM photos
+        WHERE user_id = ? AND photo_id = ?
+    ");
+
+    $stmt->execute([$userId, $photoId]);
 }
 
 function updateUserProfilePicture($userId, $imagePath) {
