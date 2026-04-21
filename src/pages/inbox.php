@@ -263,9 +263,10 @@
                 <?php endforeach; ?>
             </div>
 
+	    <div id="attach-preview" style="display:none;align-items:center;gap:8px;padding:6px 12px;background:#f5f5f5;border-top:1px solid #e8e8e8;"></div>
 	    <div class="message-bar">
 		<label class="attach-btn" for="attach-btn-input">+
-			<input id="attach-btn-input" type="file" style="display: none;">
+			<input id="attach-btn-input" type="file" accept="image/*" style="display: none;">
 		</label>
                 <input class="msg-input" id="inbox-msg-input" type="text" placeholder="Write a message...">
                 <button class="send-btn" id="inbox-send-btn">&#10148;</button>
@@ -304,6 +305,8 @@
                     initialMatchId  : <?= json_encode((int)$selectedMatchId) ?>,
                     otherUserId     : <?= json_encode((int)$selectedMatch['other_user_id']) ?>,   // ← ADD
                     otherInitials   : <?= json_encode(strtoupper(substr($selectedMatch['first_name'],0,1).substr($selectedMatch['last_name'],0,1))) ?>,  // ← ADD
+                    attachInputEl   : '#attach-btn-input',
+                    attachPreviewEl : '#attach-preview',
                     messagesEl      : '#inbox-messages',
                     inputEl         : '#inbox-msg-input',
                     sendBtnEl       : '#inbox-send-btn',

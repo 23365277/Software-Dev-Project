@@ -53,7 +53,9 @@ if(isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
 	$fileName   = str_replace('.', '_', uniqid('msg_', true)) . '_' . str_replace(' ', '_', basename($_FILES['attachment']['name']));
 	$targetFile = $target_dir . $fileName;
 
-	if(move_uploaded_file($_FILES['attachment']['tmp_name'], $targetFile)) {
+	$tmpPath = $_FILES['attachment']['tmp_name'];
+	if(is_uploaded_file($tmpPath) && copy($tmpPath, $targetFile)) {
+		unlink($tmpPath);
 		$image_url = '/assets/images/' . $fileName;
 	}
 }

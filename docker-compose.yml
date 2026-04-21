@@ -3,11 +3,11 @@ services:
     build:
       context: ./src
     container_name: roamance_web
-    user: root
     ports:
       - "8080:80"
     volumes:
       - ./src:/var/www/html
+      - images_data:/var/www/html/assets/images
     depends_on:
       - tailscale-nginx
     restart: unless-stopped
@@ -38,3 +38,4 @@ services:
 
 volumes:
   db_data:
+  images_data:

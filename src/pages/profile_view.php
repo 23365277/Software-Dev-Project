@@ -443,6 +443,8 @@ document.addEventListener('keydown', function(e) {
     align-items:center;
     z-index:2000;
 " onclick="closePhotoLightbox()">
+</div>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
 
     <img id="photo-lightbox-img" style="max-width:90%; max-height:90%; border-radius:10px;">
 </div>

@@ -266,8 +266,7 @@ const RoamanceMessaging = (() => {
         /* ── sendMessage ── */
         function sendMessage() {
             const message = el.input ? el.input.value.trim() : '';
-		const fileInput = document.getElementById('attach-btn-input');
-		const file = fileInput && fileInput.files[0];
+		const file = attachInput && attachInput.files[0];
 
             if (!message && !file) return;
 
@@ -297,7 +296,8 @@ const RoamanceMessaging = (() => {
             .then(data => {
                 if (data.success) {
                 	if (el.input) el.input.value = '';
-			if(fileInput) fileInput.value = '';
+			if(attachInput) attachInput.value = '';
+			clearAttachPreview();
                 	fetchMessages();
                 } else {
                     console.error('[RoamanceMessaging] send error:', data.error);
@@ -417,6 +417,46 @@ const RoamanceMessaging = (() => {
                     }
                 })
                 .catch(() => showError(el.error, 'Network error. Please try again.'));
+            });
+        }
+
+        /* ── Attach preview ── */
+        const attachInput   = qs(opts.attachInputEl);
+        const attachPreview = qs(opts.attachPreviewEl);
+
+        function clearAttachPreview() {
+            if (!attachPreview) return;
+            attachPreview.style.display = 'none';
+            attachPreview.innerHTML = '';
+        }
+
+        if (attachInput && attachPreview) {
+            attachInput.addEventListener('change', () => {
+                const file = attachInput.files[0];
+                if (!file) { clearAttachPreview(); return; }
+
+                attachPreview.innerHTML = '';
+
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.style.cssText = 'height:52px;width:52px;object-fit:cover;border-radius:6px;flex-shrink:0;';
+                attachPreview.appendChild(img);
+
+                const name = document.createElement('span');
+                name.textContent = file.name;
+                name.style.cssText = 'font-size:12px;color:#555;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;';
+                attachPreview.appendChild(name);
+
+                const clearBtn = document.createElement('button');
+                clearBtn.textContent = '×';
+                clearBtn.style.cssText = 'background:none;border:none;font-size:20px;line-height:1;cursor:pointer;color:#888;padding:0 2px;flex-shrink:0;';
+                clearBtn.addEventListener('click', () => {
+                    attachInput.value = '';
+                    clearAttachPreview();
+                });
+                attachPreview.appendChild(clearBtn);
+
+                attachPreview.style.display = 'flex';
             });
         }
 

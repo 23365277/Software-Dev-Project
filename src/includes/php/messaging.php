@@ -32,7 +32,11 @@
         </div>
 
         <div id="chatbox-error"></div>
+        <div id="chatbox-attach-preview" style="display:none;align-items:center;gap:8px;padding:5px 8px;background:#f5f5f5;border-top:1px solid #e2e8f0;"></div>
         <div id="chatbox-input-area">
+            <label for="chatbox-attach-input" class="attach-btn" title="Attach image">📎
+                <input id="chatbox-attach-input" type="file" accept="image/*" style="display:none;">
+            </label>
             <input type="text" id="chatbox-input" placeholder="Type your message..." disabled>
             <button id="chatbox-send" disabled>Send</button>
         </div>
@@ -70,6 +74,8 @@
         mode            : 'chatbox',
         contactsEl      : '#chatbox-contacts',
         messagesEl      : '#chatbox-messages',
+        attachInputEl   : '#chatbox-attach-input',
+        attachPreviewEl : '#chatbox-attach-preview',
         inputEl         : '#chatbox-input',
         sendBtnEl       : '#chatbox-send',
         errorEl         : '#chatbox-error',
