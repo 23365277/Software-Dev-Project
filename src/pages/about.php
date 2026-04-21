@@ -62,7 +62,7 @@
             <h2>Join Our Community</h2>
             <p>Ready to find your travel soulmate? Sign up today and start connecting with adventurers from around the world who share your passion for exploration and meaningful connection.</p>
 
-            <p style="margin-top: 30px;"><a href="signup.php" class="back-link">← Back to Home</a></p>
+            <p style="margin-top: 30px;"><a href="login.php" class="back-link">← Back to login</a></p>
         </div>
 </div>
     </div>
