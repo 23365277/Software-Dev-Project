@@ -243,7 +243,7 @@ function updateUserAgePreference($userId, $minAge, $maxAge) {
     global $pdo;
 
     $stmt = $pdo->prepare("
-        UPDATE preferences 
+        UPDATE preferences
         SET min_age = :minAge, max_age = :maxAge
         WHERE id = :userId
     ");

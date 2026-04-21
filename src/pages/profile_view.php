@@ -1,5 +1,5 @@
 <?php
-    session_start();    
+    session_start();
 
     ini_set('upload_max_filesize', '20M');
     ini_set('post_max_size', '25M');
@@ -145,10 +145,10 @@
     <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
         <div class="profile-pic">
             <?php
-            $img = $profile['profile_picture'] ?? '/assets/images/default.png';
+            $img = !empty($profile['profile_picture']) ? $profile['profile_picture'] : '/assets/images/default_profile.jpg';
             ?>
 
-            <img src="<?= $img ?>" alt="Profile Picture">
+            <img src="<?= $img ?>" alt="Profile Picture" onclick="openPhotoLightbox(this.src)">
         </div>
         <div class="edit-btn">
             <button type="button" onclick="onEditProfilePic()">Edit</button>
@@ -177,7 +177,7 @@
             </div>
             <input type="hidden" name="column" id="columnBio">
             <textarea type=text name="value" placeholder="Edit"></textarea>
-            <button type="submit">Edit</button>
+            <button type="submit">Save</button>
         </form>
     </div>
     
@@ -188,7 +188,7 @@
                 <button type="button" class="cancel-btn" onclick="cancel('editProfilePic')">X</button>
             </div>
             <input type="file" name="profile_picture" accept="image/*">
-            <button type="submit">Edit</button>
+            <button type="submit">Save</button>
         </form>
     </div>
 
@@ -200,7 +200,7 @@
             </div>
             <input type="hidden" name="column" id="columnHeight">
             <input type="number" name="value" placeholder="Edit">
-            <button type="submit">Edit</button>
+            <button type="submit">Save</button>
         </form>
     </div>
 
@@ -216,7 +216,7 @@
                 <option value="RELATIONSHIP">Relationship</option>
                 <option value="CASUAL">Casual</option>
             </select>
-            <button type="submit">Edit</button>
+            <button type="submit">Save</button>
         </form>
     </div>
 
@@ -231,7 +231,7 @@
         <input type="hidden" name="action" value="gallery_upload">
         <input type="file" name="gallery1" accept="image/*">
 
-        <button type="submit">Upload</button>
+        <button type="submit">Save</button>
     </form>
 </div>
 
@@ -248,7 +248,7 @@
                 <option value="Female">Female</option>
                 <option value="other">Other</option>
             </select>
-            <button type="submit">Edit</button>
+            <button type="submit">Save</button>
         </form>
     </div>
 
@@ -381,7 +381,7 @@
                     <div class="col-7 col-md-5 col-lg-4">
                         <div class="gallery-item">
 
-                            <img src="<?= htmlspecialchars($img['image_url']) ?>" class="gallery-img" alt="Gallery Image">
+                            <img src="<?= htmlspecialchars($img['image_url']) ?>" class="gallery-img" alt="Gallery Image" onclick="openPhotoLightbox(this.src)">
 
                             <form method="POST" enctype="multipart/form-data" class="replace-form">
                                 <input type="hidden" name="replace_photo_id" value="<?= $img['photo_id'] ?>">
@@ -412,6 +412,36 @@
         
 </div>
 
+<script>
+function openPhotoLightbox(src) {
+    const lb = document.getElementById('photo-lightbox');
+    document.getElementById('photo-lightbox-img').src = src;
+    lb.style.display = 'flex';
+}
+function closePhotoLightbox() {
+    document.getElementById('photo-lightbox').style.display = 'none';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePhotoLightbox();
+});
+</script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css">
 <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 <script src="/includes/js/profile_view.js"></script>
+
+<div id="photo-lightbox" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
+" onclick="closePhotoLightbox()">
+
+    <img id="photo-lightbox-img" style="max-width:90%; max-height:90%; border-radius:10px;">
+</div>

@@ -328,3 +328,13 @@ header .logo {
         display: none;
     }
 }
+
+.profile-pic2 img {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    object-fit: cover;
+}

@@ -1,4 +1,7 @@
-<?php $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>
+<?php $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+
+$profilePic = getUserProfilePicture($_SESSION['user_id']);
+?>
 
 <header id="mainHeader">
     <a href="<?= isset($_SESSION['user_id']) ? '/pages/home.php' : '/pages/login.php' ?>">
@@ -39,7 +42,13 @@
                 <!-- Profile accordion -->
                 <li class="profile-item">
                     <button class="profile-acc-btn" id="profileAccBtn">
-                        <img src="/assets/images/default_profile.jpg" alt="Profile" class="drawer-profile-pic">
+                        <!-- <img src="/assets/images/default_profile.jpg" alt="Profile" class="drawer-profile-pic"> -->
+                        <?php
+                            $img = !empty($profilePic) ? $profilePic : '/assets/images/default_profile.jpg';
+                        ?>
+                        <div class="profile-pic2">
+                            <img src="<?= $img ?>" alt="Profile Picture">
+                        </div>
                         <span>My Account</span>
                         <span class="acc-arrow" id="accArrow">&#9660;</span>
                     </button>
