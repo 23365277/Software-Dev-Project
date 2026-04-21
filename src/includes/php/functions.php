@@ -239,6 +239,22 @@ function getAllInterests() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function updateUserAgePreference($userId, $minAge, $maxAge) {
+    global $pdo;
+
+    $stmt = $pdo->prepare("
+        UPDATE preferences 
+        SET min_age = :minAge, max_age = :maxAge
+        WHERE id = :userId
+    ");
+
+    $stmt->execute([
+		':minAge' => $minAge,
+		':maxAge' => $maxAge,
+		':userId' => $userId
+	]);
+}
+
 function updateUserInterests($userId, $interestIds) {
     global $pdo;
 

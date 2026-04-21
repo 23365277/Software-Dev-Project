@@ -134,32 +134,41 @@ function validateAllTabs() {
                 valid = false;
                 return;
             }
-
-            const minAgeInput = document.querySelector('[name="min_Age"]');
-            const maxAgeInput = document.querySelector('[name="max_Age"]');
-
-            if (minAgeInput && maxAgeInput) {
-                const minAge = parseInt(minAgeInput.value);
-                const maxAge = parseInt(maxAgeInput.value);
-
-                if (!isNaN(minAge) && !isNaN(maxAge)) {
-
-                    if (minAge < 18 || minAge > 99 || maxAge < 18 || maxAge > 99) {
-                        alert("Age must be between 18 and 99.");
-                        minAgeInput.classList.add("invalid");
-                        maxAgeInput.classList.add("invalid");
-                        valid = false;
-                    }
-
-                    if (minAge > maxAge) {
-                        alert("Min age cannot be greater than max age.");
-                        minAgeInput.classList.add("invalid");
-                        maxAgeInput.classList.add("invalid");
-                        valid = false;
-                    }
-                }
-            }
         });
+    }
+
+    const minAgeInput = document.querySelector('[name="min_Age"]');
+    const maxAgeInput = document.querySelector('[name="max_Age"]');
+
+    if (minAgeInput && maxAgeInput) {
+
+        const minAge = parseInt(minAgeInput.value);
+        const maxAge = parseInt(maxAgeInput.value);
+
+        minAgeInput.classList.remove("invalid");
+        maxAgeInput.classList.remove("invalid");
+
+        if (!isNaN(minAge) && !isNaN(maxAge)) {
+
+            if (minAge < 18 || minAge > 99) {
+                minAgeInput.classList.add("invalid");
+                alert("Min age must be between 18 and 99.");
+                valid = false;
+            }
+
+            if (maxAge < 18 || maxAge > 99) {
+                maxAgeInput.classList.add("invalid");
+                alert("Max age must be between 18 and 99.");
+                valid = false;
+            }
+
+            if (minAge > maxAge) {
+                minAgeInput.classList.add("invalid");
+                maxAgeInput.classList.add("invalid");
+                alert("Minimum age cannot be greater than maximum age.");
+                valid = false;
+            }
+        }
     }
 
     if (!valid) {

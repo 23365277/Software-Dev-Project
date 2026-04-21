@@ -95,7 +95,7 @@
 
     foreach ($galleryImages as $imagePath) {
         saveUserGalleryImage($userId, $imagePath, 0);
-      }
+    }
 
         if (isset($_POST['replace_photo_id']) && isset($_FILES['replacement_image'])) {
             $photoId = (int) $_POST['replace_photo_id'];
@@ -105,6 +105,21 @@
             }
         
             header("Location: profile_view.php?user_id=" . $viewUserId);
+            exit;
+        }
+
+        if (isset($_POST['min_age']) && isset($_POST['max_age'])) {
+
+            $minAge = (int) $_POST['min_age'];
+            $maxAge = (int) $_POST['max_age'];
+
+            if ($minAge < 18) $minAge = 18;
+            if ($maxAge > 99) $maxAge = 99;
+            if ($minAge >= $maxAge) $minAge = $maxAge - 1;
+
+            updateUserAgePreference($viewUserId, $minAge, $maxAge);
+
+            header("Location: /pages/profile_view.php?user_id=$viewUserId");
             exit;
         }
         
@@ -127,20 +142,18 @@
 ?>
 
 <div class="container profile-wrapper">
+    <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
+        <div class="profile-pic">
+            <?php
+            $img = $profile['profile_picture'] ?? '/assets/images/default.png';
+            ?>
 
-<div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
-<div class="profile-pic">
-
-    <?php
-    $img = $profile['profile_picture'] ?? '/assets/images/default.png';
-    ?>
-
-    <img src="<?= $img ?>" alt="Profile Picture">
-</div>
-            <div class="edit-btn">
-            <button type="button" onclick="onEditProfilePic()">Edit</button>
-            </div>
+            <img src="<?= $img ?>" alt="Profile Picture">
         </div>
+        <div class="edit-btn">
+            <button type="button" onclick="onEditProfilePic()">Edit</button>
+        </div>
+    </div>
 
     <div class="profile-card shadow">
         <div class="profile-header">
@@ -207,30 +220,6 @@
         </form>
     </div>
 
-    <div class="tab" id="editMinAge">
-        <form class="auth-form" method="POST" action="">
-            <div class="form-header">
-                <h2>Edit</h2>
-                <button type="button" class="cancel-btn" onclick="cancel('editMinAge')">X</button>
-            </div>
-            <input type="hidden" name="column" id="columnMinAge">
-            <input type="number" name="value" placeholder="Edit">
-            <button type="submit">Edit</button>
-        </form>
-    </div>
-
-    <div class="tab" id="editMaxAge">
-    <form class="auth-form" method="POST" action="">
-            <div class="form-header">
-                <h2>Edit</h2>
-                <button type="button" class="cancel-btn" onclick="cancel('editMaxAge')">X</button>
-            </div>
-            <input type="hidden" name="column" id="columnMaxAge">
-            <input type="number" name="value" placeholder="Edit">
-            <button type="submit">Edit</button>
-        </form>
-    </div>
-
     <div class="tab" id="addGalleryImages">
     <form class="auth-form" method="POST" enctype="multipart/form-data">
 
@@ -281,8 +270,8 @@
             <?= htmlspecialchars($interest['name']) ?>
         </label><br>
     <?php endforeach; ?>
-</div>
-            <button type="submit">Save</button>
+    </div>
+        <button type="submit">Save</button>
         </form>
     </div>
 
@@ -328,11 +317,27 @@
         </div>
 
         <div class="col-md-4">
-            <div class="info-box">
-                <strong>Preferred Age</strong>
-                <p> Min:<?= htmlspecialchars($preferences['min_age'] ?? '') ?></p> <button type="button" onclick="onEdit('editMinAge', 'min_age')">Edit</button>
-                <p> Max:<?= htmlspecialchars($preferences['max_age'] ?? '') ?></p> <button type="button" onclick="onEdit('editMaxAge', 'max_age')">Edit</button>
-            </div>
+            <form method="POST">
+                <div class="info-box">
+                    <strong>Preferred Age</strong>
+
+                    <p>
+                        Age Range: 
+                        <strong>
+                            <span id="minAgeValue"><?= $preferences['min_age'] ?? 18 ?></span> 
+                            - 
+                            <span id="maxAgeValue"><?= $preferences['max_age'] ?? 99 ?></span>
+                        </strong>
+                    </p>
+
+                    <div id="ageSlider"></div>
+
+                    <!-- These are what get submitted -->
+                    <input type="hidden" name="min_age" id="minAgeInput" value="<?= $preferences['min_age'] ?? 18 ?>">
+                    <input type="hidden" name="max_age" id="maxAgeInput" value="<?= $preferences['max_age'] ?? 99 ?>">
+                    <button type="submit">Save</button>
+                </div>
+            </form>
         </div>
 
         <div class="col-md-4">
@@ -407,5 +412,6 @@
         
 </div>
 
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css">
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 <script src="/includes/js/profile_view.js"></script>
