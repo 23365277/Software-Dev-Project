@@ -155,6 +155,7 @@
         </div>
     </div>
 
+    
     <div class="profile-card shadow">
         <div class="profile-header">
             <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2>
