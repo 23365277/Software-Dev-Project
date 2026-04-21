@@ -44,7 +44,6 @@
                 <!-- Profile accordion -->
                 <li class="profile-item">
                     <button class="profile-acc-btn" id="profileAccBtn">
-                        <!-- <img src="/assets/images/default_profile.jpg" alt="Profile" class="drawer-profile-pic"> -->
                         <?php
                             $img = !empty($profilePic) ? $profilePic : '/assets/images/default_profile.jpg';
                         ?>
