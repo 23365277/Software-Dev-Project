@@ -263,8 +263,10 @@
                 <?php endforeach; ?>
             </div>
 
-            <div class="message-bar">
-                <button class="attach-btn">+</button>
+	    <div class="message-bar">
+		<label class="attach-btn" for="attach-btn-input">+
+			<input id="attach-btn-input" type="file" style="display: none;">
+		</label>
                 <input class="msg-input" id="inbox-msg-input" type="text" placeholder="Write a message...">
                 <button class="send-btn" id="inbox-send-btn">&#10148;</button>
             </div>

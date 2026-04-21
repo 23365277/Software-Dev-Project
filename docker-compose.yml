@@ -3,6 +3,7 @@ services:
     build:
       context: ./src
     container_name: roamance_web
+    user: root
     ports:
       - "8080:80"
     volumes:

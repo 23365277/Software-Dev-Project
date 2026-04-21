@@ -35,7 +35,7 @@ try {
 
     if ($match_id) {
         $stmt = $pdo->prepare("
-            SELECT sender_id, receiver_id, message, sent_at
+            SELECT sender_id, receiver_id, message, sent_at, image_url
             FROM messages
             WHERE match_id = ?
               AND (
@@ -47,7 +47,7 @@ try {
         $stmt->execute([$match_id, $loggedInUser, $loggedInUser]);
     } else {
         $stmt = $pdo->prepare("
-            SELECT id, sender_id, receiver_id, message, sent_at
+            SELECT id, sender_id, receiver_id, message, sent_at, image_url
             FROM messages
             WHERE (sender_id = :me1 AND receiver_id = :them1)
                OR (sender_id = :them2 AND receiver_id = :me2)

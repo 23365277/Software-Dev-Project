@@ -209,6 +209,14 @@ const RoamanceMessaging = (() => {
                             const bubble = document.createElement('div');
                             bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
                             bubble.textContent = msg.message;
+
+				if(msg.image_url) {
+					const img = document.createElement('img');
+					img.src = msg.image_url;
+					img.style.cssText = 'max-width: 200px; border-radius: 8px; display: block; margin-top: 4px;';
+					bubble.appendChild(img);
+				}
+
                             inner.appendChild(bubble);
 
                             const timeEl = document.createElement('div');
@@ -258,38 +266,39 @@ const RoamanceMessaging = (() => {
         /* ── sendMessage ── */
         function sendMessage() {
             const message = el.input ? el.input.value.trim() : '';
-            if (!message) return;
+		const fileInput = document.getElementById('attach-btn-input');
+		const file = fileInput && fileInput.files[0];
+
+            if (!message && !file) return;
 
             if (PHONE_RE.test(message)) {
                 showError(el.error, 'Phone numbers are not allowed in messages.');
                 return;
             }
 
-            const body = new URLSearchParams({ message });
+		const body = new FormData();
 
-            if (currentMatchId) {
-                body.set('match_id', currentMatchId);
-            } else if (currentContact) {
-                body.set('receiver_id', currentContact);
-            } else {
-                console.warn('[RoamanceMessaging] sendMessage: no match or contact selected');
-                return;
-            }
+		if(message) body.append('message', message);
+		if(file) body.append('attachment', file);
+		if(currentMatchId) body.append('match_id', currentMatchId);
+		else if (currentContact) body.append('receiver_id', currentContact);
 
             // Disable input while sending to prevent double-sends
             if (el.input)   el.input.disabled   = true;
             if (el.sendBtn) el.sendBtn.disabled  = true;
 
+
+		console.log('sending', message, file, currentMatchId, currentContact);
             fetch(EP.send, {
                 method  : 'POST',
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body,
             })
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    if (el.input) el.input.value = '';
-                    fetchMessages();
+                	if (el.input) el.input.value = '';
+			if(fileInput) fileInput.value = '';
+                	fetchMessages();
                 } else {
                     console.error('[RoamanceMessaging] send error:', data.error);
                     showError(el.error, data.error || 'Failed to send message.');
