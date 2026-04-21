@@ -1,6 +1,8 @@
 <?php $url = 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
-
-$profilePic = getUserProfilePicture($_SESSION['user_id']);
+    if(isset($SESSION['user_id'])){
+        $profilePic = getUserProfilePicture($_SESSION['user_id']);
+    }
+    // $profilePic = getUserProfilePicture($_SESSION['user_id']);
 ?>
 
 <header id="mainHeader">
