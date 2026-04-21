@@ -263,3 +263,10 @@ button[onclick^="onEdit"]:hover {
     bottom: 8px;
     right: 8px;
 }
+
+#ageSlider {
+	margin-top: 6px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
