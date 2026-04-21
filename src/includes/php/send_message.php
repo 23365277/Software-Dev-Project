@@ -34,7 +34,7 @@ $message     = trim($_POST['message']     ?? '');
 $receiver_id = $_POST['receiver_id']      ?? null;
 $match_id    = $_POST['match_id']         ?? null;
 
-if (!$message) {
+if (!$message && !isset($_FILES['attachment'])) {
     http_response_code(400);
     echo json_encode(['error' => 'Missing message']);
     exit;
@@ -44,6 +44,18 @@ if (preg_match('/(\+?\d[\s\-.()\[\]]{0,3}){7,}/', $message)) {
     http_response_code(422);
     echo json_encode(['error' => 'Phone numbers are not allowed in messages']);
     exit;
+}
+
+$image_url = null;
+
+if(isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
+	$target_dir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+	$fileName   = str_replace('.', '_', uniqid('msg_', true)) . '_' . str_replace(' ', '_', basename($_FILES['attachment']['name']));
+	$targetFile = $target_dir . $fileName;
+
+	if(move_uploaded_file($_FILES['attachment']['tmp_name'], $targetFile)) {
+		$image_url = '/assets/images/' . $fileName;
+	}
 }
 
 try {
@@ -81,14 +93,14 @@ try {
     // Insert directly so we can store match_id on the row.
     // functions.php sendMessage() doesn't support match_id, so we bypass it here.
     $ins = $pdo->prepare("
-        INSERT INTO messages (sender_id, receiver_id, message, match_id, sent_at, seen)
-        VALUES (?, ?, ?, ?, NOW(), 0)
+        INSERT INTO messages (sender_id, receiver_id, message, match_id, sent_at, seen, image_url)
+        VALUES (?, ?, ?, ?, NOW(), 0, ?)
     ");
-    $ins->execute([$sender_id, $receiver_id, $message, $match_id]);
+    $ins->execute([$sender_id, $receiver_id, $message, $match_id, $image_url]);
 
     echo json_encode(['success' => true]);
 
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]); // remove before going live
+    echo json_encode(['error' => $e->getMessage()]);
 }
