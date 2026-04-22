@@ -18,7 +18,7 @@
         $tripsCountries = $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    $homeCountry = getHomeCountry($pdo, $_SESSION['user_id']);
+    $homeCountry = isset($_SESSION['user_id']) ? getHomeCountry($pdo, $_SESSION['user_id']) : null;
 
 
     $rawStamps = isset($_SESSION['user_id']) ? getUserStamps($pdo, $_SESSION['user_id']) : [];

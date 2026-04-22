@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{content_type}\\\\n\" http://172.18.0.2/pages/about.php)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{content_type}\\\\n\" http://172.18.0.2/assets/css/about.css)",
+      "Bash(curl -s --compressed \"https://caliacamp.online/pages/home.php\")",
+      "Bash(curl -sv --compressed \"https://caliacamp.online/pages/home.php\")",
+      "Bash(curl -sv --compressed \"https://caliacamp.online/pages/about.php\")",
+      "Bash(docker exec:*)"
+    ]
+  }
+}

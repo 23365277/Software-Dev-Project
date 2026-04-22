@@ -338,5 +338,4 @@ function loadNextPassport() {
 		});
 }
 </script>
-</body>
-</html>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

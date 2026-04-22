@@ -12,3 +12,4 @@ RUN chown -R www-data:www-data /var/www/html
 RUN echo "upload_max_filesize=20M" >> /usr/local/etc/php/conf.d/uploads.ini
 
 RUN echo "post_max_size=25M" >> /usr/local/etc/php/conf.d/uploads.ini
+

@@ -4,7 +4,7 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 9999;
+    z-index: 900;
     font-family: Arial, sans-serif;
     color: black;
 }
@@ -260,10 +260,29 @@
 
 #chatbox-input-area {
     display: flex;
+    align-items: center;
+    gap: 6px;
     border-top: 1px solid #e2e8f0;
     padding: 8px;
     background: #fff;
 }
+
+.attach-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #e0e0e0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 14px;
+    transition: background 0.15s;
+}
+
+.attach-btn:hover { background: #f0f0f5; }
 
 #chatbox-input {
     flex: 1;

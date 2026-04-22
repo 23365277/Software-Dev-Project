@@ -110,7 +110,7 @@ const RoamanceMessaging = (() => {
         function selectContact(contactId, matchId, contactEl) {
             currentContact = contactId;
             currentMatchId = matchId;
-            lastMessageCount = 0;
+            lastMessageTimestamp = null;
 
             if (el.input)   el.input.disabled   = false;
             if (el.sendBtn) el.sendBtn.disabled  = false;
@@ -128,15 +128,125 @@ const RoamanceMessaging = (() => {
         /* ── selectMatch ── */
         function selectMatch(matchId) {
             currentMatchId = matchId;
-            lastMessageCount = 0;
+            lastMessageTimestamp = null;
             fetchMessages();
             opts.onContactSelected && opts.onContactSelected(matchId);
         }
 
-        // Tracks the ID/timestamp of the last known message to detect new arrivals
-        let lastMessageCount = 0;
+        // Timestamp of the most recent message we've rendered
+        let lastMessageTimestamp = null;
 
-        /* ── fetchMessages ── */
+        // Tracks the last date divider shown, so pollMessages can add new ones
+        let lastRenderedDate = null;
+
+        /* ── buildMessageEl: builds a single message DOM node ── */
+        function buildMessageEl(msg) {
+            const isMine = String(msg.sender_id) === String(myUserId);
+            const sentAt = msg.sent_at ? new Date(msg.sent_at) : null;
+
+            if (mode === 'inbox') {
+                const wrap = document.createElement('div');
+                wrap.className = `msg${isMine ? ' sent' : ''}`;
+
+                if (!isMine) {
+                    const avatar = document.createElement('div');
+                    avatar.className   = 'msg-avatar';
+                    avatar.textContent = opts.otherInitials || '?';
+                    wrap.appendChild(avatar);
+                }
+
+                const inner  = document.createElement('div');
+                const bubble = document.createElement('div');
+                bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
+                bubble.textContent = msg.message;
+
+                if (msg.image_url) {
+                    const img = document.createElement('img');
+                    img.src = msg.image_url;
+                    img.style.cssText = 'max-width:200px;border-radius:8px;display:block;margin-top:4px;cursor:zoom-in;';
+                    img.addEventListener('click', () => {
+                        if (typeof openPhotoLightbox === 'function') openPhotoLightbox(img.src);
+                    });
+                    bubble.appendChild(img);
+                }
+
+                inner.appendChild(bubble);
+
+                const timeEl = document.createElement('div');
+                timeEl.className   = `msg-time${isMine ? ' text-end' : ''}`;
+                timeEl.textContent = sentAt
+                    ? sentAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+                    : '';
+                inner.appendChild(timeEl);
+
+                wrap.appendChild(inner);
+
+                if (isMine) {
+                    const avatar = document.createElement('div');
+                    avatar.className        = 'msg-avatar';
+                    avatar.style.background = '#534AB7';
+                    avatar.style.color      = '#fff';
+                    avatar.textContent      = 'Me';
+                    wrap.appendChild(avatar);
+                }
+
+                return wrap;
+
+            } else {
+                const wrap = document.createElement('div');
+                wrap.className = `rm-msg msg${isMine ? ' sent' : ''}`;
+
+                const inner = document.createElement('div');
+
+                if (msg.message) {
+                    const bubble = document.createElement('div');
+                    bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
+                    bubble.textContent = (isMine ? 'You: ' : '') + msg.message;
+                    inner.appendChild(bubble);
+                }
+
+                if (msg.image_url) {
+                    const img = document.createElement('img');
+                    img.src = msg.image_url;
+                    img.style.cssText = 'max-width:160px;border-radius:8px;display:block;margin-top:4px;cursor:zoom-in;';
+                    img.addEventListener('click', () => {
+                        if (typeof openPhotoLightbox === 'function') openPhotoLightbox(img.src);
+                    });
+                    inner.appendChild(img);
+                }
+
+                wrap.appendChild(inner);
+                return wrap;
+            }
+        }
+
+        /* ── appendMessages: renders an array of messages into el.messages ── */
+        function appendMessages(messages, scrollIfNew) {
+            const today = new Date().toISOString().slice(0, 10);
+
+            messages.forEach(msg => {
+                const sentAt  = msg.sent_at ? new Date(msg.sent_at) : null;
+                const msgDate = sentAt ? sentAt.toISOString().slice(0, 10) : null;
+
+                if (mode === 'inbox' && msgDate && msgDate !== lastRenderedDate) {
+                    lastRenderedDate = msgDate;
+                    const divider = document.createElement('div');
+                    divider.className   = 'date-divider';
+                    divider.textContent = msgDate === today
+                        ? 'Today'
+                        : sentAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                    el.messages.appendChild(divider);
+                }
+
+                el.messages.appendChild(buildMessageEl(msg));
+
+                if (msg.sent_at) lastMessageTimestamp = msg.sent_at;
+            });
+
+            if (scrollIfNew) el.messages.scrollTop = el.messages.scrollHeight;
+        }
+
+        /* ── fetchMessages: full load, clears the feed (called on conversation switch) ── */
         function fetchMessages() {
             if (!el.messages) return;
 
@@ -149,11 +259,6 @@ const RoamanceMessaging = (() => {
                 return;
             }
 
-            // Remember scroll position and whether user is near the bottom BEFORE re-render
-            const area          = el.messages;
-            const distFromBottom = area.scrollHeight - area.scrollTop - area.clientHeight;
-            const isNearBottom   = distFromBottom < 80;
-
             fetch(url)
                 .then(r => r.json())
                 .then(messages => {
@@ -162,9 +267,8 @@ const RoamanceMessaging = (() => {
                         return;
                     }
 
-                    const newMessageArrived = messages.length > lastMessageCount;
-                    lastMessageCount = messages.length;
-
+                    lastMessageTimestamp = null;
+                    lastRenderedDate     = null;
                     el.messages.classList.remove('centered-message');
                     el.messages.innerHTML = '';
 
@@ -174,122 +278,70 @@ const RoamanceMessaging = (() => {
                         return;
                     }
 
-                    let lastDate = null;
-
-                    messages.forEach(msg => {
-                        const isMine  = String(msg.sender_id) === String(myUserId);
-                        const sentAt  = msg.sent_at ? new Date(msg.sent_at) : null;
-                        const msgDate = sentAt ? sentAt.toISOString().slice(0, 10) : null;
-
-                        // Date divider
-                        if (mode === 'inbox' && msgDate && msgDate !== lastDate) {
-                            lastDate = msgDate;
-                            const divider = document.createElement('div');
-                            divider.className = 'date-divider';
-                            const today = new Date().toISOString().slice(0, 10);
-                            divider.textContent = msgDate === today
-                                ? 'Today'
-                                : sentAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-                            el.messages.appendChild(divider);
-                        }
-
-                        if (mode === 'inbox') {
-                            const wrap = document.createElement('div');
-                            wrap.className = `msg${isMine ? ' sent' : ''}`;
-
-                            if (!isMine) {
-                                const avatar = document.createElement('div');
-                                avatar.className   = 'msg-avatar';
-                                avatar.textContent = opts.otherInitials || '?';
-                                wrap.appendChild(avatar);
-                            }
-
-                            const inner = document.createElement('div');
-
-                            const bubble = document.createElement('div');
-                            bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
-                            bubble.textContent = msg.message;
-                            inner.appendChild(bubble);
-
-                            const timeEl = document.createElement('div');
-                            timeEl.className   = `msg-time${isMine ? ' text-end' : ''}`;
-                            timeEl.textContent = sentAt
-                                ? sentAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
-                                : '';
-                            inner.appendChild(timeEl);
-
-                            wrap.appendChild(inner);
-
-                            if (isMine) {
-                                const avatar = document.createElement('div');
-                                avatar.className         = 'msg-avatar';
-                                avatar.style.background  = '#534AB7';
-                                avatar.style.color       = '#fff';
-                                avatar.textContent       = 'Me';
-                                wrap.appendChild(avatar);
-                            }
-
-                            el.messages.appendChild(wrap);
-
-                        } else {
-                            // Compact layout for chatbox / home
-                            const wrap   = document.createElement('div');
-                            wrap.className = `rm-msg msg${isMine ? ' sent' : ''}`;
-
-                            const bubble = document.createElement('div');
-                            bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
-                            bubble.textContent = (isMine ? 'You: ' : '') + msg.message;
-                            wrap.appendChild(bubble);
-
-                            el.messages.appendChild(wrap);
-                        }
-                    });
-
-                    // Only scroll to bottom if:
-                    // 1. User was already near the bottom (reading latest messages), OR
-                    // 2. A brand new message just arrived (so they see it)
-                    if (isNearBottom || newMessageArrived) {
-                        el.messages.scrollTop = el.messages.scrollHeight;
-                    }
+                    appendMessages(messages, true);
                 })
                 .catch(err => console.error('[RoamanceMessaging] fetchMessages:', err));
+        }
+
+        /* ── pollMessages: incremental poll, only fetches and appends new messages ── */
+        function pollMessages() {
+            if (!el.messages || (!currentMatchId && !currentContact)) return;
+
+            let url;
+            if (currentMatchId) {
+                url = `${EP.messages}?match_id=${currentMatchId}`;
+            } else {
+                url = `${EP.messages}?other_user=${currentContact}`;
+            }
+            if (lastMessageTimestamp) url += `&after=${encodeURIComponent(lastMessageTimestamp)}`;
+
+            fetch(url)
+                .then(r => r.json())
+                .then(messages => {
+                    if (!Array.isArray(messages) || !messages.length) return;
+                    const area        = el.messages;
+                    const isNearBottom = (area.scrollHeight - area.scrollTop - area.clientHeight) < 80;
+                    appendMessages(messages, isNearBottom);
+                })
+                .catch(err => console.error('[RoamanceMessaging] pollMessages:', err));
         }
 
         /* ── sendMessage ── */
         function sendMessage() {
             const message = el.input ? el.input.value.trim() : '';
-            if (!message) return;
+		const file = attachInput && attachInput.files[0];
+
+            if (!message && !file) return;
 
             if (PHONE_RE.test(message)) {
                 showError(el.error, 'Phone numbers are not allowed in messages.');
                 return;
             }
 
-            const body = new URLSearchParams({ message });
+		const body = new FormData();
 
-            if (currentMatchId) {
-                body.set('match_id', currentMatchId);
-            } else if (currentContact) {
-                body.set('receiver_id', currentContact);
-            } else {
-                console.warn('[RoamanceMessaging] sendMessage: no match or contact selected');
-                return;
-            }
+		if(message) body.append('message', message);
+		if(file) body.append('attachment', file);
+		if(currentMatchId) body.append('match_id', currentMatchId);
+		else if (currentContact) body.append('receiver_id', currentContact);
 
             // Disable input while sending to prevent double-sends
             if (el.input)   el.input.disabled   = true;
             if (el.sendBtn) el.sendBtn.disabled  = true;
 
+
+		console.log('sending', message, file, currentMatchId, currentContact);
             fetch(EP.send, {
                 method  : 'POST',
-                headers : { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body,
             })
             .then(r => r.json())
             .then(data => {
                 if (data.success) {
                     if (el.input) el.input.value = '';
-                    fetchMessages();
+                    if (attachInput) attachInput.value = '';
+                    clearAttachPreview();
+                    pollMessages();
                 } else {
                     console.error('[RoamanceMessaging] send error:', data.error);
                     showError(el.error, data.error || 'Failed to send message.');
@@ -411,6 +463,55 @@ const RoamanceMessaging = (() => {
             });
         }
 
+        /* ── Attach preview ── */
+        const attachInput   = qs(opts.attachInputEl);
+        const attachPreview = qs(opts.attachPreviewEl);
+
+        function clearAttachPreview() {
+            if (!attachPreview) return;
+            attachPreview.style.display = 'none';
+            attachPreview.innerHTML = '';
+        }
+
+        const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+        if (attachInput && attachPreview) {
+            attachInput.addEventListener('change', () => {
+                const file = attachInput.files[0];
+                if (!file) { clearAttachPreview(); return; }
+
+                if (!ALLOWED_TYPES.includes(file.type)) {
+                    showError(el.error, 'Unsupported image format. Please use JPEG, PNG, GIF, or WebP.');
+                    attachInput.value = '';
+                    clearAttachPreview();
+                    return;
+                }
+
+                attachPreview.innerHTML = '';
+
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.style.cssText = 'height:52px;width:52px;object-fit:cover;border-radius:6px;flex-shrink:0;';
+                attachPreview.appendChild(img);
+
+                const name = document.createElement('span');
+                name.textContent = file.name;
+                name.style.cssText = 'font-size:12px;color:#555;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;';
+                attachPreview.appendChild(name);
+
+                const clearBtn = document.createElement('button');
+                clearBtn.textContent = '×';
+                clearBtn.style.cssText = 'background:none;border:none;font-size:20px;line-height:1;cursor:pointer;color:#888;padding:0 2px;flex-shrink:0;';
+                clearBtn.addEventListener('click', () => {
+                    attachInput.value = '';
+                    clearAttachPreview();
+                });
+                attachPreview.appendChild(clearBtn);
+
+                attachPreview.style.display = 'flex';
+            });
+        }
+
         /* ── Input event listeners ── */
         if (el.sendBtn) el.sendBtn.addEventListener('click', sendMessage);
         if (el.input) {
@@ -420,7 +521,7 @@ const RoamanceMessaging = (() => {
         }
 
         /* ── Polling ── */
-        pollTimer = setInterval(fetchMessages, POLL_INTERVAL);
+        pollTimer = setInterval(pollMessages, POLL_INTERVAL);
 
         /* ── Auto-init for inbox mode ── */
         if (mode === 'inbox' && opts.initialMatchId) {

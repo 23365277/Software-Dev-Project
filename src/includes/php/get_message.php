@@ -23,6 +23,7 @@ if (!$loggedInUser) {
 
 $match_id   = $_GET['match_id']   ?? null;
 $other_user = $_GET['other_user'] ?? null;
+$after      = $_GET['after']      ?? null;
 
 if (!$match_id && !$other_user) {
     http_response_code(400);
@@ -34,31 +35,43 @@ try {
     global $pdo;
 
     if ($match_id) {
-        $stmt = $pdo->prepare("
-            SELECT sender_id, receiver_id, message, sent_at
+        $sql = "
+            SELECT sender_id, receiver_id, message, sent_at, image_url
             FROM messages
             WHERE match_id = ?
               AND (
                     (sender_id   = ? AND deleted_sender   = 0) OR
                     (receiver_id = ? AND deleted_receiver = 0)
                   )
-            ORDER BY sent_at ASC
-        ");
-        $stmt->execute([$match_id, $loggedInUser, $loggedInUser]);
+        ";
+        $params = [$match_id, $loggedInUser, $loggedInUser];
+        if ($after) {
+            $sql .= " AND sent_at > ?";
+            $params[] = $after;
+        }
+        $sql .= " ORDER BY sent_at ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
     } else {
-        $stmt = $pdo->prepare("
-            SELECT id, sender_id, receiver_id, message, sent_at
+        $sql = "
+            SELECT id, sender_id, receiver_id, message, sent_at, image_url
             FROM messages
             WHERE (sender_id = :me1 AND receiver_id = :them1)
                OR (sender_id = :them2 AND receiver_id = :me2)
-            ORDER BY sent_at ASC
-        ");
-        $stmt->execute([
+        ";
+        $params = [
             ':me1'   => $loggedInUser,
             ':them1' => $other_user,
             ':them2' => $other_user,
             ':me2'   => $loggedInUser,
-        ]);
+        ];
+        if ($after) {
+            $sql .= " AND sent_at > :after";
+            $params[':after'] = $after;
+        }
+        $sql .= " ORDER BY sent_at ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
     }
 
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));

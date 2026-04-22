@@ -13,7 +13,7 @@ body {
     padding: 20px;
 }
 
-/* Header section */
+
 .profile-container {
     display: flex;
     align-items: center;
@@ -21,7 +21,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Profile image */
 .profile-pic img {
     width: 140px;
     height: 140px;
@@ -31,7 +30,7 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-/* Profile card */
+
 .profile-card {
     flex: 1;
     background: #fff;
@@ -40,7 +39,7 @@ body {
     box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-/* Bio */
+
 .profile-bio {
     margin-top: 10px;
     color: #444;
@@ -105,7 +104,7 @@ button[onclick^="onEdit"] {
     gap: 4px;
 }
 
-/* hover */
+
 .edit-btn button:hover,
 .profile-card button:hover,
 .profile-bio button:hover,
@@ -140,7 +139,7 @@ button[onclick^="onEdit"]:hover {
     transform: scale(1.02);
 }
 
-/* replace button */
+
 .replace-form {
     position: absolute;
     top: 8px;
@@ -159,7 +158,7 @@ button[onclick^="onEdit"]:hover {
     display: none;
 }
 
-/* backdrop */
+
 .tab {
     display: none;
     position: fixed;
@@ -170,12 +169,12 @@ button[onclick^="onEdit"]:hover {
     justify-content: center;
 }
 
-/* when active via JS: display flex */
+
 .tab.active {
     display: flex;
 }
 
-/* form box */
+
 .auth-form {
     width: 380px;
     background: #fff;
@@ -187,7 +186,7 @@ button[onclick^="onEdit"]:hover {
     gap: 10px;
 }
 
-/* inputs */
+
 .auth-form input,
 .auth-form select,
 .auth-form textarea {
@@ -196,7 +195,7 @@ button[onclick^="onEdit"]:hover {
     border: 1px solid #ddd;
 }
 
-/* buttons */
+
 .auth-form button {
     padding: 10px;
     border: none;
@@ -209,14 +208,14 @@ button[onclick^="onEdit"]:hover {
     background: #3e8e41;
 }
 
-/* header */
+
 .form-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* close button */
+
 .cancel-btn {
     background: #ccc !important;
     color: #333;
@@ -227,7 +226,7 @@ button[onclick^="onEdit"]:hover {
     color: white;
 }
 
-/* interests scroll box */
+
 .interests-container {
     max-height: 200px;
     overflow-y: auto;
@@ -251,7 +250,6 @@ button[onclick^="onEdit"]:hover {
     transition: all 0.2s ease;
 }
 
-/* hover effect */
 .delete-btn:hover {
     background: #ff3b30;
     transform: translateY(-1px);
@@ -262,4 +260,11 @@ button[onclick^="onEdit"]:hover {
     position: absolute;
     bottom: 8px;
     right: 8px;
+}
+
+#ageSlider {
+	margin-top: 6px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
