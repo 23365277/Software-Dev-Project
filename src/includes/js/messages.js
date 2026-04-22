@@ -213,7 +213,10 @@ const RoamanceMessaging = (() => {
 				if(msg.image_url) {
 					const img = document.createElement('img');
 					img.src = msg.image_url;
-					img.style.cssText = 'max-width: 200px; border-radius: 8px; display: block; margin-top: 4px;';
+					img.style.cssText = 'max-width: 200px; border-radius: 8px; display: block; margin-top: 4px; cursor: zoom-in;';
+					img.addEventListener('click', () => {
+						if (typeof openPhotoLightbox === 'function') openPhotoLightbox(img.src);
+					});
 					bubble.appendChild(img);
 				}
 

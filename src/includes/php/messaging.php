@@ -92,3 +92,21 @@
     });
 </script>
 <?php endif; ?>
+
+<!-- Photo lightbox (shared across chatbox and home messaging) -->
+<div id="photo-lightbox" onclick="closePhotoLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;cursor:zoom-out;">
+    <img id="photo-lightbox-img" src="" alt="" style="max-width:90vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.6);">
+</div>
+<script>
+function openPhotoLightbox(src) {
+    const lb = document.getElementById('photo-lightbox');
+    document.getElementById('photo-lightbox-img').src = src;
+    lb.style.display = 'flex';
+}
+function closePhotoLightbox() {
+    document.getElementById('photo-lightbox').style.display = 'none';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePhotoLightbox();
+});
+</script>
