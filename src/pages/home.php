@@ -77,7 +77,7 @@ $latestLike = $likes[0] ?? null;
             <div id="home-attach-preview" style="display:none;align-items:center;gap:8px;padding:6px 12px;background:#f5f5f5;border-top:1px solid #e0e0e0;"></div>
             <div id="home-input-area">
                 <label for="home-attach-input" class="attach-btn" title="Attach image">📎
-                    <input id="home-attach-input" type="file" accept="image/*" style="display:none;">
+                    <input id="home-attach-input" type="file" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
                 </label>
                 <input type="text" id="home-msg-input" placeholder="Type your message..." disabled>
                 <button id="home-msg-send" disabled>Send</button>

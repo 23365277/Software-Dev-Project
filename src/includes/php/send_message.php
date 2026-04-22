@@ -49,6 +49,15 @@ if (preg_match('/(\+?\d[\s\-.()\[\]]{0,3}){7,}/', $message)) {
 $image_url = null;
 
 if(isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
+    $allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $detectedMime = mime_content_type($_FILES['attachment']['tmp_name']);
+
+    if (!in_array($detectedMime, $allowedMimes, true)) {
+        http_response_code(415);
+        echo json_encode(['error' => 'Unsupported image format. Please use JPEG, PNG, GIF, or WebP.']);
+        exit;
+    }
+
 	$target_dir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
 	$fileName   = str_replace('.', '_', uniqid('msg_', true)) . '_' . str_replace(' ', '_', basename($_FILES['attachment']['name']));
 	$targetFile = $target_dir . $fileName;

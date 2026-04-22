@@ -250,8 +250,18 @@ const RoamanceMessaging = (() => {
                             const bubble = document.createElement('div');
                             bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
                             bubble.textContent = (isMine ? 'You: ' : '') + msg.message;
-                            wrap.appendChild(bubble);
 
+                            if (msg.image_url) {
+                                const img = document.createElement('img');
+                                img.src = msg.image_url;
+                                img.style.cssText = 'max-width: 160px; border-radius: 8px; display: block; margin-top: 4px; cursor: zoom-in;';
+                                img.addEventListener('click', () => {
+                                    if (typeof openPhotoLightbox === 'function') openPhotoLightbox(img.src);
+                                });
+                                bubble.appendChild(img);
+                            }
+
+                            wrap.appendChild(bubble);
                             el.messages.appendChild(wrap);
                         }
                     });
@@ -433,10 +443,19 @@ const RoamanceMessaging = (() => {
             attachPreview.innerHTML = '';
         }
 
+        const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
         if (attachInput && attachPreview) {
             attachInput.addEventListener('change', () => {
                 const file = attachInput.files[0];
                 if (!file) { clearAttachPreview(); return; }
+
+                if (!ALLOWED_TYPES.includes(file.type)) {
+                    showError(el.error, 'Unsupported image format. Please use JPEG, PNG, GIF, or WebP.');
+                    attachInput.value = '';
+                    clearAttachPreview();
+                    return;
+                }
 
                 attachPreview.innerHTML = '';
 

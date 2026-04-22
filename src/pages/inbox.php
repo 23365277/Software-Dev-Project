@@ -271,7 +271,7 @@
 	    <div id="attach-preview" style="display:none;align-items:center;gap:8px;padding:6px 12px;background:#f5f5f5;border-top:1px solid #e8e8e8;"></div>
 	    <div class="message-bar">
 		<label class="attach-btn" for="attach-btn-input">+
-			<input id="attach-btn-input" type="file" accept="image/*" style="display: none;">
+			<input id="attach-btn-input" type="file" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
 		</label>
                 <input class="msg-input" id="inbox-msg-input" type="text" placeholder="Write a message...">
                 <button class="send-btn" id="inbox-send-btn">&#10148;</button>
