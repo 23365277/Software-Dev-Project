@@ -60,7 +60,7 @@
             ->execute([$selectedMatchId, $currentUserId]);
 
         $msgQ = $pdo->prepare("
-            SELECT sender_id, message, sent_at
+            SELECT sender_id, message, sent_at, image_url
             FROM messages
             WHERE match_id = ?
               AND (
@@ -251,6 +251,11 @@
                         <div>
                             <div class="bubble <?= $isSent ? 'sent' : 'received' ?>">
                                 <?= htmlspecialchars($msg['message']) ?>
+                                <?php if (!empty($msg['image_url'])): ?>
+                                    <img src="<?= htmlspecialchars($msg['image_url']) ?>"
+                                         style="max-width:200px;border-radius:8px;display:block;margin-top:4px;cursor:zoom-in;"
+                                         onclick="openPhotoLightbox(this.src)" alt="">
+                                <?php endif; ?>
                             </div>
                             <div class="msg-time <?= $isSent ? 'text-end' : '' ?>">
                                 <?= date('g:i A', strtotime($msg['sent_at'])) ?>
