@@ -193,12 +193,17 @@ const RoamanceMessaging = (() => {
                 return wrap;
 
             } else {
-                const wrap   = document.createElement('div');
+                const wrap = document.createElement('div');
                 wrap.className = `rm-msg msg${isMine ? ' sent' : ''}`;
 
-                const bubble = document.createElement('div');
-                bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
-                bubble.textContent = (isMine ? 'You: ' : '') + msg.message;
+                const inner = document.createElement('div');
+
+                if (msg.message) {
+                    const bubble = document.createElement('div');
+                    bubble.className   = `bubble ${isMine ? 'sent' : 'received'}`;
+                    bubble.textContent = (isMine ? 'You: ' : '') + msg.message;
+                    inner.appendChild(bubble);
+                }
 
                 if (msg.image_url) {
                     const img = document.createElement('img');
@@ -207,10 +212,10 @@ const RoamanceMessaging = (() => {
                     img.addEventListener('click', () => {
                         if (typeof openPhotoLightbox === 'function') openPhotoLightbox(img.src);
                     });
-                    bubble.appendChild(img);
+                    inner.appendChild(img);
                 }
 
-                wrap.appendChild(bubble);
+                wrap.appendChild(inner);
                 return wrap;
             }
         }
