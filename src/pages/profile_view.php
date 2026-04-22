@@ -4,7 +4,13 @@
     ini_set('upload_max_filesize', '20M');
     ini_set('post_max_size', '25M');
     require_once $_SERVER['DOCUMENT_ROOT'] . '/includes/php/functions.php';
-    $viewUserId = isset($_GET['user_id']) && $_SESSION['role'] === 'ADMIN' ? (int) $_GET['user_id'] : $_SESSION['user_id'];
+
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: /pages/login.php');
+        exit();
+    }
+
+    $viewUserId = isset($_GET['user_id']) && ($_SESSION['role'] ?? '') === 'ADMIN' ? (int) $_GET['user_id'] : $_SESSION['user_id'];
 
     $profile = getProfileInfoById($viewUserId);
     $preferences = getPreferenceInfoById($viewUserId);
@@ -19,7 +25,7 @@
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-        $userId = isset($_POST['user_id']) ? (int) $_POST['user_id'] : $_SESSION['user_id'];
+        $userId = isset($_POST['user_id']) ? (int) $_POST['user_id'] : ($_SESSION['user_id'] ?? null);
         $newProfilePicture = '';
 
         // Check if file uploaded

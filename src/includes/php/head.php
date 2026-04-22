@@ -65,6 +65,10 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
         }
     } else {
         setcookie('remember_me', '', time() - 1, '/', '', true, true);
+        if (!in_array($currentPage, $publicPages)) {
+            header('Location: /pages/login.php');
+            exit();
+        }
     }
 }
 ?>
