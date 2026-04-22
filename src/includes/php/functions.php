@@ -882,7 +882,7 @@ function getUserTrips(PDO $pdo, $userId) {
 	SELECT location, start_date, end_date
 	FROM trips
 	WHERE user_id = :userId
-		AND start_date >= CURDATE()
+		AND start_date > CURDATE()
 	ORDER BY start_date ASC
 	LIMIT 1");
 	$tripStmt->execute(['userId' => $userId]);
