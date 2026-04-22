@@ -444,8 +444,8 @@ function sendMessage($sender_id, $receiver_id, $message){
 
 function blockUser($user_id) {
 	global $pdo;
-	
-	$loggedInUser = $_SESSION['user_id'];
+
+	$loggedInUser = $_SESSION['user_id'] ?? null;
 
 	if($user_id == $loggedInUser) {
 		return ['success' => false, 'error' => "You cannot block yourself."];
@@ -500,7 +500,7 @@ function getBlockedUsers($userId) {
 
 function unblockUser($blockedId) {
     global $pdo;
-    $loggedInUser = $_SESSION['user_id'];
+    $loggedInUser = $_SESSION['user_id'] ?? null;
     $stmt = $pdo->prepare("DELETE FROM blocks WHERE blocker_id = ? AND blocked_id = ?");
     $stmt->execute([$loggedInUser, $blockedId]);
     return ['success' => true];
@@ -509,7 +509,7 @@ function unblockUser($blockedId) {
 function reportUser($reported_id, $reason) {
 	global $pdo;
 
-	$reporter_id = $_SESSION['user_id'];
+	$reporter_id = $_SESSION['user_id'] ?? null;
 
 	if ($reporter_id == $reported_id) {
 		return ['success' => false, 'error' => "You cannot report yourself."];
@@ -1108,7 +1108,7 @@ function getDestinations(PDO $pdo) {
 
 function banUser($targetId) {
     global $pdo;
-    $adminId = $_SESSION['user_id'];
+    $adminId = $_SESSION['user_id'] ?? null;
 
     if ($targetId == $adminId) {
         return ['success' => false, 'error' => 'You cannot ban yourself.'];
@@ -1139,7 +1139,7 @@ function banUser($targetId) {
 
 function suspendUser($targetId, $days, $reason = 'Administrative suspension') {
     global $pdo;
-    $adminId = $_SESSION['user_id'];
+    $adminId = $_SESSION['user_id'] ?? null;
 
     if ($targetId == $adminId) {
         return ['success' => false, 'error' => 'You cannot suspend yourself.'];
