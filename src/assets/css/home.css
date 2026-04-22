@@ -1,6 +1,6 @@
 .welcome-banner {
     display: inline-block;
-    margin: 1rem 1rem 0;
+    margin: 1rem 1rem 1rem;
     padding: 0.55rem 1.25rem;
     background: rgba(255, 255, 255, 0.35);
     backdrop-filter: blur(8px);
