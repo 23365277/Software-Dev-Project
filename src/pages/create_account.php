@@ -99,7 +99,7 @@
 <div class="col-lg-4 col-md-6 col-sm-10 col-12">
 <form id="regForm" class="auth-form" method="POST" action="" enctype="multipart/form-data" onsubmit="return validateAllTabs()" novalidate>
   
-  <!-- <div class="tab">
+  <div class="tab">
   <h2 class="signup-Title">Create Account</h2>
     <p style="font-size:12px;color:#888;background:#f5f5f5;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
        &#9432; When this form is submitted, this section's contents cannot be changed.
@@ -134,7 +134,7 @@
 
   <label for="fileInput" class="upload-btn">Add Profile Image</label>
 </div>
-  </div> -->
+  </div>
   
   <div class="tab">
   <h2 class="signup-Title">Preferences Form</h2>
@@ -144,9 +144,8 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <!-- <input type="number" name="min_Age" placeholder=" Min Age" min="18" max="99" required>
-    <input type="number" name="max_Age" placeholder=" Max Age" min="18" max="99" required> -->
-    <div class="info-box">
+    
+      <div style="margin-bottom: 15px;">
                     <strong>Preferred Age</strong>
 
                     <p>
@@ -224,6 +223,8 @@ document.addEventListener('keydown', function(e) {
     ">
 </div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css">
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 <script src="/includes/js/create_account.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2QU_U5Ck0fQvEFTE2RGDSEQAm1ITlcZU&libraries=places&callback=initAutocomplete" async defer></script>
 
