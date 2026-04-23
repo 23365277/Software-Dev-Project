@@ -147,7 +147,13 @@
     include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
 ?>
 
-<div class="container profile-wrapper">
+<div class="container py-4 profile-page">
+<div class="profile-page-header">
+    <h1 class="profile-page-title">Your Passport</h1>
+    <h5 class="profile-page-subtitle">Manage your profile, preferences and gallery</h5>
+</div>
+
+<div class="profile-wrapper">
     <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
         <div class="profile-pic">
             <?php
@@ -371,9 +377,9 @@
         </div>
     </div>
 
-</div>
+</div><!-- /.profile-wrapper -->
 
-<div class="container py-4">
+<div class="gallery-wrapper">
     <div class="gallery-section col-12">
         <h3 class="mb-3">
             Gallery
@@ -415,9 +421,9 @@
             <p class="text-muted">No gallery images yet</p>
         <?php endif; ?>
     </div>
-</div>
-        
-</div>
+</div><!-- /.gallery-wrapper -->
+
+</div><!-- /.profile-page -->
 
 <script>
 function openPhotoLightbox(src) {
