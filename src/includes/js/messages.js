@@ -243,7 +243,19 @@ const RoamanceMessaging = (() => {
                 if (msg.sent_at) lastMessageTimestamp = msg.sent_at;
             });
 
-            if (scrollIfNew) el.messages.scrollTop = el.messages.scrollHeight;
+            if (scrollIfNew) {
+                const area = el.messages;
+                const scrollToBottom = () => { area.scrollTop = area.scrollHeight; };
+                scrollToBottom();
+                area.querySelectorAll('img').forEach(img => {
+                    if (!img.complete) {
+                        img.addEventListener('load', scrollToBottom, { once: true });
+                        img.addEventListener('error', scrollToBottom, { once: true });
+                    } else {
+                        requestAnimationFrame(() => requestAnimationFrame(scrollToBottom));
+                    }
+                });
+            }
         }
 
         /* ── fetchMessages: full load, clears the feed (called on conversation switch) ── */
