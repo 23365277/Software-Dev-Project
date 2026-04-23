@@ -13,8 +13,8 @@
         $date_of_birth = $_POST['date_of_birth'] ?? '';
         $gender = $_POST['gender'] ?? '';
         $Pgender = $_POST['preferredGender'] ?? '';
-        $min_age = $_POST['min_Age'] ?? '';
-        $max_age = $_POST['max_Age'] ?? '';
+        $min_age = !empty($_POST['min_age']) ? (int)$_POST['min_age'] : 18;
+        $max_age = !empty($_POST['max_age']) ? (int)$_POST['max_age'] : 99;
         $looking_for = $_POST['lookingFor'] ?? '';
         $bio = $_POST['bio'] ?? '';
         $height_cm = $_POST['height_cm'] ?? '';
