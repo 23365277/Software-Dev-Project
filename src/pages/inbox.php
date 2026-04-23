@@ -135,7 +135,10 @@
 ?>
 
 <div class="inbox-page">
-<h1 class="inbox-page-title">Messages</h1>
+<div class="inbox-header">
+    <h1 class="inbox-page-title">Messages</h1>
+    <h5 class="inbox-page-subtitle">Your conversations and connections</h5>
+</div>
 <div class="inbox-wrap">
 
     <!-- ── Sidebar ── -->
@@ -145,7 +148,7 @@
             <button id="sidebar-blocked-toggle" class="sidebar-blocked-btn" onclick="toggleBlockedPanel()">&#128683; Blocked</button>
         </div>
         <div class="search-box">
-            <input type="text" placeholder="Search conversations...">
+            <input type="text" id="inbox-search" placeholder="Search conversations...">
         </div>
         <div class="people-list" id="sidebar-people-list">
             <?php foreach ($matches as $match): ?>
@@ -333,7 +336,17 @@
                 // Scroll to bottom of pre-rendered messages on first load
                 document.addEventListener('DOMContentLoaded', () => {
                     const area = document.getElementById('inbox-messages');
-                    if (area) area.scrollTop = area.scrollHeight;
+                    if (!area) return;
+                    const scrollToBottom = () => { area.scrollTop = area.scrollHeight; };
+                    scrollToBottom();
+                    area.querySelectorAll('img').forEach(img => {
+                        if (!img.complete) {
+                            img.addEventListener('load', scrollToBottom, { once: true });
+                            img.addEventListener('error', scrollToBottom, { once: true });
+                        } else {
+                            requestAnimationFrame(() => requestAnimationFrame(scrollToBottom));
+                        }
+                    });
                 });
             </script>
 
@@ -486,6 +499,15 @@ function toggleBlockedPanel() {
     people.style.display  = showing ? ''     : 'none';
     btn.classList.toggle('active', !showing);
 }
+
+document.getElementById('inbox-search').addEventListener('input', function () {
+    const query = this.value.toLowerCase().trim();
+    document.querySelectorAll('#sidebar-people-list .person-row').forEach(row => {
+        const name    = row.querySelector('.person-name')?.textContent.toLowerCase() ?? '';
+        const preview = row.querySelector('.person-preview')?.textContent.toLowerCase() ?? '';
+        row.style.display = (!query || name.includes(query) || preview.includes(query)) ? '' : 'none';
+    });
+});
 </script>
 
 <script>
@@ -501,3 +523,4 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closePhotoLightbox();
 });
 </script>
+<?php $skipChatbox = true; include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
