@@ -151,9 +151,9 @@
                     <p>
                         Age Range:
                         <strong>
-                            <span id="minAgeValue"><?= $preferences['min_Age'] ?? 18 ?></span> 
+                            <span id="minAgeInput"><?= $preferences['min_Age'] ?? 18 ?></span> 
                             -
-                            <span id="maxAgeValue"><?= $preferences['max_Age'] ?? 99 ?></span>
+                            <span id="maxAgeInput"><?= $preferences['max_Age'] ?? 99 ?></span>
                         </strong>
                     </p>
 
