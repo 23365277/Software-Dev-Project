@@ -151,17 +151,17 @@
                     <p>
                         Age Range:
                         <strong>
-                            <span id="minAgeValue"><?= $preferences['min_age'] ?? 18 ?></span> 
+                            <span id="minAgeValue"><?= $preferences['min_Age'] ?? 18 ?></span> 
                             -
-                            <span id="maxAgeValue"><?= $preferences['max_age'] ?? 99 ?></span>
+                            <span id="maxAgeValue"><?= $preferences['max_Age'] ?? 99 ?></span>
                         </strong>
                     </p>
 
                     <div id="ageSlider"></div>
 
                     <!-- These are what get submitted -->
-                    <input type="hidden" name="min_age" id="minAgeInput" value="<?= $preferences['min_age'] ?? 18 ?>">
-                    <input type="hidden" name="max_age" id="maxAgeInput" value="<?= $preferences['max_age'] ?? 99 ?>">
+                    <input type="hidden" name="min_age" id="minAgeInput" value="<?= $preferences['min_Age'] ?? 18 ?>">
+                    <input type="hidden" name="max_age" id="maxAgeInput" value="<?= $preferences['max_Age'] ?? 99 ?>">
                 </div>
     <select name="lookingFor" placeholder="looking For" required>
         <option value="" disabled selected hidden>Looking For</option>
