@@ -5,6 +5,13 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 
 	$selectedCountry = $_GET['trip_country'] ?? null;
+
+	$currentUserId  = $_SESSION['user_id'] ?? null;
+	$preferences    = $currentUserId ? getPreferenceInfoById($currentUserId) : [];
+	$userProfile    = $currentUserId ? getProfileInfoById($currentUserId)    : [];
+	$userInterests  = $currentUserId ? getUserInterestsById($currentUserId)  : [];
+	$allInterests   = getAllInterests();
+	$userInterestIds = array_column($userInterests ?? [], 'id');
 ?>
 <!DOCTYPE html>
 <html>
@@ -60,19 +67,76 @@
 		</div>
 	</div>
 
-	<!-- Preference overlay (unchanged) -->
+	<!-- Preference overlay -->
 	<div class="preference-overlay" id="preferenceOverlay">
 		<div class="preference-panel" id="preferencePanel">
 			<button type="button" class="close-overlay" id="closePreferenceOverlay">&times;</button>
-			<h2 class="mb-4">Edit Your Preferences</h2>
-			<a href="/pages/profile_view.php" class="preference-link-btn">Edit Profile Preferences</a>
-			<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Preference</a>
-			<?php if (!empty($selectedCountry)): ?>
-				<div class="alert alert-info mt-4">
-					Current Trip Preference: <strong><?= htmlspecialchars($selectedCountry) ?></strong>
+			<h2 class="pref-panel-title">Edit Preferences</h2>
+
+			<!-- Matching Preferences -->
+			<div class="pref-section">
+				<h3 class="pref-section-title">Matching</h3>
+
+				<div class="pref-field">
+					<label class="pref-label">Preferred Gender <span class="pref-tick" id="genderTick"></span></label>
+					<div class="pref-field-row">
+						<select id="prefGender" class="pref-select">
+							<option value="Male"   <?= ($preferences['pref_gender'] ?? '') === 'Male'   ? 'selected' : '' ?>>Male</option>
+							<option value="Female" <?= ($preferences['pref_gender'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
+							<option value="other"  <?= ($preferences['pref_gender'] ?? '') === 'other'  ? 'selected' : '' ?>>Other</option>
+							<option value="Any"    <?= ($preferences['pref_gender'] ?? '') === 'Any'    ? 'selected' : '' ?>>Any</option>
+						</select>
+						<button class="pref-field-save-btn" id="saveGender">Save</button>
+					</div>
 				</div>
-			<?php endif; ?>
-			<button type="button" class="btn btn-outline-dark reset-preferences-btn" id="resetTripPreferenceBtn2">Reset Trip Preference</button>
+
+				<div class="pref-field">
+					<label class="pref-label">Looking For <span class="pref-tick" id="lookingForTick"></span></label>
+					<div class="pref-field-row">
+						<select id="lookingFor" class="pref-select">
+							<option value="RELATIONSHIP" <?= ($userProfile['looking_for'] ?? '') === 'RELATIONSHIP' ? 'selected' : '' ?>>Relationship</option>
+							<option value="CASUAL"       <?= ($userProfile['looking_for'] ?? '') === 'CASUAL'       ? 'selected' : '' ?>>Casual</option>
+						</select>
+						<button class="pref-field-save-btn" id="saveLookingFor">Save</button>
+					</div>
+				</div>
+
+				<div class="pref-field">
+					<label class="pref-label">Age Range: <span id="prefAgeDisplay"><?= $preferences['min_age'] ?? 18 ?> – <?= $preferences['max_age'] ?? 99 ?></span></label>
+					<div id="prefAgeSlider"></div>
+					<input type="hidden" id="prefMinAge" value="<?= $preferences['min_age'] ?? 18 ?>">
+					<input type="hidden" id="prefMaxAge" value="<?= $preferences['max_age'] ?? 99 ?>">
+				</div>
+
+				<button class="pref-save-btn" id="saveMatchingPrefs">Save Age Range <span class="pref-tick" id="ageTick"></span></button>
+				<div class="pref-feedback" id="matchingFeedback"></div>
+			</div>
+
+			<!-- Interests -->
+			<div class="pref-section">
+				<h3 class="pref-section-title">Interests</h3>
+				<div class="pref-interests-grid" id="prefInterestsGrid">
+					<?php foreach ($allInterests as $interest): ?>
+						<label class="pref-interest-chip <?= in_array($interest['id'], $userInterestIds) ? 'selected' : '' ?>">
+							<input type="checkbox" value="<?= $interest['id'] ?>"
+								<?= in_array($interest['id'], $userInterestIds) ? 'checked' : '' ?>>
+							<?= htmlspecialchars($interest['name']) ?>
+						</label>
+					<?php endforeach; ?>
+				</div>
+				<button class="pref-save-btn" id="saveInterests">Save Interests</button>
+				<div class="pref-feedback" id="interestsFeedback"></div>
+			</div>
+
+			<!-- Trip Filter -->
+			<div class="pref-section">
+				<h3 class="pref-section-title">Trip Filter</h3>
+				<?php if (!empty($selectedCountry)): ?>
+					<p class="pref-active-filter">Active: <strong><?= htmlspecialchars($selectedCountry) ?></strong></p>
+				<?php endif; ?>
+				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Destination</a>
+				<button type="button" class="pref-reset-btn" id="resetTripPreferenceBtn2">✕ Reset Filter</button>
+			</div>
 		</div>
 	</div>
 
@@ -80,6 +144,8 @@
 
 <!-- GSAP CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.css">
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 
 <script>
 const preferenceToggle = document.getElementById("preferenceToggle");
@@ -98,6 +164,103 @@ preferenceToggle.addEventListener("click", () => {
 
 closePreferenceOverlay.addEventListener("click", () => {
 	preferenceOverlay.classList.remove("active");
+});
+
+// ── Preference chip toggle (max 5) ───────────────────────────
+document.querySelectorAll(".pref-interest-chip input").forEach(cb => {
+	cb.addEventListener("change", () => {
+		const checked = document.querySelectorAll("#prefInterestsGrid input:checked");
+		if (cb.checked && checked.length > 5) {
+			cb.checked = false;
+			showPrefFeedback(document.getElementById("interestsFeedback"), "Maximum 5 interests.", false);
+			return;
+		}
+		cb.closest(".pref-interest-chip").classList.toggle("selected", cb.checked);
+	});
+});
+
+// ── Per-field saves ───────────────────────────────────────────
+function savePrefField(column, value, tickId) {
+	fetch("/actions/update_preferences.php", {
+		method: "POST",
+		body: new URLSearchParams({ type: "field", column, value })
+	})
+	.then(r => r.json())
+	.then(data => {
+		if (data.success) showPrefTick(tickId);
+	});
+}
+
+function showPrefTick(id) {
+	const el = document.getElementById(id);
+	el.textContent = "✓ Saved";
+	el.classList.add("show");
+	setTimeout(() => { el.textContent = ""; el.classList.remove("show"); }, 2500);
+}
+
+document.getElementById("saveGender").addEventListener("click", () => {
+	savePrefField("pref_gender", document.getElementById("prefGender").value, "genderTick");
+});
+
+document.getElementById("saveLookingFor").addEventListener("click", () => {
+	savePrefField("looking_for", document.getElementById("lookingFor").value, "lookingForTick");
+});
+
+// ── Save age range ────────────────────────────────────────────
+document.getElementById("saveMatchingPrefs").addEventListener("click", () => {
+	const minAge = parseInt(document.getElementById("prefMinAge").value, 10);
+	const maxAge = parseInt(document.getElementById("prefMaxAge").value, 10);
+	const feedback = document.getElementById("matchingFeedback");
+
+	if (minAge >= maxAge) {
+		showPrefFeedback(feedback, "Min age must be less than max age.", false);
+		return;
+	}
+
+	fetch("/actions/update_preferences.php", {
+		method: "POST",
+		body: new URLSearchParams({ type: "matching", pref_gender: document.getElementById("prefGender").value, looking_for: document.getElementById("lookingFor").value, min_age: minAge, max_age: maxAge })
+	})
+	.then(r => r.json())
+	.then(data => {
+		if (data.success) showPrefTick("ageTick");
+		else showPrefFeedback(feedback, "Error saving.", false);
+	});
+});
+
+// ── Save interests ────────────────────────────────────────────
+document.getElementById("saveInterests").addEventListener("click", () => {
+	const checked = [...document.querySelectorAll("#prefInterestsGrid input:checked")].map(cb => cb.value);
+	const feedback = document.getElementById("interestsFeedback");
+	const body = new URLSearchParams({ type: "interests" });
+	checked.forEach(id => body.append("interests[]", id));
+
+	fetch("/actions/update_preferences.php", { method: "POST", body })
+		.then(r => r.json())
+		.then(data => showPrefFeedback(feedback, data.success ? "Saved!" : "Error saving.", data.success));
+});
+
+function showPrefFeedback(el, msg, ok) {
+	el.textContent = msg;
+	el.className = "pref-feedback " + (ok ? "ok" : "err");
+	setTimeout(() => { el.textContent = ""; el.className = "pref-feedback"; }, 2500);
+}
+
+// ── Age range slider ──────────────────────────────────────────
+const prefAgeSlider = document.getElementById("prefAgeSlider");
+noUiSlider.create(prefAgeSlider, {
+	start:  [<?= $preferences['min_age'] ?? 18 ?>, <?= $preferences['max_age'] ?? 99 ?>],
+	connect: true,
+	range:  { min: 18, max: 99 },
+	step:   1,
+	tooltips: false,
+});
+prefAgeSlider.noUiSlider.on("update", (values) => {
+	const min = Math.round(values[0]);
+	const max = Math.round(values[1]);
+	document.getElementById("prefMinAge").value  = min;
+	document.getElementById("prefMaxAge").value  = max;
+	document.getElementById("prefAgeDisplay").textContent = min + " – " + max;
 });
 
 const stamp = document.querySelector(".action-stamper");
