@@ -99,15 +99,18 @@
 <div class="col-lg-4 col-md-6 col-sm-10 col-12">
 <form id="regForm" class="auth-form" method="POST" action="" enctype="multipart/form-data" onsubmit="return validateAllTabs()" novalidate>
   
-  <div class="tab">
+  <!-- <div class="tab">
   <h2 class="signup-Title">Create Account</h2>
-    <input type="text" name="email" id="email" placeholder="Email" required>
-    <input type="text" name="emailConfirm" id="emailConfirm" placeholder="Confirm Email" required>
-    <input type="text" name="password" id="password" placeholder="Password" required>
-    <input type="text" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm Password" required>
-    <input type="text" name="first_name" placeholder="First Name" required>
-    <input type="text" name="last_name" placeholder="Last Name" required>
-    <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" required>
+    <p style="font-size:12px;color:#888;background:#f5f5f5;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
+       &#9432; When this form is submitted, this section's contents cannot be changed.
+    </p>
+    <input type="text" name="email" id="email" placeholder="Email" >
+    <input type="text" name="emailConfirm" id="emailConfirm" placeholder="Confirm Email" >
+    <input type="text" name="password" id="password" placeholder="Password" >
+    <input type="text" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm Password" >
+    <input type="text" name="first_name" placeholder="First Name" >
+    <input type="text" name="last_name" placeholder="Last Name" >
+    <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" >
   </div>
 
   <div class="tab">
@@ -120,29 +123,19 @@
     </select>
     <input type="text" name="bio" placeholder="bio" required>
     <input type="number" name="height_cm" placeholder="Height cm" min="54" required>
-    <input type="text" name="country" placeholder="Country" required>
+    <input type="text" id="trip-destination"name="country" placeholder="Country" required>
     <input type="text" name="city" placeholder="City" required>
-    <input type="file" name="profile_picture" accept="image/*">
-  </div>
+    <div class="profile-pic">
+  <img id="profilePreview" src="/assets/images/default_profile.jpg"
+       alt="Profile Picture"
+       onclick="openPhotoLightbox(this.src)">
 
-  <div class="tab">
-  <h2 class="signup-Title">Photos</h2>
-    <input type="file" name="gallery1" placeholder="Image 1">
-    <input type="file" name="gallery2" placeholder="Image 2">
-    <input type="file" name="gallery3" placeholder="Image 3">
-    <input type="file" name="gallery4" placeholder="Image 4">
-    <input type="file" name="gallery5" placeholder="Image 5">
-  </div>
+  <input type="file" id="fileInput" name="profile_picture" accept="image/*" onchange="previewImage(event)">
 
-  <div class="tab">
-  <h2 class="signup-Title">Interest Form</h2>
-    <input type="text" name="interest1" placeholder="Interest 1">
-    <input type="text" name="interest2" placeholder="Interest 2">
-    <input type="text" name="interest3" placeholder="Interest 3">
-    <input type="text" name="interest4" placeholder="Interest 4">
-    <input type="text" name="interest5" placeholder="Interest 5">
-  </div>
-
+  <label for="fileInput" class="upload-btn">Add Profile Image</label>
+</div>
+  </div> -->
+  
   <div class="tab">
   <h2 class="signup-Title">Preferences Form</h2>
     <select name="preferredGender" placeholder="Preferred Gender" required>
@@ -151,8 +144,26 @@
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <input type="number" name="min_Age" placeholder=" Min Age" min="18" max="99" required>
-    <input type="number" name="max_Age" placeholder=" Max Age" min="18" max="99" required>
+    <!-- <input type="number" name="min_Age" placeholder=" Min Age" min="18" max="99" required>
+    <input type="number" name="max_Age" placeholder=" Max Age" min="18" max="99" required> -->
+    <div class="info-box">
+                    <strong>Preferred Age</strong>
+
+                    <p>
+                        Age Range:
+                        <strong>
+                            <span id="minAgeValue"><?= $preferences['min_age'] ?? 18 ?></span> 
+                            -
+                            <span id="maxAgeValue"><?= $preferences['max_age'] ?? 99 ?></span>
+                        </strong>
+                    </p>
+
+                    <div id="ageSlider"></div>
+
+                    <!-- These are what get submitted -->
+                    <input type="hidden" name="min_age" id="minAgeInput" value="<?= $preferences['min_age'] ?? 18 ?>">
+                    <input type="hidden" name="max_age" id="maxAgeInput" value="<?= $preferences['max_age'] ?? 99 ?>">
+                </div>
     <select name="lookingFor" placeholder="looking For" required>
         <option value="" disabled selected hidden>Looking For</option>
         <option value="Casual">Casual</option>
@@ -172,13 +183,48 @@
     <span class="step"></span>
     <span class="step"></span>
     <span class="step"></span>
-    <span class="step"></span>
-    <span class="step"></span>
+    <!-- <span class="step"></span>
+    <span class="step"></span> -->
   </div>
 </form>
 </div>
 </div>
 
+<script>
+function openPhotoLightbox(src) {
+    const lb = document.getElementById('photo-lightbox');
+    document.getElementById('photo-lightbox-img').src = src;
+    lb.style.display = 'flex';
+}
+function closePhotoLightbox() {
+    document.getElementById('photo-lightbox').style.display = 'none';
+}
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePhotoLightbox();
+});
+</script>
+
+<div id="photo-lightbox" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
+" onclick="closePhotoLightbox()">
+
+<img id="photo-lightbox-img" src="" style="
+        max-width:90%;
+        max-height:90%;
+        border-radius:10px;
+    ">
+</div>
+
 <script src="/includes/js/create_account.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2QU_U5Ck0fQvEFTE2RGDSEQAm1ITlcZU&libraries=places&callback=initAutocomplete" async defer></script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>

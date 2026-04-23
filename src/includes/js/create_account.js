@@ -1,5 +1,6 @@
 let currentTab = 0;
 showTab(currentTab);
+const destination = document.getElementById("trip-destination");
 
 function showTab(n) {
     const x = document.getElementsByClassName("tab");
@@ -103,7 +104,8 @@ async function validateForm() {
             valid = false;
         }
     }
-    let password = document.getElementById("password").value;
+    let passwordField = document.getElementById("password");
+    let password = passwordField.value.trim();
     let confirmPassword = document.getElementById("passwordConfirm").value;
 
     if (!password || !confirmPassword) {
@@ -114,8 +116,59 @@ async function validateForm() {
         valid = false;
     }
 
+    
+
+    if(password.length < 8 || !hasUpperCase(password) || !hasNumbers(password)){
+        alert("Password not strong enough\n" +
+              "Must contain a capital letter\n" +
+              "Must contain a number\n" +
+              "Must be at least 8 characters long");
+        passwordField.classList.add("invalid");
+        valid = false;
+    }
+
+    if (currentTab === 1 && destination) {
+        const destinationValue = destination.value.trim().toLowerCase();
+    
+        if (
+            destinationValue === "" ||
+            // !/^[a-zA-Z\s\-]+$/.test(destinationValue) ||
+            !allowedCountries.includes(destinationValue)
+        ) {
+            alert("Please enter a valid country");
+            destination.classList.add("invalid");
+            valid = false;
+        }
+    }
 
     return valid;
+}
+
+function previewImage(event) {
+    const img = document.getElementById('profilePreview');
+    const file = event.target.files[0];
+    
+    if (file) {
+      img.src = URL.createObjectURL(file);
+    }
+  }
+
+function hasUpperCase(str) {
+    for (let char of str) {
+      if (char >= 'A' && char <= 'Z') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+function hasNumbers(str){
+    for(let char of str){
+        if(char >= '0' && char <='9'){
+            return true;
+        }
+    }
+    return false;
 }
 
 function validateAllTabs() {
@@ -178,10 +231,87 @@ function validateAllTabs() {
     return valid;
 }
 
-// function checkSize(input) {
-//     const file = input.files[0];
-//     if (file && file.size > 2 * 1024 * 1024) { // 2MB
-//         alert("File too large (max 2MB)");
-//         input.value = "";
-//     }
-// }
+const nameMap = { "Scotland, UK": "United Kingdom", "England, UK": "United Kingdom", "Wales, UK": "United Kingdom", "Northern Ireland, UK": "United Kingdom" };
+let allowedCountries = [];
+
+async function loadAllowedCountries() {
+    try {
+        const res = await fetch("/actions/get_country.php");
+        const data = await res.json();
+
+        if (Array.isArray(data.data)) {
+            allowedCountries = data.data.map(country => country.trim().toLowerCase());
+        }
+    } catch (err) {
+        console.error("Failed to load destinations:", err);
+    }
+}
+
+async function initAutocomplete() {
+    await loadAllowedCountries();
+
+    const autocomplete = new google.maps.places.Autocomplete(destination, {
+        types: ["country"],
+        fields: ["name", "geometry", "types"]
+    });
+
+    autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry || !place.geometry.location) {
+            return;
+        }
+
+        const placeTypes = place.types || [];
+        if (!placeTypes.includes("country")) {
+            destination.value = "";
+            showErrorToast("Please select a country from the suggestions.");
+            return;
+        }
+
+        const rawName = place.name ? place.name.trim() : "";
+        const countryName = nameMap[rawName] ?? rawName;
+
+        if (!allowedCountries.includes(countryName.toLowerCase())) {
+            destination.value = "";
+            showErrorToast("That country isn't available as a destination yet.");
+            return;
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const slider = document.getElementById('ageSlider');
+
+    if (!slider) return;
+
+    const minAge = parseInt(document.getElementById("minAgeInput").value);
+    const maxAge = parseInt(document.getElementById("maxAgeInput").value);
+
+    noUiSlider.create(slider, {
+        start: [minAge, maxAge],
+        connect: true,
+        step: 1,
+        range: {
+            'min': 18,
+            'max': 99
+        }
+    });
+
+    const minOutput = document.getElementById("minAgeValue");
+    const maxOutput = document.getElementById("maxAgeValue");
+
+    slider.noUiSlider.on('update', function (values) {
+
+        const min = Math.round(values[0]);
+        const max = Math.round(values[1]);
+
+        minOutput.textContent = min;
+        maxOutput.textContent = max;
+
+        document.getElementById("minAgeInput").value = min;
+        document.getElementById("maxAgeInput").value = max;
+    });
+
+});
