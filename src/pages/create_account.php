@@ -126,7 +126,7 @@
     <input type="text" id="trip-destination"name="country" placeholder="Country" required>
     <input type="text" name="city" placeholder="City" required>
     <div class="profile-pic">
-  <img id="profilePreview" src="/assets/images/default_profile.jpg"
+  <img id="profilePreview" src="/assets/images/default_profile.png"
        alt="Profile Picture"
        onclick="openPhotoLightbox(this.src)">
 

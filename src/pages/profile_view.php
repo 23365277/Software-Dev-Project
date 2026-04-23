@@ -157,7 +157,7 @@
     <div class="profile-container col-lg-4 col-md-6 col-sm-12 pb-4">
         <div class="profile-pic">
             <?php
-            $img = !empty($profile['profile_picture']) ? $profile['profile_picture'] : '/assets/images/default_profile.jpg';
+            $img = !empty($profile['profile_picture']) ? $profile['profile_picture'] : '/assets/images/default_profile.png';
             ?>
 
             <img src="<?= $img ?>" alt="Profile Picture" onclick="openPhotoLightbox(this.src)">
