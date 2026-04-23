@@ -129,7 +129,7 @@ async function validateForm() {
 
     if (currentTab === 1 && destination) {
         const destinationValue = destination.value.trim().toLowerCase();
-    
+
         if (
             destinationValue === "" ||
             // !/^[a-zA-Z\s\-]+$/.test(destinationValue) ||
@@ -284,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const slider = document.getElementById('ageSlider');
 
-    if (!slider) return;
+    if (!slider || typeof noUiSlider === 'undefined') return;
 
     const minAge = parseInt(document.getElementById("minAgeInput").value);
     const maxAge = parseInt(document.getElementById("maxAgeInput").value);
