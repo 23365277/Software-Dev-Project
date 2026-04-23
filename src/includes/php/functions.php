@@ -617,16 +617,16 @@ function getUsersForGraph() {
     $stmt = $pdo->prepare(
         "SELECT COUNT(*) AS total_before
 		FROM users
-		WHERE created_at < CURDATE() - INTERVAL $days DAY"
+		WHERE created_at < CURDATE() - INTERVAL " . ($days - 1) . " DAY"
     );
-	
+
 	$stmt->execute();
     $totalBefore = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total_before'];
 
 	$stmt = $pdo->prepare(
 		"SELECT DATE(created_at) AS day, COUNT(*) AS count
 		FROM users
-		WHERE created_at >= CURDATE() - INTERVAL $days DAY
+		WHERE created_at >= CURDATE() - INTERVAL " . ($days - 1) . " DAY
 		GROUP BY day
 		ORDER BY day ASC"
 	);
@@ -680,16 +680,16 @@ function getMatchesForGraph() {
 	$stmt = $pdo->prepare(
 		"SELECT COUNT(*) AS total_before
 		FROM matches
-		WHERE matched_at < CURDATE() - INTERVAL $days DAY"
+		WHERE matched_at < CURDATE() - INTERVAL " . ($days - 1) . " DAY"
 	);
-	
+
 	$stmt->execute();
 	$totalBefore = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total_before'];
 
 	$stmt = $pdo->prepare(
 		"SELECT DATE(matched_at) AS day, COUNT(*) AS count
 		FROM matches
-		WHERE matched_at >= CURDATE() - INTERVAL $days DAY
+		WHERE matched_at >= CURDATE() - INTERVAL " . ($days - 1) . " DAY
 		GROUP BY day
 		ORDER BY day ASC"
 	);

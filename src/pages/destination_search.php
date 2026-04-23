@@ -294,7 +294,7 @@ function initMap() {
         });
 
         map.setCenter(place.geometry.location);
-        map.setZoom(12);
+        map.setZoom(5);
     });
 }
 </script>

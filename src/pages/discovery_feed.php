@@ -44,6 +44,10 @@
 				<li>Plan your trip together</li>
 			</ul>
 		</div>
+
+		<div class="fast-animation-button">
+			<button class="btn btn-outline-dark" id="fastAnimation">Normal Animation</button>
+		</div>
 	</aside>
 
 	<!-- Passport + interests panel -->
@@ -148,6 +152,18 @@
 <script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.0/dist/nouislider.min.js"></script>
 
 <script>
+const fastAnimationToggle = document.getElementById("fastAnimation");
+let isFastMode = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    fastAnimationToggle.addEventListener("click", () => {
+        isFastMode = !isFastMode;
+        fastAnimationToggle.textContent = isFastMode ? "Fast Animation":"Normal Animation";
+    });
+});
+
+
 const preferenceToggle = document.getElementById("preferenceToggle");
 const preferenceOverlay = document.getElementById("preferenceOverlay");
 const closePreferenceOverlay = document.getElementById("closePreferenceOverlay");
@@ -299,6 +315,11 @@ function decision(action){
 
 		const stampId = action === "like" ? "approvedStamp" : "rejectedStamp";
 		window.passportDirection = action === "like" ? -1400 : 1400;
+
+		if (isFastMode) {
+			window.closeCover();
+			return;
+		} 
 
 		gsap.to(stamp, {
 			x: -20,
