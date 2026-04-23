@@ -94,6 +94,24 @@ body {
     text-align: center;
 }
 
+.join-link {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.join-link:hover {
+    color: #c7d2fe;
+}
+
+.login-heading {
+    color: #ffffff;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-top: 18px;
+}
+
 .auth-box hr{
     border: 2px solid #ffffff;
 }

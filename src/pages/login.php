@@ -46,7 +46,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
     </div>
 
     <div class="auth-box mt-4">
-        <h2>Join Roamance</h2>
+        <h2><a href="/pages/create_account.php" class="join-link">Join Roamance</a></h2>
         <hr>
         <?php if (isset($_GET['blocked'])): ?>
             <div style="background:#fee2e2; color:#b91c1c; padding:10px; border-radius:5px; font-size:0.9em; margin-bottom:10px;">
@@ -61,6 +61,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
                 <?php endif; ?>
             </div>
         <?php endif; ?>
+        <h3 class="login-heading">Log In</h3>
         <form id="login-form">
             <div id="login-error" style="display:none; background:#fee2e2; color:#b91c1c; padding:10px; border-radius:5px; font-size:0.9em;"></div>
             <input type="email" name="email" placeholder="Email" required>
