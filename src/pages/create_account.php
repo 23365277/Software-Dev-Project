@@ -129,15 +129,15 @@
     <p id="passwordConfirmHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; Passwords don't match.
     </p>
-    <input type="text" name="first_name" id="first_name" placeholder="First Name" >
+    <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
     <p id="firstNameHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; First name can only contain letters, hyphens, and apostrophes.
     </p>
-    <input type="text" name="last_name" id="last_name" placeholder="Last Name" >
+    <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
     <p id="lastNameHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; Last name can only contain letters, hyphens, and apostrophes.
     </p>
-    <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" >
+    <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" required>
     <p id="dobHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; Must be at least 18 years old.
     </p>
