@@ -265,7 +265,7 @@
         </form>
     </div>
 
-    <div class="tab" id="editInterests">
+    <!-- <div class="tab" id="editInterests">
         <form class="auth-form" method="POST" action="">
             <div class="form-header">
                 <h2>Edit</h2>
@@ -286,7 +286,38 @@
     </div>
         <button type="submit">Save</button>
         </form>
-    </div>
+    </div> -->
+
+    <div class="tab" id="editInterests">
+    <form class="auth-form" method="POST" action="">
+        <div class="form-header">
+            <h2>Edit</h2>
+            <button type="button" class="cancel-btn" onclick="cancel('editInterests')">X</button>
+        </div>
+
+        <!-- 🔍 Search -->
+        <div class="mb-2">
+            <input type="text" id="interestSearch" class="form-control" placeholder="Search interests...">
+        </div>
+
+        <!-- 📜 Scrollable list -->
+        <div class="scrollableContainer" id="interestList" style="max-height: 230px;">
+            <?php foreach ($allInterests as $interest): ?>
+                <label class="interest-item">
+                    <input
+                        type="checkbox"
+                        name="interests[]"
+                        value="<?= $interest['id'] ?>"
+                        <?= in_array($interest['id'], $userInterestIds) ? 'checked' : '' ?>
+                    >
+                    <?= htmlspecialchars($interest['name']) ?>
+                </label>
+            <?php endforeach; ?>
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+</div>
 
     <div class="tab" id="addGalleryImages">
         <form class="auth-form" method="POST" action="" enctype="multipart/form-data">
@@ -384,7 +415,7 @@
         <h3 class="mb-3">
             Gallery
             <?php if (count($gallery) < 6): ?>
-            <button type="button" onclick="onEdit('addGalleryImages')">Edit</button>
+            <button type="button" onclick="onEdit('addGalleryImages')">Add</button>
             <?php endif; ?>
         </h3>
 

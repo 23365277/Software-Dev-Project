@@ -90,3 +90,18 @@ function limitInterests(max = 5) {
 document.addEventListener("DOMContentLoaded", function () {
     limitInterests(5);
 });
+
+document.getElementById("interestSearch").addEventListener("input", function () {
+    const searchValue = this.value.toLowerCase();
+    const items = document.querySelectorAll("#interestList .interest-item");
+
+    items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+
+        if (text.includes(searchValue)) {
+            item.style.display = "block";
+        } else {
+            item.style.display = "none";
+        }
+    });
+});
