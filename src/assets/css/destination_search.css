@@ -387,3 +387,17 @@ body {
         font-size: 2.4rem;
     }
 }
+
+@media (max-width: 480px) {
+    #map {
+        height: 300px;
+    }
+
+    .atlas-page-title {
+        font-size: 1.8rem;
+    }
+
+    .atlas-map-note {
+        font-size: 0.8rem;
+    }
+}
