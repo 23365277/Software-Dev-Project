@@ -88,6 +88,7 @@ body {
     width: 380px;
 }
 
+.auth-box h1,
 .auth-box h2 {
     color: #ffffff;
     margin-bottom: 25px;
@@ -98,6 +99,7 @@ body {
     color: #ffffff;
     text-decoration: underline;
     text-underline-offset: 4px;
+    text-align: center;
 }
 
 .join-link:hover {
