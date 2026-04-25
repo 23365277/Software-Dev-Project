@@ -59,6 +59,8 @@
     font-size: 14px;
     transition: 0.2s;
     width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
 }
 
 .auth-form input:focus,
