@@ -265,29 +265,6 @@
         </form>
     </div>
 
-    <!-- <div class="tab" id="editInterests">
-        <form class="auth-form" method="POST" action="">
-            <div class="form-header">
-                <h2>Edit</h2>
-                <button type="button" class="cancel-btn" onclick="cancel('editInterests')">X</button>
-            </div>
-            <div class="interests-container">
-                <?php foreach ($allInterests as $interest): ?>
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="interests[]"
-                            value="<?= $interest['id'] ?>"
-                <?= in_array($interest['id'], $userInterestIds) ? 'checked' : '' ?>
-            >
-            <?= htmlspecialchars($interest['name']) ?>
-        </label><br>
-    <?php endforeach; ?>
-    </div>
-        <button type="submit">Save</button>
-        </form>
-    </div> -->
-
     <div class="tab" id="editInterests">
     <form class="auth-form" method="POST" action="">
         <div class="form-header">
@@ -295,12 +272,10 @@
             <button type="button" class="cancel-btn" onclick="cancel('editInterests')">X</button>
         </div>
 
-        <!-- 🔍 Search -->
         <div class="mb-2">
             <input type="text" id="interestSearch" class="form-control" placeholder="Search interests...">
         </div>
 
-        <!-- 📜 Scrollable list -->
         <div class="scrollableContainer" id="interestList" style="max-height: 230px;">
             <?php foreach ($allInterests as $interest): ?>
                 <label class="interest-item">
