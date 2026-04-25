@@ -837,7 +837,7 @@ function getNextPassport(PDO $pdo, $userId, $tripCountries = null) {
 
 	$params = array_merge([
 		':userId' => $userId,
-		':preferred_gender' => $preferences['gender'] ?? null,
+		':preferred_gender' => $preferences['pref_gender'] ?? null,
 		':min_age' => $preferences['min_age'] ?? null,
 		':max_age' => $preferences['max_age'] ?? null
 	], $tripCountryParams);

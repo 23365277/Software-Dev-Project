@@ -8,6 +8,21 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
+
+        $serverErrors = [];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $serverErrors[] = "Invalid email address.";
+        if (strlen($password) < 8)                      $serverErrors[] = "Password must be at least 8 characters.";
+        if (!preg_match('/[A-Z]/', $password))           $serverErrors[] = "Password must contain an uppercase letter.";
+        if (!preg_match('/[0-9]/', $password))           $serverErrors[] = "Password must contain a number.";
+        if (empty(trim($_POST['first_name'] ?? '')))     $serverErrors[] = "First name is required.";
+        if (empty(trim($_POST['last_name'] ?? '')))      $serverErrors[] = "Last name is required.";
+        if (empty($_POST['date_of_birth'] ?? ''))        $serverErrors[] = "Date of birth is required.";
+
+        if (!empty($serverErrors)) {
+            http_response_code(400);
+            echo implode(' ', $serverErrors);
+            exit();
+        }
         $first_name = $_POST['first_name'] ?? '';
         $last_name = $_POST['last_name'] ?? '';
         $date_of_birth = $_POST['date_of_birth'] ?? '';
