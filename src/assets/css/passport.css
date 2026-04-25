@@ -135,9 +135,6 @@
     position: relative;
     width: 100%;
     margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .carousel-window {
@@ -163,15 +160,21 @@
 }
 
 .arrow {
-    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.45);
     color: white;
     border: none;
-    padding: 12px;
+    padding: 10px 14px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
     border-radius: 50%;
-    margin: 0 10px;
 }
+
+.arrow.left  { left:  10px; }
+.arrow.right { right: 10px; }
 
 .passport-left > img {
   width: 90%;
@@ -258,6 +261,7 @@
     height: 160px;
     border-radius: 8px;
     object-fit: cover;
+    background-color: #d2d2d2;
     border: 3px solid #1e3a5f;
     flex-shrink: 0;            /* prevent image from shrinking */
 }
@@ -498,6 +502,33 @@
   display: block;
 }
 
+.no-gallery-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 400px;
+    background: #1e3a5f;
+    color: rgba(255,255,255,0.7);
+    font-family: "Playfair Display", serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+
+.no-gallery-icon {
+    font-size: 2.5rem;
+    opacity: 0.6;
+}
+
+.no-gallery-placeholder p {
+    margin: 0;
+    opacity: 0.8;
+}
+
 .no-stamps {
     display: flex;
     flex-direction: column;
@@ -611,6 +642,11 @@
 
     .carousel-track {
         height: 100%;
+    }
+
+    .no-gallery-placeholder {
+        height: 100%;
+        min-height: unset;
     }
 
     .carousel-track img {

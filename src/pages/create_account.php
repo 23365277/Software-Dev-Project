@@ -13,8 +13,8 @@
         $date_of_birth = $_POST['date_of_birth'] ?? '';
         $gender = $_POST['gender'] ?? '';
         $Pgender = $_POST['preferredGender'] ?? '';
-        $min_age = !empty($_POST['min_age']) ? (int)$_POST['min_age'] : 18;
-        $max_age = !empty($_POST['max_age']) ? (int)$_POST['max_age'] : 99;
+        $min_age = !empty($_POST['min_Age']) ? (int)$_POST['min_Age'] : 18;
+        $max_age = !empty($_POST['max_Age']) ? (int)$_POST['max_Age'] : 99;
         $looking_for = $_POST['lookingFor'] ?? '';
         $bio = $_POST['bio'] ?? '';
         $height_cm = $_POST['height_cm'] ?? '';
@@ -104,26 +104,75 @@
     <p style="font-size:12px;color:#888;background:#f5f5f5;border-radius:6px;padding:8px 10px;margin-bottom:8px;">
        &#9432; When this form is submitted, this section's contents cannot be changed.
     </p>
-    <input type="text" name="email" id="email" placeholder="Email" >
-    <input type="text" name="emailConfirm" id="emailConfirm" placeholder="Confirm Email" >
-    <input type="text" name="password" id="password" placeholder="Password" >
-    <input type="text" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm Password" >
-    <input type="text" name="first_name" placeholder="First Name" >
-    <input type="text" name="last_name" placeholder="Last Name" >
+    <input type="email" name="email" id="email" placeholder="Email" >
+    <p id="emailHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Please enter a valid email address.
+    </p>
+    <p id="emailExistsHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; An account is already associated with this email.
+    </p>
+    <input type="email" name="emailConfirm" id="emailConfirm" placeholder="Confirm Email" >
+    <p id="emailConfirmHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Email addresses don't match.
+    </p>
+    <input type="password" name="password" id="password" placeholder="Password" >
+    <p id="passwordLengthHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Password must contain at least 8 characters.
+    </p>
+    <p id="passwordNumberHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Password must contain a number.
+    </p>
+    <p id="passwordUpperHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Password must contain an uppercase letter.
+    </p>
+    <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="Confirm Password" >
+    <p id="passwordConfirmHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Passwords don't match.
+    </p>
+    <input type="text" name="first_name" id="first_name" placeholder="First Name" >
+    <p id="firstNameHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; First name can only contain letters, hyphens, and apostrophes.
+    </p>
+    <input type="text" name="last_name" id="last_name" placeholder="Last Name" >
+    <p id="lastNameHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Last name can only contain letters, hyphens, and apostrophes.
+    </p>
     <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" >
-  </div>
+    <p id="dobHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Must be at least 18 years old.
+    </p>
+</div>
 
   <div class="tab">
   <h2 class="signup-Title">Bit About You</h2>
-    <select name="gender" placeholder="Gender" required>
+    <select id="gender" name="gender" placeholder="Gender" required>
         <option value="" disabled selected hidden>Gender</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    <input type="text" name="bio" placeholder="bio" required>
-    <input type="number" name="height_cm" placeholder="Height cm" min="54" required>
-    <input type="text" id="trip-destination"name="country" placeholder="Country" required>
+    <p id="genderHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Please select a gender.
+    </p>
+    <input type="text" id="bio" name="bio" placeholder="Bio" required>
+    <p id="bioHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Please enter a short bio.
+    </p>
+    <input type="number" id="height_cm" name="height_cm" placeholder="Height cm" min="54" required>
+    <p id="heightHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Height must be between 54cm and 272cm.
+    </p>
+    <input type="text" id="trip-destination" name="country" placeholder="Country" required>
+    <p id="countryHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Please select a valid country from the suggestions.
+    </p>
+    <p id="countryNotListedHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; That country or territory isn't in our list yet.
+    </p>
+    <input type="text" id="city" name="city" placeholder="City" required>
+    <p id="cityHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; City can only contain letters, spaces, hyphens, and periods.
+    </p>
     <div class="profile-pic">
   <img id="profilePreview" src="/assets/images/default_profile.png"
        alt="Profile Picture"
@@ -137,33 +186,36 @@
   
   <div class="tab">
   <h2 class="signup-Title">Preferences Form</h2>
-    <select name="preferredGender" placeholder="Preferred Gender" required>
+    <select id="preferredGender" name="preferredGender" required>
         <option value="" disabled selected hidden>Preferred Gender</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Other">Other</option>
     </select>
-    
-      <div style="margin-bottom: 15px;">
-                    <strong>Preferred Age</strong>
-                    <p>
-                        Age Range:
-                        <strong>
-                            <span id="minAgeValue"><?= $preferences['min_Age'] ?? 18 ?></span>
-                            -
-                            <span id="maxAgeValue"><?= $preferences['max_Age'] ?? 99 ?></span>
-                        </strong>
-                    </p>
-                    <div id="ageSlider"></div>
-                    
-                    <input type="hidden" name="min_Age" id="minAgeInput" value="<?= $preferences['min_Age'] ?? 18 ?>">
-                    <input type="hidden" name="max_Age" id="maxAgeInput" value="<?= $preferences['max_Age'] ?? 99 ?>">
-                </div>
-    <select name="lookingFor" placeholder="looking For" required>
+    <p id="preferredGenderHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Please select a preferred gender.
+    </p>
+
+    <div class="age-slider-wrap">
+        <label class="age-slider-label">Preferred Age Range</label>
+        <div class="age-slider-values">
+            <span id="minAgeValue"><?= $preferences['min_Age'] ?? 18 ?></span>
+            <span class="age-slider-dash">–</span>
+            <span id="maxAgeValue"><?= $preferences['max_Age'] ?? 99 ?></span>
+        </div>
+        <div id="ageSlider"></div>
+        <input type="hidden" name="min_Age" id="minAgeInput" value="<?= $preferences['min_Age'] ?? 18 ?>">
+        <input type="hidden" name="max_Age" id="maxAgeInput" value="<?= $preferences['max_Age'] ?? 99 ?>">
+    </div>
+
+    <select id="lookingFor" name="lookingFor" required>
         <option value="" disabled selected hidden>Looking For</option>
         <option value="Casual">Casual</option>
         <option value="Relationship">Relationship</option>
     </select>
+    <p id="lookingForHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
+       &#9432; Please select what you are looking for.
+    </p>
   </div>
 
   <div style="overflow:auto;">

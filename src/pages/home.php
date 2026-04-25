@@ -13,11 +13,14 @@ $likes = getLikes($pdo, $userId);
 $latestMatch = $matches[0] ?? null;
 $latestLike = $likes[0] ?? null;
 
+$homeProfile = getProfileInfoById($userId);
+$welcomeName = $homeProfile['first_name'] ?? '';
+
 ?>
 
-<?php if (isset($_SESSION['user_id']) && !empty($_COOKIE['user_name'])): ?>
+<?php if ($welcomeName): ?>
 <div class="welcome-banner">
-    Welcome back, <?php echo htmlspecialchars($_COOKIE['user_name']); ?>!
+    Welcome back, <?php echo htmlspecialchars($welcomeName); ?>!
 </div>
 <?php endif; ?>
 

@@ -2,6 +2,19 @@ let currentTab = 0;
 showTab(currentTab);
 const destination = document.getElementById("trip-destination");
 
+document.getElementById('regForm').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        const pacContainer = document.querySelector('.pac-container');
+        const autocompleteOpen = pacContainer && pacContainer.offsetParent !== null;
+        if (autocompleteOpen) return;
+        e.preventDefault();
+        const tabs = document.getElementsByClassName("tab");
+        if (currentTab < tabs.length - 1) {
+            nextPrev(1);
+        }
+    }
+});
+
 function showTab(n) {
     const x = document.getElementsByClassName("tab");
     x[n].style.display = "block";
@@ -60,7 +73,7 @@ async function validateForm() {
             }
 
             if (age < 18) {
-                alert("You must be at least 18 years old to register.");
+                showHelp('dobHelp');
                 input.classList.add("invalid");
                 valid = false;
             }
@@ -70,21 +83,24 @@ async function validateForm() {
             const height = parseInt(input.value);
 
             if (isNaN(height) || height < 54 || height > 272) {
-                alert("Height must be between 54cm and 272cm.");
                 input.classList.add("invalid");
                 valid = false;
             }
         }
     });
 
-    let email = document.getElementById("email").value;
-    let confirmEmail = document.getElementById("emailConfirm").value;
+    const emailField = document.getElementById("email");
+    const emailConfirmField = document.getElementById("emailConfirm");
+    let email = emailField.value;
+    let confirmEmail = emailConfirmField.value;
 
-    if (!email || !confirmEmail) {
-        alert("Fill in email fields");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+        showHelp('emailHelp');
+        emailField.classList.add("invalid");
         valid = false;
     } else if (email !== confirmEmail) {
-        alert("Email doesn't match");
+        showHelp('emailConfirmHelp');
+        emailConfirmField.classList.add("invalid");
         valid = false;
     }
 
@@ -100,43 +116,51 @@ async function validateForm() {
         const data = await response.json();
 
         if (data.exists) {
-            alert("Email already exists");
+            showHelp('emailExistsHelp');
+            emailField.classList.add("invalid");
             valid = false;
         }
     }
+
     let passwordField = document.getElementById("password");
     let password = passwordField.value.trim();
-    let confirmPassword = document.getElementById("passwordConfirm").value;
+    const passwordConfirmField = document.getElementById("passwordConfirm");
+    let confirmPassword = passwordConfirmField.value;
 
-    if (!password || !confirmPassword) {
-        alert("Fill in password fields");
-        valid = false;
-    } else if (password !== confirmPassword) {
-        alert("Password doesn't match");
-        valid = false;
-    }
-
-    
-
-    if(password.length < 8 || !hasUpperCase(password) || !hasNumbers(password)){
-        alert("Password not strong enough\n" +
-              "Must contain a capital letter\n" +
-              "Must contain a number\n" +
-              "Must be at least 8 characters long");
-        passwordField.classList.add("invalid");
+    if (password !== confirmPassword) {
+        showHelp('passwordConfirmHelp');
+        passwordConfirmField.classList.add("invalid");
         valid = false;
     }
+
+    if (password.length < 8) { showHelp('passwordLengthHelp'); passwordField.classList.add("invalid"); valid = false; }
+    if (!hasUpperCase(password)) { showHelp('passwordUpperHelp'); passwordField.classList.add("invalid"); valid = false; }
+    if (!hasNumbers(password)) { showHelp('passwordNumberHelp'); passwordField.classList.add("invalid"); valid = false; }
+
+    const firstName = document.getElementById('first_name').value.trim();
+    const lastName  = document.getElementById('last_name').value.trim();
+    if (firstName && !nameRegex.test(firstName)) { showHelp('firstNameHelp'); document.getElementById('first_name').classList.add("invalid"); valid = false; }
+    if (lastName  && !nameRegex.test(lastName))  { showHelp('lastNameHelp');  document.getElementById('last_name').classList.add("invalid");  valid = false; }
 
     if (currentTab === 1 && destination) {
         const destinationValue = destination.value.trim().toLowerCase();
-
-        if (
-            destinationValue === "" ||
-            // !/^[a-zA-Z\s\-]+$/.test(destinationValue) ||
-            !allowedCountries.includes(destinationValue)
-        ) {
-            alert("Please enter a valid country");
+        if (destinationValue === "" || !allowedCountries.includes(destinationValue)) {
+            showHelp('countryHelp');
             destination.classList.add("invalid");
+            valid = false;
+        }
+
+        const height = parseInt(document.getElementById('height_cm').value);
+        if (isNaN(height) || height < 54 || height > 272) {
+            showHelp('heightHelp');
+            document.getElementById('height_cm').classList.add("invalid");
+            valid = false;
+        }
+
+        const cityVal = document.getElementById('city').value.trim();
+        if (cityVal && !cityRegex.test(cityVal)) {
+            showHelp('cityHelp');
+            document.getElementById('city').classList.add("invalid");
             valid = false;
         }
     }
@@ -184,6 +208,8 @@ function validateAllTabs() {
 
             if (input.hasAttribute("required") && input.value.trim() === "") {
                 input.classList.add("invalid");
+                if (input.id === 'preferredGender') showHelp('preferredGenderHelp');
+                if (input.id === 'lookingFor') showHelp('lookingForHelp');
                 valid = false;
                 return;
             }
@@ -205,27 +231,20 @@ function validateAllTabs() {
 
             if (minAge < 18 || minAge > 99) {
                 minAgeInput.classList.add("invalid");
-                alert("Min age must be between 18 and 99.");
                 valid = false;
             }
 
             if (maxAge < 18 || maxAge > 99) {
                 maxAgeInput.classList.add("invalid");
-                alert("Max age must be between 18 and 99.");
                 valid = false;
             }
 
             if (minAge > maxAge) {
                 minAgeInput.classList.add("invalid");
                 maxAgeInput.classList.add("invalid");
-                alert("Minimum age cannot be greater than maximum age.");
                 valid = false;
             }
         }
-    }
-
-    if (!valid) {
-        alert("Please fill all required fields before submitting.");
     }
 
     return valid;
@@ -263,9 +282,10 @@ async function initAutocomplete() {
         }
 
         const placeTypes = place.types || [];
-        if (!placeTypes.includes("country")) {
-            destination.value = "";
-            showErrorToast("Please select a country from the suggestions.");
+        const isCountryLike = placeTypes.includes("country") || placeTypes.includes("political");
+        if (!isCountryLike) {
+            showHelp('countryHelp');
+            destination.classList.add("invalid");
             return;
         }
 
@@ -273,12 +293,164 @@ async function initAutocomplete() {
         const countryName = nameMap[rawName] ?? rawName;
 
         if (!allowedCountries.includes(countryName.toLowerCase())) {
-            destination.value = "";
-            showErrorToast("That country isn't available as a destination yet.");
+            showHelp('countryNotListedHelp');
+            destination.classList.add("invalid");
             return;
         }
+
+        hideHelp('countryHelp');
+        hideHelp('countryNotListedHelp');
+        destination.classList.remove("invalid");
     });
 }
+
+function showHelp(id) { document.getElementById(id).classList.add('visible'); }
+function hideHelp(id) { document.getElementById(id).classList.remove('visible'); }
+
+document.getElementById('email').addEventListener('blur', function () {
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim());
+    valid ? hideHelp('emailHelp') : showHelp('emailHelp');
+    this.classList.toggle('invalid', !valid);
+});
+document.getElementById('email').addEventListener('input', function () {
+    hideHelp('emailHelp');
+    hideHelp('emailExistsHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('emailConfirm').addEventListener('blur', function () {
+    const match = this.value === document.getElementById('email').value;
+    match ? hideHelp('emailConfirmHelp') : showHelp('emailConfirmHelp');
+    this.classList.toggle('invalid', !match);
+});
+document.getElementById('emailConfirm').addEventListener('input', function () {
+    hideHelp('emailConfirmHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('password').addEventListener('input', function () {
+    const val = this.value;
+    const tooShort   = val.length < 8;
+    const noNumber   = !hasNumbers(val);
+    const noUpper    = !hasUpperCase(val);
+    const anyInvalid = tooShort || noNumber || noUpper;
+
+    tooShort ? showHelp('passwordLengthHelp') : hideHelp('passwordLengthHelp');
+    noNumber ? showHelp('passwordNumberHelp') : hideHelp('passwordNumberHelp');
+    noUpper  ? showHelp('passwordUpperHelp')  : hideHelp('passwordUpperHelp');
+    if (val === '') {
+        hideHelp('passwordLengthHelp');
+        hideHelp('passwordNumberHelp');
+        hideHelp('passwordUpperHelp');
+    }
+    this.classList.toggle('invalid', val !== '' && anyInvalid);
+
+    const confirm = document.getElementById('passwordConfirm');
+    if (confirm.value !== '') {
+        const match = val === confirm.value;
+        match ? hideHelp('passwordConfirmHelp') : showHelp('passwordConfirmHelp');
+        confirm.classList.toggle('invalid', !match);
+    }
+});
+
+document.getElementById('passwordConfirm').addEventListener('blur', function () {
+    const match = this.value === document.getElementById('password').value;
+    match ? hideHelp('passwordConfirmHelp') : showHelp('passwordConfirmHelp');
+    this.classList.toggle('invalid', !match);
+});
+document.getElementById('passwordConfirm').addEventListener('input', function () {
+    hideHelp('passwordConfirmHelp');
+    this.classList.remove('invalid');
+});
+
+const nameRegex = /^[a-zA-ZÀ-ÿ'\-\s]+$/;
+
+function validateNameField(inputId, helpId) {
+    const field = document.getElementById(inputId);
+    const invalid = field.value.trim() !== '' && !nameRegex.test(field.value.trim());
+    invalid ? showHelp(helpId) : hideHelp(helpId);
+    field.classList.toggle('invalid', invalid);
+}
+
+['first_name', 'last_name'].forEach(id => {
+    const helpId = id === 'first_name' ? 'firstNameHelp' : 'lastNameHelp';
+    document.getElementById(id).addEventListener('blur', function () {
+        validateNameField(id, helpId);
+    });
+    document.getElementById(id).addEventListener('input', function () {
+        validateNameField(id, helpId);
+    });
+});
+
+const cityRegex = /^[a-zA-ZÀ-ÿ\s'\-\.]+$/;
+
+document.getElementById('height_cm').addEventListener('keydown', function (e) {
+    const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
+    if (!allowed.includes(e.key) && !/^\d$/.test(e.key)) e.preventDefault();
+});
+
+document.getElementById('height_cm').addEventListener('blur', function () {
+    const h = parseInt(this.value);
+    const invalid = this.value !== '' && (isNaN(h) || h < 54 || h > 272);
+    invalid ? showHelp('heightHelp') : hideHelp('heightHelp');
+    this.classList.toggle('invalid', invalid);
+});
+document.getElementById('height_cm').addEventListener('input', function () {
+    hideHelp('heightHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('city').addEventListener('blur', function () {
+    const invalid = this.value.trim() !== '' && !cityRegex.test(this.value.trim());
+    invalid ? showHelp('cityHelp') : hideHelp('cityHelp');
+    this.classList.toggle('invalid', invalid);
+});
+document.getElementById('city').addEventListener('input', function () {
+    hideHelp('cityHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('trip-destination').addEventListener('input', function () {
+    hideHelp('countryHelp');
+    hideHelp('countryNotListedHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('gender').addEventListener('change', function () {
+    hideHelp('genderHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('bio').addEventListener('input', function () {
+    hideHelp('bioHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('dob').addEventListener('blur', function () {
+    if (!this.value) return;
+    const dob = new Date(this.value);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    const underage = age < 18;
+    underage ? showHelp('dobHelp') : hideHelp('dobHelp');
+    this.classList.toggle('invalid', underage);
+});
+document.getElementById('dob').addEventListener('input', function () {
+    hideHelp('dobHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('preferredGender').addEventListener('change', function () {
+    hideHelp('preferredGenderHelp');
+    this.classList.remove('invalid');
+});
+
+document.getElementById('lookingFor').addEventListener('change', function () {
+    hideHelp('lookingForHelp');
+    this.classList.remove('invalid');
+});
 
 document.addEventListener("DOMContentLoaded", function () {
 
