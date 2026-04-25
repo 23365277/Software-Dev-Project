@@ -42,7 +42,7 @@
                 <li class="profile-item">
                     <button class="profile-acc-btn" id="profileAccBtn">
                         <?php
-                            $img = !empty($profilePic) ? $profilePic : '/assets/images/default_profile.png';
+                            $img = !empty($profilePic) ? $profilePic : '/src/assets/images/default_profile.png';
                         ?>
                         <div class="profile-pic2">
                             <img src="<?= $img ?>" alt="Profile Picture">

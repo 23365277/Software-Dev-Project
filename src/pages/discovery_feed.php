@@ -499,7 +499,7 @@ function displayPassport(user) {
 
 			hideNoProfilesOverlay();
 			currentProfileId = user.user_id;
-			document.querySelector(".profile-img").src = user.profile_picture || '/assets/images/default_profile.png';
+			document.querySelector(".profile-img").src = user.profile_picture || '/src/assets/images/default_profile.png';
 			document.querySelector(".profile-img").alt = user.first_name + " " + user.last_name;
 			document.querySelectorAll(".name-field")[0].textContent = user.last_name;
 			document.querySelectorAll(".name-field")[1].textContent = user.first_name;

@@ -15,7 +15,7 @@ if (!$user) {
 	$stamps = [];
 } else {
 	$currentProfileId = $user['user_id'];
-	$profileImage = !empty($user['profile_picture']) ? $user['profile_picture'] : '/assets/images/default_profile.png';
+	$profileImage = !empty($user['profile_picture']) ? $user['profile_picture'] : '/src/assets/images/default_profile.png';
 	$firstName = $user['first_name'];
 	$lastName = $user['last_name'];
 	$country = $user['country'];
