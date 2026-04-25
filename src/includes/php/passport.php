@@ -15,7 +15,7 @@ if (!$user) {
 	$stamps = [];
 } else {
 	$currentProfileId = $user['user_id'];
-	$profileImage = $user['profile_picture'];
+	$profileImage = !empty($user['profile_picture']) ? $user['profile_picture'] : '/assets/images/default_profile.png';
 	$firstName = $user['first_name'];
 	$lastName = $user['last_name'];
 	$country = $user['country'];
@@ -43,24 +43,31 @@ if (!$user) {
 						<p class="gallery-title">MY TRAVELS</p>
 						<div class="title-line"></div>
 						<div class="carousel">
-							<button class="arrow left" onclick="moveSlide(-1)">&#10094;</button>
+							<button class="arrow left" onclick="moveSlide(-1)" <?= count($galleryImages) > 1 ? '' : 'style="display:none;"' ?>>&#10094;</button>
 							<div class="carousel-window">
 								<div class="carousel-track" id="carouselTrack">
-									<?php foreach($galleryImages as $img): ?>
-										<img src="<?= $img ?>" alt="Travel Photo">
-									<?php endforeach; ?>
+									<?php if (!empty($galleryImages)): ?>
+										<?php foreach($galleryImages as $img): ?>
+											<img src="<?= $img ?>" alt="Travel Photo">
+										<?php endforeach; ?>
+									<?php else: ?>
+										<div class="no-gallery-placeholder">
+											<span class="no-gallery-icon">📷</span>
+											<p>No travel photos yet</p>
+										</div>
+									<?php endif; ?>
 								</div>
 							</div>
-							<button class="arrow right" onclick="moveSlide(1)">&#10095;</button>
+							<button class="arrow right" onclick="moveSlide(1)" <?= count($galleryImages) > 1 ? '' : 'style="display:none;"' ?>>&#10095;</button>
 						</div>
 					</div>
 				</div>
-				
+
 				<div class="col-12 col-lg-7">
 					<div class="passport-right">
 						<div class="info">
 							<div class="profile-header">
-								<img src="<?= $profileImage ?>" alt="<?= $firstName . ' ' . $lastName ?>" class="profile-img">	
+								<img src="<?= $profileImage ?>" alt="<?= $firstName . ' ' . $lastName ?>" class="profile-img">
 								<div class="user-info">
 									<div class="tpass-header">
 										<img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
@@ -76,12 +83,12 @@ if (!$user) {
 										</div>
 										<div class="details-right">
 											<p class="header">NATIONALITY</p>
-											<p class="other-field"><?= $country ?></p> 
+											<p class="other-field"><?= $country ?></p>
 											<p class="header">AGE</p>
 											<p class="other-field"><?= $age ?> years</p>
 										</div>
 									</div>
-								</div>		
+								</div>
 							</div>
 							<div class="body">
 								<div class="BioDest">
@@ -98,14 +105,14 @@ if (!$user) {
 											<?php else: ?>
 												<p class="body-text">No planned trips</p>
 											<?php endif; ?>
-									</div>	
+									</div>
 								</div>
 							</div>
 						</div>
 						<div class="separator">
 							<span>VISA STAMPS</span>
-						</div>		
-				
+						</div>
+
 						<div id="stampsArea">
 											<?php if (empty($stamps)): ?>
 								<div class="no-stamps">
@@ -132,6 +139,7 @@ if (!$user) {
 				</div>
 			</div>
 		</div>
+	</div><!-- /.passport -->
 	<!-- Interests slide-out panel — lives inside passport-wrapper so it animates with it -->
 	<div class="interests-panel" id="interestsPanel">
 		<button class="interests-tab" id="interestsTab" aria-label="Toggle interests">
@@ -175,7 +183,7 @@ if (!$user) {
 <script src="/includes/js/passport.js"></script>
 
 <script>
-let currentProfileId = <?= json_encode($currentProfileId) ?>; 
+let currentProfileId = <?= json_encode($currentProfileId) ?>;
 </script>
 
 <script>

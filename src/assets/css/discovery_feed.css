@@ -228,9 +228,64 @@
 }
 
 @media (max-width: 768px) {
-    .interests-panel,
+    .interests-panel {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        height: auto;
+        flex-direction: column-reverse;
+        align-items: stretch;
+        transform: none;
+        transition: none;
+        z-index: 2;
+        pointer-events: auto;
+    }
+
+    .interests-panel.open {
+        transform: none;
+    }
+
     .interests-tab {
-        display: none;
+        writing-mode: horizontal-tb;
+        text-orientation: unset;
+        border-radius: 0 0 12px 12px !important;
+        border: none;
+        padding: 0.6rem 1rem;
+        min-height: unset;
+        align-self: stretch;
+        margin-top: 0;
+        justify-content: center;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .interests-page-wrapper {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: max-height 0.4s ease, opacity 0.3s ease;
+        display: block;
+    }
+
+    .interests-panel.open .interests-page-wrapper {
+        max-height: 50vh;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .interests-page {
+        width: 100%;
+        border-radius: 8px 8px 0 0;
+        border: none;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+        overflow-y: auto;
+    }
+
+    .interests-page::before {
+        border-radius: 8px 8px 0 0;
     }
 }
 

@@ -45,8 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (realSlides.length > 1) {
             track.appendChild(realSlides[0].cloneNode(true));
             track.insertBefore(realSlides[realSlides.length - 1].cloneNode(true), realSlides[0]);
+            window.currentIndex = 1;
+        } else {
+            window.currentIndex = 0;
         }
-        window.currentIndex = 1;
     }
 
     window.isSliding = false;
@@ -55,7 +57,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const track = document.getElementById("carouselTrack");
         if (!track) return;
         const slides = track.querySelectorAll("img");
-        if (slides.length === 0) return;
+        if (slides.length === 0) {
+            track.style.transition = "none";
+            track.style.transform = "translateX(0)";
+            return;
+        }
         const slideWidth = slides[0].clientWidth;
         if (!slideWidth) return;
 

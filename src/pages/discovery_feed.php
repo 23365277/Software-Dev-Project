@@ -46,7 +46,10 @@
 		</div>
 
 		<div class="fast-animation-button">
-			<button class="btn btn-outline-dark" id="fastAnimation">Normal Animation</button>
+			<label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.9em; font-weight:500;">
+				<input type="checkbox" id="fastAnimation" style="width:16px; height:16px; cursor:pointer;">
+				Fast Animation
+			</label>
 		</div>
 	</aside>
 
@@ -153,15 +156,14 @@
 
 <script>
 const fastAnimationToggle = document.getElementById("fastAnimation");
-let isFastMode = false;
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    fastAnimationToggle.addEventListener("click", () => {
-        isFastMode = !isFastMode;
-        fastAnimationToggle.textContent = isFastMode ? "Fast Animation":"Normal Animation";
+    fastAnimationToggle.addEventListener("change", () => {
+        isFastMode = fastAnimationToggle.checked;
     });
 });
+
+let isFastMode = false;
 
 
 const preferenceToggle = document.getElementById("preferenceToggle");
@@ -170,7 +172,12 @@ const closePreferenceOverlay = document.getElementById("closePreferenceOverlay")
 const resetPreferencesBtn = document.getElementById("resetTripPreferenceBtn");
 const tripPreferenceAlert = document.getElementById("tripPreferenceAlert");
 
-document.getElementById("interestsTab").addEventListener("click", () => {
+document.getElementById("interestsPanel").addEventListener("click", (e) => {
+    e.stopPropagation();
+});
+
+document.getElementById("interestsTab").addEventListener("click", (e) => {
+    e.stopPropagation();
     document.getElementById("interestsPanel").classList.toggle("open");
 });
 
@@ -196,6 +203,12 @@ document.querySelectorAll(".pref-interest-chip input").forEach(cb => {
 });
 
 // ── Per-field saves ───────────────────────────────────────────
+function refreshPassport() {
+	_passportCache = null;
+	preferenceOverlay.classList.remove("active");
+	window.closeCover();
+}
+
 function savePrefField(column, value, tickId) {
 	fetch("/actions/update_preferences.php", {
 		method: "POST",
@@ -203,7 +216,7 @@ function savePrefField(column, value, tickId) {
 	})
 	.then(r => r.json())
 	.then(data => {
-		if (data.success) showPrefTick(tickId);
+		if (data.success) refreshPassport();
 	});
 }
 
@@ -239,7 +252,7 @@ document.getElementById("saveMatchingPrefs").addEventListener("click", () => {
 	})
 	.then(r => r.json())
 	.then(data => {
-		if (data.success) showPrefTick("ageTick");
+		if (data.success) refreshPassport();
 		else showPrefFeedback(feedback, "Error saving.", false);
 	});
 });
@@ -253,7 +266,10 @@ document.getElementById("saveInterests").addEventListener("click", () => {
 
 	fetch("/actions/update_preferences.php", { method: "POST", body })
 		.then(r => r.json())
-		.then(data => showPrefFeedback(feedback, data.success ? "Saved!" : "Error saving.", data.success));
+		.then(data => {
+			if (data.success) refreshPassport();
+			else showPrefFeedback(feedback, "Error saving.", false);
+		});
 });
 
 function showPrefFeedback(el, msg, ok) {
@@ -420,16 +436,54 @@ function formatDate(dateString) {
 	});
 }
 
-function loadNextPassport() {
-	let url = "/actions/get_next_passport.php";
+let _passportCache = null;
+let _passportPrefetching = false;
 
-	if (selectedCountry) {
-		url += "?trip_country=" + encodeURIComponent(selectedCountry);
-	}
+function prefetchNextPassport() {
+	if (_passportPrefetching) return;
+	_passportPrefetching = true;
+
+	let url = "/actions/get_next_passport.php";
+	if (selectedCountry) url += "?trip_country=" + encodeURIComponent(selectedCountry);
 
 	fetch(url)
 		.then(res => res.json())
 		.then(user => {
+			if (user && user.user_id) {
+				_passportCache = user;
+				const urls = [user.profile_picture, ...(user.galleryImages || [])].filter(Boolean);
+				urls.forEach(src => { const img = new Image(); img.src = src; });
+			} else {
+				_passportCache = null;
+			}
+			_passportPrefetching = false;
+		})
+		.catch(() => { _passportCache = null; _passportPrefetching = false; });
+}
+
+function loadNextPassport() {
+	const cached = _passportCache;
+	_passportCache = null;
+
+	if (cached) {
+		displayPassport(cached);
+		prefetchNextPassport();
+		return;
+	}
+
+	let url = "/actions/get_next_passport.php";
+	if (selectedCountry) url += "?trip_country=" + encodeURIComponent(selectedCountry);
+
+	fetch(url)
+		.then(res => res.json())
+		.then(user => {
+			displayPassport(user);
+			prefetchNextPassport();
+		});
+}
+
+function displayPassport(user) {
+	{
 
 			if (!user || !user.user_id) {
 					showNoProfilesOverlay();
@@ -445,7 +499,7 @@ function loadNextPassport() {
 
 			hideNoProfilesOverlay();
 			currentProfileId = user.user_id;
-			document.querySelector(".profile-img").src = user.profile_picture;
+			document.querySelector(".profile-img").src = user.profile_picture || '/assets/images/default_profile.png';
 			document.querySelector(".profile-img").alt = user.first_name + " " + user.last_name;
 			document.querySelectorAll(".name-field")[0].textContent = user.last_name;
 			document.querySelectorAll(".name-field")[1].textContent = user.first_name;
@@ -489,17 +543,39 @@ function loadNextPassport() {
 			}
 
 			const carouselTrack = document.getElementById("carouselTrack");
+			const arrowLeft = document.querySelector(".arrow.left");
+			const arrowRight = document.querySelector(".arrow.right");
 			carouselTrack.innerHTML = "";
 
 			const galleryImages = user.galleryImages || [];
-			galleryImages.forEach(img=> {
-				const image = document.createElement("img");
-				image.src = img;
-				image.alt = "Travel Photo";
-				carouselTrack.appendChild(image);
-			});
-
-			window.currentIndex = 0;
+			if (galleryImages.length === 0) {
+				carouselTrack.innerHTML = `
+					<div class="no-gallery-placeholder">
+						<span class="no-gallery-icon">📷</span>
+						<p>No travel photos yet</p>
+					</div>`;
+				if (arrowLeft) arrowLeft.style.display = "none";
+				if (arrowRight) arrowRight.style.display = "none";
+				window.currentIndex = 0;
+			} else {
+				const showArrows = galleryImages.length > 1 ? "" : "none";
+				if (arrowLeft) arrowLeft.style.display = showArrows;
+				if (arrowRight) arrowRight.style.display = showArrows;
+				galleryImages.forEach(img => {
+					const image = document.createElement("img");
+					image.src = img;
+					image.alt = "Travel Photo";
+					carouselTrack.appendChild(image);
+				});
+				const realSlides = Array.from(carouselTrack.querySelectorAll("img"));
+				if (realSlides.length > 1) {
+					carouselTrack.appendChild(realSlides[0].cloneNode(true));
+					carouselTrack.insertBefore(realSlides[realSlides.length - 1].cloneNode(true), realSlides[0]);
+					window.currentIndex = 1;
+				} else {
+					window.currentIndex = 0;
+				}
+			}
 			updateCarousel();
 
 			document.getElementById("approvedStamp").classList.remove("visible");
@@ -519,7 +595,9 @@ function loadNextPassport() {
 
 			gsap.set(".passport-wrapper", { x: 0, y: -1400 });
 			gsap.to(".passport-wrapper", { y: 0, duration: 1, ease: "power2.out", onComplete: peelCover });
-		});
+	}
 }
+
+prefetchNextPassport();
 </script>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
