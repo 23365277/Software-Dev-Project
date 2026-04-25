@@ -124,7 +124,6 @@
     <input type="text" name="bio" placeholder="bio" required>
     <input type="number" name="height_cm" placeholder="Height cm" min="54" required>
     <input type="text" id="trip-destination"name="country" placeholder="Country" required>
-    <input type="text" name="city" placeholder="City" required>
     <div class="profile-pic">
   <img id="profilePreview" src="/assets/images/default_profile.png"
        alt="Profile Picture"
@@ -147,19 +146,16 @@
     
       <div style="margin-bottom: 15px;">
                     <strong>Preferred Age</strong>
-
                     <p>
                         Age Range:
                         <strong>
-                            <span id="minAgeValue"><?= $preferences['min_Age'] ?? 18 ?></span> 
+                            <span id="minAgeValue"><?= $preferences['min_Age'] ?? 18 ?></span>
                             -
                             <span id="maxAgeValue"><?= $preferences['max_Age'] ?? 99 ?></span>
                         </strong>
                     </p>
-
                     <div id="ageSlider"></div>
-
-                    <!-- These are what get submitted -->
+                    
                     <input type="hidden" name="min_Age" id="minAgeInput" value="<?= $preferences['min_Age'] ?? 18 ?>">
                     <input type="hidden" name="max_Age" id="maxAgeInput" value="<?= $preferences['max_Age'] ?? 99 ?>">
                 </div>
@@ -182,8 +178,6 @@
     <span class="step"></span>
     <span class="step"></span>
     <span class="step"></span>
-    <!-- <span class="step"></span>
-    <span class="step"></span> -->
   </div>
 </form>
 </div>

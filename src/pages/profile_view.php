@@ -172,7 +172,7 @@
         <div class="profile-header">
             <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2>
             <p class="text-muted">
-                <?= htmlspecialchars(($profile['city'] ?? '') . ', ' . ($profile['country'] ?? '')) ?>
+                <?= htmlspecialchars(($profile['country'] ?? '')) ?>
             </p>
         </div>
 
