@@ -74,6 +74,31 @@
     font-size: 0.9rem;
 }
 
+.trip-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #1a3a5c;
+    color: #fff;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+}
+
+.trip-filter-chip:hover {
+    background: #c0392b;
+}
+
+.trip-filter-chip .chip-remove {
+    font-size: 1rem;
+    line-height: 1;
+    font-weight: 400;
+}
+
 .sidebar-reset-btn {
     background: none;
     border: 1px solid rgba(30,58,92,0.3);

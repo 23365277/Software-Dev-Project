@@ -116,7 +116,12 @@
                 <div id="map"></div>
             </div>
 
-            <p class="atlas-map-note">Tap any country to explore travellers heading there.</p>
+            <p class="atlas-map-note">Tap countries to select, tap again to deselect. Apply to filter the discovery feed.</p>
+            <div id="atlasFilterPanel" style="display:none; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px; padding:10px 14px; background:#f5f5f5; border-radius:8px;">
+                <span style="font-size:0.85em; color:#555;">Selected:</span>
+                <div id="atlasSelectedChips" style="display:flex; flex-wrap:wrap; gap:6px; flex:1;"></div>
+                <button onclick="applyAtlasFilter()" style="background:#18314f; color:#fff; border:none; border-radius:6px; padding:6px 14px; cursor:pointer; font-size:0.85em;">Apply Filter</button>
+            </div>
         </section>
     </section>
 
@@ -147,6 +152,8 @@
 <script>
 let map;
 let marker;
+let atlasSelectedCountries = [];
+const atlasSelectedFeatures = new Map();
 const locationNormalizeMap = {
     'England': 'United Kingdom',
     'Scotland': 'United Kingdom',
@@ -260,14 +267,30 @@ function initMap() {
     });
 
     map.data.addListener('click', (event) => {
-        const country =
+        const raw =
             event.feature.getProperty('ADMIN') ||
             event.feature.getProperty('name') ||
             event.feature.getProperty('NAME');
 
-        if (!country) return;
+        if (!raw) return;
+        const country = locationNormalizeMap[raw] ?? raw;
 
-        window.location.href = "/pages/discovery_feed.php?trip_country=" + encodeURIComponent(country);
+        const idx = atlasSelectedCountries.indexOf(country);
+        if (idx === -1) {
+            atlasSelectedCountries.push(country);
+            atlasSelectedFeatures.set(country, event.feature);
+            map.data.overrideStyle(event.feature, {
+                fillColor: '#e63946',
+                fillOpacity: 0.75,
+                strokeColor: '#c1121f',
+                strokeWeight: 2
+            });
+        } else {
+            atlasSelectedCountries.splice(idx, 1);
+            atlasSelectedFeatures.delete(country);
+            map.data.revertStyle(event.feature);
+        }
+        updateAtlasFilterPanel();
     });
 
     map.data.loadGeoJson('/assets/data/countries.geojson');
@@ -296,6 +319,39 @@ function initMap() {
         map.setCenter(place.geometry.location);
         map.setZoom(5);
     });
+}
+
+function updateAtlasFilterPanel() {
+    const panel = document.getElementById('atlasFilterPanel');
+    const chips = document.getElementById('atlasSelectedChips');
+    if (atlasSelectedCountries.length === 0) {
+        panel.style.display = 'none';
+        return;
+    }
+    panel.style.display = 'flex';
+    chips.innerHTML = atlasSelectedCountries.map(c =>
+        `<span style="background:#18314f;color:#fff;border-radius:4px;padding:3px 8px;font-size:0.8em;display:flex;align-items:center;gap:4px;">
+            ${c}
+            <button onclick="removeAtlasCountry('${c.replace(/'/g, "\\'")}')" style="background:none;border:none;color:#fff;cursor:pointer;font-size:1em;line-height:1;padding:0;">&times;</button>
+        </span>`
+    ).join('');
+}
+
+function removeAtlasCountry(country) {
+    const idx = atlasSelectedCountries.indexOf(country);
+    if (idx !== -1) {
+        const feature = atlasSelectedFeatures.get(country);
+        if (feature) map.data.revertStyle(feature);
+        atlasSelectedCountries.splice(idx, 1);
+        atlasSelectedFeatures.delete(country);
+    }
+    updateAtlasFilterPanel();
+}
+
+function applyAtlasFilter() {
+    if (atlasSelectedCountries.length === 0) return;
+    window.location.href = '/pages/discovery_feed.php?trip_countries=' +
+        atlasSelectedCountries.map(encodeURIComponent).join(',');
 }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2QU_U5Ck0fQvEFTE2RGDSEQAm1ITlcZU&libraries=places&callback=initMap" async defer></script>
