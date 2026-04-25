@@ -8,6 +8,26 @@ body {
     color: #18314f;
 }
 
+.scrollableContainer {
+    padding: 4px;
+    max-height: 230px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.scrollableContainer::-webkit-scrollbar {
+    width: 5px;
+}
+
+.scrollableContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollableContainer::-webkit-scrollbar-thumb {
+    background: #c5cedc;
+    border-radius: 4px;
+}
+
 /* ── Page header card ── */
 .profile-page-header {
     position: relative;

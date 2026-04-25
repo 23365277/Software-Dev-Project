@@ -172,7 +172,7 @@
         <div class="profile-header">
             <h2><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) ?></h2>
             <p class="text-muted">
-                <?= htmlspecialchars(($profile['city'] ?? '') . ', ' . ($profile['country'] ?? '')) ?>
+                <?= htmlspecialchars(($profile['country'] ?? '')) ?>
             </p>
         </div>
 
@@ -266,27 +266,33 @@
     </div>
 
     <div class="tab" id="editInterests">
-        <form class="auth-form" method="POST" action="">
-            <div class="form-header">
-                <h2>Edit</h2>
-                <button type="button" class="cancel-btn" onclick="cancel('editInterests')">X</button>
-            </div>
-            <div class="interests-container">
-                <?php foreach ($allInterests as $interest): ?>
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="interests[]"
-                            value="<?= $interest['id'] ?>"
-                <?= in_array($interest['id'], $userInterestIds) ? 'checked' : '' ?>
-            >
-            <?= htmlspecialchars($interest['name']) ?>
-        </label><br>
-    <?php endforeach; ?>
-    </div>
+    <form class="auth-form" method="POST" action="">
+        <div class="form-header">
+            <h2>Edit</h2>
+            <button type="button" class="cancel-btn" onclick="cancel('editInterests')">X</button>
+        </div>
+
+        <div class="mb-2">
+            <input type="text" id="interestSearch" class="form-control" placeholder="Search interests...">
+        </div>
+
+        <div class="scrollableContainer" id="interestList" style="max-height: 230px;">
+            <?php foreach ($allInterests as $interest): ?>
+                <label class="interest-item">
+                    <input
+                        type="checkbox"
+                        name="interests[]"
+                        value="<?= $interest['id'] ?>"
+                        <?= in_array($interest['id'], $userInterestIds) ? 'checked' : '' ?>
+                    >
+                    <?= htmlspecialchars($interest['name']) ?>
+                </label>
+            <?php endforeach; ?>
+        </div>
+
         <button type="submit">Save</button>
-        </form>
-    </div>
+    </form>
+</div>
 
     <div class="tab" id="addGalleryImages">
         <form class="auth-form" method="POST" action="" enctype="multipart/form-data">
@@ -384,7 +390,7 @@
         <h3 class="mb-3">
             Gallery
             <?php if (count($gallery) < 6): ?>
-            <button type="button" onclick="onEdit('addGalleryImages')">Edit</button>
+            <button type="button" onclick="onEdit('addGalleryImages')">Add</button>
             <?php endif; ?>
         </h3>
 
