@@ -174,7 +174,7 @@
        &#9432; City can only contain letters, spaces, hyphens, and periods.
     </p>
     <div class="profile-pic">
-  <img id="profilePreview" src="/src/assets/images/default_profile.png"
+  <img id="profilePreview" src="/assets/images/default_profile.png"
        alt="Profile Picture"
        onclick="openPhotoLightbox(this.src)">
 
