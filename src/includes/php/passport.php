@@ -37,8 +37,8 @@ if (!$user) {
 			<div id="rejectedStamp" class="stamp_overlay rejected">
 				<img src="/assets/images/ui/denied_stamp.svg" alt="Rejected Stamp">
 			</div>
-			<div class= "row g-0 g-lg-3 align-items-stretch passport-content">
-				<div class="col-12 col-lg-5">
+			<div class= "row g-0 g-md-3 align-items-stretch passport-content">
+				<div class="col-12 col-md-5">
 					<div class="passport-left">
 						<p class="gallery-title">MY TRAVELS</p>
 						<div class="title-line"></div>
@@ -63,7 +63,7 @@ if (!$user) {
 					</div>
 				</div>
 
-				<div class="col-12 col-lg-7">
+				<div class="col-12 col-md-7">
 					<div class="passport-right">
 						<div class="info">
 							<div class="profile-header">

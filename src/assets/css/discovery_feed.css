@@ -148,6 +148,16 @@
     }
 }
 
+@media (max-width: 900px) {
+    .feed-layout {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "center";
+    }
+    .feed-sidebar-left {
+        display: none;
+    }
+}
+
 @media (max-width: 640px) {
     html {
         overflow-x: hidden;

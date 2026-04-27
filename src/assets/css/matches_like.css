@@ -174,7 +174,7 @@ body {
     display: block;
 }
 
-@media (max-width: 950px) {
+@media (min-width: 641px) and (max-width: 1100px) {
     .passport-grid {
         grid-template-columns: repeat(2, 1fr);
     }

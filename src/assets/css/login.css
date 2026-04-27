@@ -50,7 +50,7 @@ body {
 .container {
     display: flex;
     gap: 30px;
-    max-width: 750px;
+    max-width: 900px;
     width: 100%;
     padding: 20px;
     align-items: stretch;
