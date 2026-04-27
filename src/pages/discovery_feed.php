@@ -94,27 +94,21 @@
 				<h3 class="pref-section-title">Matching</h3>
 
 				<div class="pref-field">
-					<label class="pref-label">Preferred Gender <span class="pref-tick" id="genderTick"></span></label>
-					<div class="pref-field-row">
-						<select id="prefGender" class="pref-select">
-							<option value="Male"   <?= ($preferences['pref_gender'] ?? '') === 'Male'   ? 'selected' : '' ?>>Male</option>
-							<option value="Female" <?= ($preferences['pref_gender'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
-							<option value="other"  <?= ($preferences['pref_gender'] ?? '') === 'other'  ? 'selected' : '' ?>>Other</option>
-							<option value="Any"    <?= ($preferences['pref_gender'] ?? '') === 'Any'    ? 'selected' : '' ?>>Any</option>
-						</select>
-						<button class="pref-field-save-btn" id="saveGender">Save</button>
-					</div>
+					<label class="pref-label">Preferred Gender</label>
+					<select id="prefGender" class="pref-select">
+						<option value="Male"   <?= ($preferences['pref_gender'] ?? '') === 'Male'   ? 'selected' : '' ?>>Male</option>
+						<option value="Female" <?= ($preferences['pref_gender'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
+						<option value="other"  <?= ($preferences['pref_gender'] ?? '') === 'other'  ? 'selected' : '' ?>>Other</option>
+						<option value="Any"    <?= ($preferences['pref_gender'] ?? '') === 'Any'    ? 'selected' : '' ?>>Any</option>
+					</select>
 				</div>
 
 				<div class="pref-field">
-					<label class="pref-label">Looking For <span class="pref-tick" id="lookingForTick"></span></label>
-					<div class="pref-field-row">
-						<select id="lookingFor" class="pref-select">
-							<option value="RELATIONSHIP" <?= ($userProfile['looking_for'] ?? '') === 'RELATIONSHIP' ? 'selected' : '' ?>>Relationship</option>
-							<option value="CASUAL"       <?= ($userProfile['looking_for'] ?? '') === 'CASUAL'       ? 'selected' : '' ?>>Casual</option>
-						</select>
-						<button class="pref-field-save-btn" id="saveLookingFor">Save</button>
-					</div>
+					<label class="pref-label">Looking For</label>
+					<select id="lookingFor" class="pref-select">
+						<option value="RELATIONSHIP" <?= ($userProfile['looking_for'] ?? '') === 'RELATIONSHIP' ? 'selected' : '' ?>>Relationship</option>
+						<option value="CASUAL"       <?= ($userProfile['looking_for'] ?? '') === 'CASUAL'       ? 'selected' : '' ?>>Casual</option>
+					</select>
 				</div>
 
 				<div class="pref-field">
@@ -124,7 +118,7 @@
 					<input type="hidden" id="prefMaxAge" value="<?= $preferences['max_age'] ?? 99 ?>">
 				</div>
 
-				<button class="pref-save-btn" id="saveMatchingPrefs">Save Age Range <span class="pref-tick" id="ageTick"></span></button>
+				<button class="pref-save-btn" id="saveMatchingPrefs">Save Preferences</button>
 				<div class="pref-feedback" id="matchingFeedback"></div>
 			</div>
 
@@ -180,40 +174,18 @@ closePreferenceOverlay.addEventListener("click", () => {
 	preferenceOverlay.classList.remove("active");
 });
 
-// ── Per-field saves ───────────────────────────────────────────
 function refreshPassport() {
 	_passportCache = null;
 	preferenceOverlay.classList.remove("active");
 	window.closeCover();
 }
 
-function savePrefField(column, value, tickId) {
-	fetch("/actions/update_preferences.php", {
-		method: "POST",
-		body: new URLSearchParams({ type: "field", column, value })
-	})
-	.then(r => r.json())
-	.then(data => {
-		if (data.success) refreshPassport();
-	});
+function showPrefFeedback(el, msg, ok) {
+	el.textContent = msg;
+	el.className = "pref-feedback " + (ok ? "ok" : "err");
+	setTimeout(() => { el.textContent = ""; el.className = "pref-feedback"; }, 2500);
 }
 
-function showPrefTick(id) {
-	const el = document.getElementById(id);
-	el.textContent = "✓ Saved";
-	el.classList.add("show");
-	setTimeout(() => { el.textContent = ""; el.classList.remove("show"); }, 2500);
-}
-
-document.getElementById("saveGender").addEventListener("click", () => {
-	savePrefField("pref_gender", document.getElementById("prefGender").value, "genderTick");
-});
-
-document.getElementById("saveLookingFor").addEventListener("click", () => {
-	savePrefField("looking_for", document.getElementById("lookingFor").value, "lookingForTick");
-});
-
-// ── Save age range ────────────────────────────────────────────
 document.getElementById("saveMatchingPrefs").addEventListener("click", () => {
 	const minAge = parseInt(document.getElementById("prefMinAge").value, 10);
 	const maxAge = parseInt(document.getElementById("prefMaxAge").value, 10);
@@ -234,13 +206,6 @@ document.getElementById("saveMatchingPrefs").addEventListener("click", () => {
 		else showPrefFeedback(feedback, "Error saving.", false);
 	});
 });
-
-
-function showPrefFeedback(el, msg, ok) {
-	el.textContent = msg;
-	el.className = "pref-feedback " + (ok ? "ok" : "err");
-	setTimeout(() => { el.textContent = ""; el.className = "pref-feedback"; }, 2500);
-}
 
 // ── Age range slider ──────────────────────────────────────────
 const prefAgeSlider = document.getElementById("prefAgeSlider");
@@ -394,6 +359,25 @@ function _updateSidebarFilter() {
         display.querySelectorAll(".trip-filter-chip").forEach(el => el.remove());
         const resetBtn = display.querySelector(".sidebar-reset-btn");
         selectedCountries.forEach(c => display.insertBefore(_createFilterChip(c), resetBtn));
+    }
+
+    // Sync the active filter label inside the preference panel
+    const prefActive = document.querySelector(".pref-active-filter");
+    if (selectedCountries.length === 0) {
+        prefActive?.remove();
+    } else {
+        const strong = document.createElement("strong");
+        strong.textContent = selectedCountries.join(", ");
+        if (prefActive) {
+            prefActive.innerHTML = "Active: ";
+            prefActive.appendChild(strong);
+        } else {
+            const p = document.createElement("p");
+            p.className = "pref-active-filter";
+            p.innerHTML = "Active: ";
+            p.appendChild(strong);
+            document.getElementById("resetTripPreferenceBtn2").insertAdjacentElement("beforebegin", p);
+        }
     }
 }
 
