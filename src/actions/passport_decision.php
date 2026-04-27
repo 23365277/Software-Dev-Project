@@ -38,8 +38,8 @@ try {
 
         $stmt = $pdo->prepare("
             INSERT INTO dislikes (sender_id, receiver_id, cooldown_until)
-            VALUES (:sender_id, :receiver_id, DATE_ADD(NOW(), INTERVAL 3 MINUTE))
-            ON DUPLICATE KEY UPDATE cooldown_until = DATE_ADD(NOW(), INTERVAL 3 MINUTE)
+            VALUES (:sender_id, :receiver_id, DATE_ADD(NOW(), INTERVAL 24 HOUR))
+            ON DUPLICATE KEY UPDATE cooldown_until = DATE_ADD(NOW(), INTERVAL 24 HOUR)
         ");
 
         $stmt->execute([
