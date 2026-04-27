@@ -137,29 +137,57 @@ function getProfileInfo(){
 	return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function getAllUnseen($userId, $limit = 20, $offset = 0){
+function getAllUnseen($userId, $limit = 20, $offset = 0, $filters = []){
 	global $pdo;
 
-	$bitchFuckCunt = 30;
+	$gender     = !empty($filters['gender'])     ? $filters['gender']     : null;
+	$minAge     = !empty($filters['min_age'])     ? (int)$filters['min_age']     : null;
+	$maxAge     = !empty($filters['max_age'])     ? (int)$filters['max_age']     : null;
+	$country    = !empty($filters['country'])     ? '%' . $filters['country'] . '%' : null;
+	$lookingFor = !empty($filters['looking_for']) ? $filters['looking_for'] : null;
+	$tripDest   = !empty($filters['trip_dest'])   ? '%' . $filters['trip_dest'] . '%' : null;
 
-	$stmt = $pdo -> prepare("SELECT p.*
-							  FROM profiles p
-							  WHERE p.user_id NOT IN(
-								SELECT receiver_id FROM likes WHERE sender_id = :userId
-							  )
-							  AND p.user_id NOT IN(
-								SELECT
-									CASE WHEN user1_id = :userId THEN user2_id ELSE user1_id END
-									FROM matches
-									WHERE user1_id = :userId OR user2_id = :userId
-							  )
-							  AND p.user_id != :userId;
-							  LIMIT :limit OFFSET :offset");
+	$stmt = $pdo->prepare("
+		SELECT p.*, TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) AS age,
+		    CASE WHEN d.receiver_id IS NOT NULL THEN 1 ELSE 0 END AS is_disliked
+		FROM profiles p
+		LEFT JOIN dislikes d ON d.sender_id = :userId
+		    AND d.receiver_id = p.user_id
+		    AND d.cooldown_until > NOW()
+		WHERE p.user_id NOT IN (
+			SELECT receiver_id FROM likes WHERE sender_id = :userId
+		)
+		AND p.user_id NOT IN (
+			SELECT CASE WHEN user1_id = :userId THEN user2_id ELSE user1_id END
+			FROM matches
+			WHERE user1_id = :userId OR user2_id = :userId
+		)
+		AND p.user_id != :userId
+		AND (:gender     IS NULL OR p.gender     = :gender)
+		AND (:minAge     IS NULL OR TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= :minAge)
+		AND (:maxAge     IS NULL OR TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) <= :maxAge)
+		AND (:country    IS NULL OR p.country    LIKE :country)
+		AND (:lookingFor IS NULL OR p.looking_for = :lookingFor)
+		AND (:tripDest   IS NULL OR EXISTS (
+			SELECT 1 FROM trips t
+			WHERE t.user_id = p.user_id
+			AND t.location LIKE :tripDest
+			AND t.start_date >= CURDATE()
+		))
+		LIMIT :limit OFFSET :offset
+	");
 
-	$stmt ->bindValue(':userID', $userId, PDO::PARAM_INT);
-	$stmt ->bindValue(':limit', $limit, PDO::PARAM_INT);
-	$stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
-	
+	$stmt->bindValue(':userId',     $userId,     PDO::PARAM_INT);
+	$stmt->bindValue(':limit',      $limit,      PDO::PARAM_INT);
+	$stmt->bindValue(':offset',     $offset,     PDO::PARAM_INT);
+	$stmt->bindValue(':gender',     $gender);
+	$stmt->bindValue(':minAge',     $minAge,     $minAge     ? PDO::PARAM_INT : PDO::PARAM_NULL);
+	$stmt->bindValue(':maxAge',     $maxAge,     $maxAge     ? PDO::PARAM_INT : PDO::PARAM_NULL);
+	$stmt->bindValue(':country',    $country);
+	$stmt->bindValue(':lookingFor', $lookingFor);
+	$stmt->bindValue(':tripDest',   $tripDest);
+	$stmt->execute();
+
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -806,9 +834,9 @@ function getNextPassport(PDO $pdo, $userId, $tripCountries = null, $excludeUserI
 
 	if (!$preferences) {
 		$preferences = [
+			'pref_gender' => null,
 			'min_age' => null,
 			'max_age' => null,
-			'gender' => null
 		];
 	}
 
@@ -861,9 +889,9 @@ function getNextPassport(PDO $pdo, $userId, $tripCountries = null, $excludeUserI
 		FROM likes l
 		WHERE l.sender_id = :userId)
 	AND p.user_id NOT IN (
-		SELECT b.blocked_id
-		FROM blocks b
-		WHERE b.blocker_id = :userId)
+		SELECT b.blocked_id FROM blocks b WHERE b.blocker_id = :userId
+		UNION
+		SELECT b.blocker_id FROM blocks b WHERE b.blocked_id = :userId)
 	AND NOT EXISTS (
 		SELECT 1
 		FROM dislikes d
@@ -881,10 +909,13 @@ function getNextPassport(PDO $pdo, $userId, $tripCountries = null, $excludeUserI
 	LIMIT 1
     ");
 
+	$prefGender = $preferences['pref_gender'] ?? null;
+	if (in_array($prefGender, ['Any', 'ANY', ''], true)) $prefGender = null;
+
 	$params = array_merge([
 		':userId' => $userId,
 		':excludeUserId' => $excludeUserId,
-		':preferred_gender' => $preferences['pref_gender'] ?? null,
+		':preferred_gender' => $prefGender,
 		':min_age' => $preferences['min_age'] ?? null,
 		':max_age' => $preferences['max_age'] ?? null
 	], $tripCountryParams);
@@ -930,6 +961,26 @@ function getHomeCountry(PDO $pdo, $userId) {
 	return $homeStmt->fetchColumn() ?: null;
 }
 
+
+function getCountryList(): array {
+    return [
+        'Afghanistan','Albania','Algeria','Andorra','Angola','Argentina','Armenia',
+        'Australia','Austria','Bahamas','Bahrain','Bangladesh','Belarus','Belgium',
+        'Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana',
+        'Brazil','Brunei','Bulgaria','Cambodia','Cameroon','Canada','Chile','China',
+        'Colombia','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark',
+        'Dominican Republic','Ecuador','Egypt','Eritrea','Estonia','Finland','France',
+        'Germany','Ghana','Greece','Hungary','Iceland','India','Indonesia','Iran',
+        'Iraq','Ireland','Israel','Italy','Japan','Jordan','Kazakhstan','Kenya',
+        'Kuwait','Latvia','Lebanon','Lithuania','Luxembourg','Malaysia','Mexico',
+        'Morocco','Netherlands','New Zealand','Nigeria','Norway','Pakistan','Peru',
+        'Philippines','Poland','Portugal','Qatar','Romania','Russia','Saudi Arabia',
+        'Serbia','Singapore','Slovakia','Slovenia','South Africa','South Korea',
+        'Spain','Sweden','Switzerland','Thailand','Turkey','Ukraine',
+        'United Arab Emirates','United Kingdom','United States','Vietnam',
+        'Zambia','Zimbabwe'
+    ];
+}
 
 function getUserTrips(PDO $pdo, $userId) {
 	$tripStmt = $pdo->prepare("
@@ -1109,8 +1160,8 @@ function getCountryFlag(string $country): string {
 
 function getMatches(PDO $pdo, $userId): array {
 	$stmt = $pdo->prepare("
-		SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth, 
-			   p.profile_picture, p.bio, m.matched_at
+		SELECT p.user_id, p.first_name, p.last_name, p.country, p.date_of_birth,
+			   p.profile_picture, p.bio, p.gender, p.looking_for, m.matched_at
 		FROM matches m
 		JOIN profiles p 
 			ON p.user_id = CASE 
@@ -1133,9 +1184,13 @@ function getMatches(PDO $pdo, $userId): array {
 function getLikes(PDO $pdo, $userId): array {
 	$stmt = $pdo->prepare("
 		SELECT p.user_id, p.first_name, p.last_name, p.country,
-		       p.date_of_birth, p.profile_picture, p.bio, l.created_at
+		       p.date_of_birth, p.profile_picture, p.bio, p.gender, p.looking_for, l.created_at,
+		       CASE WHEN d.receiver_id IS NOT NULL THEN 1 ELSE 0 END AS is_disliked
 		FROM likes l
 		JOIN profiles p ON p.user_id = l.receiver_id
+		LEFT JOIN dislikes d ON d.sender_id = :userId
+		    AND d.receiver_id = l.receiver_id
+		    AND d.cooldown_until > NOW()
 		WHERE l.sender_id = :userId
 		AND NOT EXISTS (
 			SELECT 1

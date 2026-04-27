@@ -293,3 +293,100 @@ body {
         height: 240px;
     }
 }
+
+.all-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.2rem;
+    background: rgba(255,255,255,0.6);
+    border: 2px solid rgba(30, 58, 92, 0.2);
+    border-radius: 12px;
+}
+
+.all-filter-bar select,
+.all-filter-bar input[type="text"],
+.all-filter-bar input[type="number"] {
+    padding: 0.4rem 0.75rem;
+    border: 2px solid #d6dde8;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #1e3a5f;
+    background: white;
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 120px;
+}
+
+.all-filter-bar input[type="number"] {
+    width: 90px;
+    min-width: unset;
+}
+
+.all-filter-bar select:focus,
+.all-filter-bar input:focus {
+    border-color: #25476f;
+    box-shadow: 0 0 0 3px rgba(37, 71, 111, 0.1);
+}
+
+.all-filter-bar button {
+    padding: 0.4rem 1.1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid #1e3a5f;
+}
+
+#applyAllFilters {
+    background: #1e3a5f;
+    color: white;
+}
+
+#applyAllFilters:hover {
+    background: #25476f;
+    transform: translateY(-1px);
+}
+
+#resetAllFilters {
+    background: transparent;
+    color: #1e3a5f;
+}
+
+#resetAllFilters:hover {
+    background: #1e3a5f;
+    color: white;
+    transform: translateY(-1px);
+}
+
+#loadMoreBtn {
+    display: block;
+    margin: 2rem auto 0.5rem;
+    padding: 0.75rem 2.5rem;
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: #1e3a5f;
+    background: transparent;
+    border: 2px solid #1e3a5f;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(15, 42, 68, 0.15);
+}
+
+#loadMoreBtn:hover {
+    background: #1e3a5f;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15, 42, 68, 0.35);
+}
+
+#loadMoreBtn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(15, 42, 68, 0.2);
+}

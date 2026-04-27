@@ -189,6 +189,54 @@
     margin-top: 0.5rem;
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.action-like-btn,
+.action-dislike-btn {
+    border-radius: 8px;
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.action-like-btn {
+    background: transparent;
+    color: #2e7d4f;
+    border: 2px solid #2e7d4f;
+}
+
+.action-like-btn:hover {
+    background: rgba(46, 125, 79, 0.1);
+    transform: translateY(-1px);
+}
+
+.action-like-btn.liked {
+    background: linear-gradient(135deg, #3ace3a, #28a828);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(58, 206, 58, 0.4);
+}
+
+.action-dislike-btn {
+    background: transparent;
+    color: #c0392b;
+    border: 2px solid #c0392b;
+}
+
+.action-dislike-btn:hover {
+    background: rgba(192, 57, 43, 0.1);
+    transform: translateY(-1px);
+}
+
+.action-dislike-btn.disliked {
+    background: linear-gradient(135deg, #ff4d4d, #d93636);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
 }
 
 .view-gallery-btn {

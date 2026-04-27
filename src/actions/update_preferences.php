@@ -18,9 +18,9 @@ if ($type === 'matching') {
     $minAge     = max(18, min(99, (int) ($_POST['min_age'] ?? 18)));
     $maxAge     = max(18, min(99, (int) ($_POST['max_age'] ?? 99)));
 
-    if ($minAge >= $maxAge) $minAge = $maxAge - 1;
+    if ($minAge >= $maxAge) $minAge = max(18, $maxAge - 1);
 
-    $allowedGenders = ['Male', 'Female', 'other', 'Any'];
+    $allowedGenders = ['MALE', 'FEMALE', 'OTHER', 'ANY'];
     $allowedLooking = ['RELATIONSHIP', 'CASUAL'];
 
     if (!in_array($prefGender, $allowedGenders) || !in_array($lookingFor, $allowedLooking)) {

@@ -27,7 +27,11 @@ $photoStmt->execute(['userId' => $profileId]);
 $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 ?>
 
-<div class="card-container">
+<div class="card-container"
+    data-gender="<?= strtolower($profile['gender'] ?? '') ?>"
+    data-looking-for="<?= strtolower($profile['looking_for'] ?? '') ?>"
+    data-nationality="<?= strtolower($profile['country'] ?? '') ?>"
+    data-age="<?= $age ?>">
     <div class="mini-passport-wrapper mx-auto <?= $cardMode === 'dashboard' ? 'dashboard-passport' : '' ?>" data-trip-country="<?= htmlspecialchars(strtolower($nextTrip['location'] ?? '')) ?>">
         <div class="mini-cover"
             style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
@@ -89,7 +93,16 @@ $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
         </div>
     </div>
     <?php if ($cardMode !== 'dashboard'): ?>
+    <?php
+        $showDecisionBtns = $showDecisionBtns ?? false;
+        $cardDecision     = $cardDecision ?? null;
+    ?>
     <div class="gallery-btn-row">
+        <?php if ($showDecisionBtns): ?>
+            <button class="action-dislike-btn <?= $cardDecision === 'disliked' ? 'disliked' : '' ?>"
+                data-receiver="<?= $profileId ?>">✕ Dislike</button>
+        <?php endif; ?>
+
         <?php if (!empty($galleryImages)): ?>
             <button class="view-gallery-btn"
                 data-gallery='<?= htmlspecialchars(json_encode($galleryImages), ENT_QUOTES) ?>'
@@ -98,6 +111,11 @@ $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
             </button>
         <?php else: ?>
             <span class="no-gallery-text">No photos yet</span>
+        <?php endif; ?>
+
+        <?php if ($showDecisionBtns): ?>
+            <button class="action-like-btn <?= $cardDecision === 'liked' ? 'liked' : '' ?>"
+                data-receiver="<?= $profileId ?>">♥ Like</button>
         <?php endif; ?>
     </div>
     <?php endif; ?>

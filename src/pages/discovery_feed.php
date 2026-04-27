@@ -96,10 +96,10 @@
 				<div class="pref-field">
 					<label class="pref-label">Preferred Gender</label>
 					<select id="prefGender" class="pref-select">
-						<option value="Male"   <?= ($preferences['pref_gender'] ?? '') === 'Male'   ? 'selected' : '' ?>>Male</option>
-						<option value="Female" <?= ($preferences['pref_gender'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
-						<option value="other"  <?= ($preferences['pref_gender'] ?? '') === 'other'  ? 'selected' : '' ?>>Other</option>
-						<option value="Any"    <?= ($preferences['pref_gender'] ?? '') === 'Any'    ? 'selected' : '' ?>>Any</option>
+						<option value="MALE"   <?= ($preferences['pref_gender'] ?? '') === 'MALE'   ? 'selected' : '' ?>>Male</option>
+						<option value="FEMALE" <?= ($preferences['pref_gender'] ?? '') === 'FEMALE' ? 'selected' : '' ?>>Female</option>
+						<option value="OTHER"  <?= ($preferences['pref_gender'] ?? '') === 'OTHER'  ? 'selected' : '' ?>>Other</option>
+						<option value="ANY"    <?= in_array($preferences['pref_gender'] ?? '', ['ANY','Any','']) ? 'selected' : '' ?>>Any</option>
 					</select>
 				</div>
 

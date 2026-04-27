@@ -111,7 +111,7 @@ $welcomeName = $homeProfile['first_name'] ?? '';
                     <div class="page-card page-card-discovery-feed">
                         <div class="page-card-overlay"></div>
                         <div class="page-card-content">
-                            <h3>Passports</h3>
+                            <h3>Passport Control</h3>
                             <p>
                                 Browse traveller profiles and discover people who share the same travel desires.
                             </p>

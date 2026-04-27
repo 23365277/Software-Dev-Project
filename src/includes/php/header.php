@@ -23,15 +23,15 @@
         <ul class="drawer-nav">
 
             <?php if (isset($_SESSION['user_id'])): ?>
-                <li><a href="/pages/home.php"><span>🏠</span> Home</a></li>
+                <li><a href="/pages/home.php"><span>✈️</span> Lounge</a></li>
                 <li><a href="/pages/destination_search.php"><span>🗺</span> Atlas</a></li>
                 <li><a href="/pages/post_a_trip.php"><span>🛫</span> Post A Trip</a></li>
-                <li><a href="/pages/inbox.php"><span>📨</span> Inbox</a></li>
-                <li><a href="/pages/matches_likes.php"><span>💓</span> Matches and Likes</a></li>
+                <li><a href="/pages/inbox.php"><span>📨</span> Postcards</a></li>
+                <li><a href="/pages/matches_likes.php"><span>💓</span> Fellow Travellers</a></li>
                 <?php if (($_SESSION['user_role'] ?? '') === 'ADMIN'): ?>
                 <li><a href="/pages/admin_panel.php"><span>🛠️</span> Admin</a></li>
                 <?php endif; ?>
-                <li><a href="/pages/discovery_feed.php"><span>🔎</span> Passports</a></li>
+                <li><a href="/pages/discovery_feed.php"><span>🛂</span> Passport Control</a></li>
             <?php else: ?>
                 <li><a href="/pages/about.php"><span>ℹ️</span> About</a></li>
             <?php endif; ?>
@@ -51,7 +51,7 @@
                         <span class="acc-arrow" id="accArrow">&#9660;</span>
                     </button>
                     <ul class="profile-sub" id="profileSub">
-                        <li><a href="/pages/profile_view.php">✏️ Edit Profile</a></li>
+                        <li><a href="/pages/profile_view.php">🪪 My Passport</a></li>
                         <li><a href="/actions/logout.php">🚪 Logout</a></li>
                     </ul>
                 </li>
