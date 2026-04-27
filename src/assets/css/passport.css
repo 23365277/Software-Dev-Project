@@ -686,13 +686,11 @@
     }
 
     .arrow {
-        display: block;
-        z-index: 10;
-        width: 44px;
-        height: 44px;
-        font-size: 20px;
-        background: rgba(0,0,0,0.45);
-        top: 40%;
+        display: none;
+    }
+
+    .passport {
+        cursor: pointer;
     }
 
     /* ── Details panel floats on top of background ── */
