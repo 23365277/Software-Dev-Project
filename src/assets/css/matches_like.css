@@ -176,12 +176,18 @@ body {
 
 @media (max-width: 950px) {
     .passport-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .passport-grid {
         grid-template-columns: 1fr;
         justify-items: center;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .connections-tabs {
         flex-wrap: wrap;
     }

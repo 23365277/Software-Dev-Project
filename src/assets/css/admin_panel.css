@@ -154,7 +154,7 @@ h3 {
     font-size: 0.78rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .scrollableContainer {
         max-height: 180px;
     }

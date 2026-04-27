@@ -222,7 +222,7 @@ body {
 }
 
 /* ── Mobile ────────────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .post-a-trip-back {
         border-radius: 12px;
         margin: 0.75rem !important;

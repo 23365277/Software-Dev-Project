@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (passportEl) {
         passportEl.addEventListener("click", (e) => {
-            if (window.innerWidth > 768) return;
+            if (window.innerWidth > 640) return;
             if (e.target.closest(".stamps-container")) return;
             const x = e.clientX;
             const mid = passportEl.getBoundingClientRect().left + passportEl.offsetWidth / 2;

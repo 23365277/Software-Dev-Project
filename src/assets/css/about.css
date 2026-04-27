@@ -139,7 +139,7 @@
     z-index: -1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .about-section {
         padding: 20px;
     }

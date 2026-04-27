@@ -148,7 +148,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     html {
         overflow-x: hidden;
     }
@@ -252,7 +252,7 @@
     transition: background 0.2s;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .interests-panel {
         position: absolute;
         bottom: 0;
@@ -358,7 +358,7 @@ body.passport-page {
     background-attachment: fixed;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .passport-container {
         padding: 0;
     }
