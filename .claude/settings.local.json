@@ -6,7 +6,8 @@
       "Bash(curl -s --compressed \"https://caliacamp.online/pages/home.php\")",
       "Bash(curl -sv --compressed \"https://caliacamp.online/pages/home.php\")",
       "Bash(curl -sv --compressed \"https://caliacamp.online/pages/about.php\")",
-      "Bash(docker exec:*)"
+      "Bash(docker exec:*)",
+      "Bash(awk -F: '{print $1}')"
     ]
   }
 }
