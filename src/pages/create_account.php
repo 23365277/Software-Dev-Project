@@ -184,10 +184,10 @@
     <p id="countryNotListedHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; That country or territory isn't in our list yet.
     </p>
-    <input type="text" id="city" name="city" placeholder="City" required>
+    <!-- <input type="text" id="city" name="city" placeholder="City" required>
     <p id="cityHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; City can only contain letters, spaces, hyphens, and periods.
-    </p>
+    </p> -->
     <div class="profile-pic">
   <img id="profilePreview" src="/assets/images/default_profile.png"
        alt="Profile Picture"
