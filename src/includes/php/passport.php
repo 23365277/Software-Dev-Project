@@ -194,5 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const angle = (Math.random() * 10) - 5;
         stamp.style.transform = `rotate(${angle}deg)`;
     });
+
+    // Prevent stamp taps from triggering the carousel swipe handler
+    const stampsContainer = document.querySelector(".stamps-container");
+    if (stampsContainer) {
+        stampsContainer.addEventListener("click", e => e.stopPropagation());
+        stampsContainer.addEventListener("touchend", e => e.stopPropagation());
+    }
 });
 </script>

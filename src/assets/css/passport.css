@@ -749,7 +749,12 @@
     }
 
     .stamp {
-        background: rgba(255,255,255,0.88);
+        background: #fff !important;
+    }
+
+    .stamp:hover,
+    .stamp:active {
+        background: #fff !important;
     }
 
     .no-stamps {
