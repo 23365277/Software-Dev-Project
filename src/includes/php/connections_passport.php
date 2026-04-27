@@ -1,6 +1,6 @@
 <?php
 $profileId = $profile['user_id'];
-$profileImage = $profile['profile_picture'] ?? '/assets/images/default_profile.png';
+$profileImage = !empty($profile['profile_picture']) ? $profile['profile_picture'] : '/assets/images/default_profile.png';
 $firstName = $profile['first_name'] ?? '';
 $lastName = $profile['last_name'] ?? '';
 $country = $profile['country'] ?? '';
