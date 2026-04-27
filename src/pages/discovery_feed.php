@@ -12,6 +12,7 @@
 	$userInterests  = $currentUserId ? getUserInterestsById($currentUserId)  : [];
 	$allInterests   = getAllInterests();
 	$userInterestIds = array_column($userInterests ?? [], 'id');
+	$currentDisplayedUser = null;
 ?>
 <!DOCTYPE html>
 <html>
@@ -439,12 +440,24 @@ function formatDate(dateString) {
 let _passportCache = null;
 let _passportPrefetching = false;
 
-function prefetchNextPassport() {
+function prefetchNextPassport(currentDisplayedUser) {
 	if (_passportPrefetching) return;
 	_passportPrefetching = true;
 
 	let url = "/actions/get_next_passport.php";
-	if (selectedCountry) url += "?trip_country=" + encodeURIComponent(selectedCountry);
+	let params = new URLSearchParams();
+
+	if (selectedCountry) {
+		params.append("trip_country", selectedCountry);
+	}
+
+	if (currentDisplayedUser && currentDisplayedUser.user_id) {
+		params.append("displayed_user", currentDisplayedUser.user_id);
+	}
+
+	if ([...params].length > 0) {
+		url += "?" + params.toString();
+	}
 
 	fetch(url)
 		.then(res => res.json())
@@ -484,6 +497,7 @@ function loadNextPassport() {
 
 function displayPassport(user) {
 	{
+		$currentDisplayedUser = user;
 
 			if (!user || !user.user_id) {
 					showNoProfilesOverlay();
@@ -598,6 +612,6 @@ function displayPassport(user) {
 	}
 }
 
-prefetchNextPassport();
+prefetchNextPassport($currentDisplayedUser);
 </script>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
