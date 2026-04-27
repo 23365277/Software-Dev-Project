@@ -101,6 +101,7 @@
                         endforeach; ?>
                     </div>
                 </div>
+                <button id="loadMoreBtn">more cunts</button>
             </div>
         </div>
     </div>
@@ -125,6 +126,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha512-NcZdtrT77bJr4STcmsGAESr06BYGE8woZdSdEgqnpyqac7sugNO+Tr4bGwGF3MsnEkGKhU2KL2xh6Ec+BqsaHA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+let currPage = 0;
+
+function loadMore(){
+    fetch('/actions/get_unseen.php?pages=${currPage}')
+    .then(res => res.json())
+    .then(profiles =>{
+        if(profiles.length === 0){
+          document.getElementById("loadMoreBtn").style.display = "none";
+          return;
+        }
+        profiles.forEach(profile => renderCard(profile));
+        currPage++;
+    });
+}
+
+loadMore();
+
 document.addEventListener("DOMContentLoaded", () => {
     const buttons = document.querySelectorAll(".tab-btn");
     const tabs = document.querySelectorAll(".tab-content");

@@ -137,8 +137,10 @@ function getProfileInfo(){
 	return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function getAllUnseen($userId){
+function getAllUnseen($userId, $limit = 20, $offset = 0){
 	global $pdo;
+
+	$bitchFuckCunt = 30;
 
 	$stmt = $pdo -> prepare("SELECT p.*
 							  FROM profiles p
@@ -151,9 +153,12 @@ function getAllUnseen($userId){
 									FROM matches
 									WHERE user1_id = :userId OR user2_id = :userId
 							  )
-							  AND p.user_id != :userId;");
+							  AND p.user_id != :userId;
+							  LIMIT :limit OFFSET :offset");
 
-	$stmt ->execute([":userId" => $userId]);
+	$stmt ->bindValue(':userID', $userId, PDO::PARAM_INT);
+	$stmt ->bindValue(':limit', $limit, PDO::PARAM_INT);
+	$stmt ->bindValue(':offset', $offset, PDO::PARAM_INT);
 	
 	return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
