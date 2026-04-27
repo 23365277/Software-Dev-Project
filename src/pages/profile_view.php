@@ -430,7 +430,7 @@
 </div><!-- /.gallery-wrapper -->
 
 <div class="danger-zone">
-    <h4>Danger Zone</h4>
+    <h4>Nothing to Declare?</h4>
     <p>Deleting your account is permanent and cannot be undone. All your data, matches, messages and photos will be removed.</p>
     <button id="deleteAccountBtn" class="delete-account-btn">Delete Account</button>
 </div>
