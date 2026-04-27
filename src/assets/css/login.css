@@ -59,10 +59,13 @@ body {
 }
 
 .info-box, .auth-box {
-    background: rgba(255, 255, 255, 0);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .info-box {
@@ -95,15 +98,46 @@ body {
     text-align: center;
 }
 
-.join-link {
-    color: #ffffff;
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-align: center;
+.join-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0 14px;
+    gap: 10px;
 }
 
-.join-link:hover {
-    color: #c7d2fe;
+.join-divider::before,
+.join-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.4);
+}
+
+.join-divider span {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+.btn-join-cta {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 1em;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-join-cta:hover {
+    background: #ffffff;
+    color: #18314f;
 }
 
 .login-heading {

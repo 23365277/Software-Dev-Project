@@ -1,6 +1,6 @@
 <?php
 $userId = $_SESSION["user_id"];
-$user = getNextPassport($pdo, $userId, $selectedCountry);
+$user = getNextPassport($pdo, $userId, !empty($selectedCountries) ? $selectedCountries : null);
 
 if (!$user) {
     $currentProfileId = null;

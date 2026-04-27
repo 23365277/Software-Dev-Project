@@ -777,7 +777,7 @@ function getRecentActivity($limit = 15) {
 function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountry = null) {
 
 	$preferences = getPreferenceInfoById($userId);
-	
+
 	if (!$preferences) {
 		$preferences = [
 			'min_age' => null,
@@ -794,17 +794,48 @@ function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountry 
 		':userId' => $userId
 	]);
 
-	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio, p.gender
-	FROM profiles p 
-	WHERE p.user_id != :userId 
-	AND (:displayedUser IS NULL OR p.user_id != :displayedUser)
-	AND p.user_id NOT IN ( 
-		SELECT l.receiver_id 
-		FROM likes l 
-		WHERE l.sender_id = :userId) 
-	AND p.user_id NOT IN ( 
-		SELECT b.blocked_id 
-		FROM blocks b 
+	$tripCountryCondition = "1=1";
+	$tripCountryParams = [];
+	if (!empty($tripCountries) && is_array($tripCountries)) {
+		$placeholders = [];
+		foreach ($tripCountries as $i => $country) {
+			$key = ":trip_country_{$i}";
+			$placeholders[] = $key;
+			$tripCountryParams[$key] = $country;
+		}
+		$inClause = implode(',', $placeholders);
+		$tripCountryCondition = "EXISTS (SELECT 1 FROM trips t WHERE t.user_id = p.user_id AND t.location IN ($inClause) AND t.start_date >= CURDATE())";
+	}
+
+	$stmt = $pdo->prepare("SELECT p.user_id, p.profile_picture, p.first_name, p.last_name, p.country, p.date_of_birth, p.bio, p.gender,
+		(
+			(SELECT COUNT(DISTINCT t2.location)
+			 FROM trips t1
+			 JOIN trips t2 ON t1.location = t2.location
+			 WHERE t1.user_id = :userId
+			   AND t2.user_id = p.user_id
+			   AND t1.start_date >= CURDATE()
+			   AND t2.start_date >= CURDATE()
+			) * 100
+			+
+			(SELECT COUNT(*)
+			 FROM user_interests ui1
+			 JOIN user_interests ui2 ON ui1.interest_id = ui2.interest_id
+			 WHERE ui1.user_id = :userId
+			   AND ui2.user_id = p.user_id
+			) * 20
+			+
+			RAND() * 5
+		) AS score
+	FROM profiles p
+	WHERE p.user_id != :userId
+	AND p.user_id NOT IN (
+		SELECT l.receiver_id
+		FROM likes l
+		WHERE l.sender_id = :userId)
+	AND p.user_id NOT IN (
+		SELECT b.blocked_id
+		FROM blocks b
 		WHERE b.blocker_id = :userId)
 	AND NOT EXISTS (
 		SELECT 1
@@ -813,29 +844,24 @@ function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountry 
 		AND d.receiver_id = p.user_id
 		AND d.cooldown_until > NOW()
 	)
-	AND (:trip_country IS NULL OR EXISTS 
-		(SELECT 1
-		FROM trips t
-		WHERE t.user_id = p.user_id 
-		AND t.location = :trip_country
-		AND t.start_date >= CURDATE()))
+	AND $tripCountryCondition
 	AND (:preferred_gender IS NULL OR p.gender = :preferred_gender)
 	AND (
 		(:min_age IS NULL OR TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) >= :min_age)
-		AND 
+		AND
 		(:max_age IS NULL OR TIMESTAMPDIFF(YEAR, p.date_of_birth, CURDATE()) <= :max_age))
-        ORDER BY RAND()
-        LIMIT 1
+	ORDER BY score DESC
+	LIMIT 1
     ");
 
-	$params = [
+	$params = array_merge([
 		':userId' => $userId,
 		':displayedUser' => $currentDisplayedUser,
 		':trip_country' => $tripCountry,
 		':preferred_gender' => $preferences['gender'] ?? null,
 		':min_age' => $preferences['min_age'] ?? null,
 		':max_age' => $preferences['max_age'] ?? null
-	];
+	], $tripCountryParams);
 
     $stmt->execute($params);
 

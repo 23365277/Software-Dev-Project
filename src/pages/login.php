@@ -46,8 +46,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
     </div>
 
     <div class="auth-box mt-4">
-        <h1><a href="/pages/create_account.php" class="join-link">Join Roamance</a></h1>
-        <hr>
         <?php if (isset($_GET['blocked'])): ?>
             <div style="background:#fee2e2; color:#b91c1c; padding:10px; border-radius:5px; font-size:0.9em; margin-bottom:10px;">
                 <?php if ($_GET['blocked'] === 'banned'): ?>
@@ -71,6 +69,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/head.php';
             </label>
             <button type="submit" id="login-btn" class="btn btn-secondary btn-signup">Log In</button>
         </form>
+
+        <div class="join-divider">
+            <span>New to Roamance?</span>
+        </div>
+        <a href="/pages/create_account.php" class="btn-join-cta">Create an Account</a>
 
         <script>
         document.getElementById('login-form').addEventListener('submit', async function(e) {

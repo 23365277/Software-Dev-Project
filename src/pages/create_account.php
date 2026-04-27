@@ -8,6 +8,21 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
+
+        $serverErrors = [];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $serverErrors[] = "Invalid email address.";
+        if (strlen($password) < 8)                      $serverErrors[] = "Password must be at least 8 characters.";
+        if (!preg_match('/[A-Z]/', $password))           $serverErrors[] = "Password must contain an uppercase letter.";
+        if (!preg_match('/[0-9]/', $password))           $serverErrors[] = "Password must contain a number.";
+        if (empty(trim($_POST['first_name'] ?? '')))     $serverErrors[] = "First name is required.";
+        if (empty(trim($_POST['last_name'] ?? '')))      $serverErrors[] = "Last name is required.";
+        if (empty($_POST['date_of_birth'] ?? ''))        $serverErrors[] = "Date of birth is required.";
+
+        if (!empty($serverErrors)) {
+            http_response_code(400);
+            echo implode(' ', $serverErrors);
+            exit();
+        }
         $first_name = $_POST['first_name'] ?? '';
         $last_name = $_POST['last_name'] ?? '';
         $date_of_birth = $_POST['date_of_birth'] ?? '';
@@ -129,15 +144,15 @@
     <p id="passwordConfirmHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; Passwords don't match.
     </p>
-    <input type="text" name="first_name" id="first_name" placeholder="First Name" >
+    <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
     <p id="firstNameHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; First name can only contain letters, hyphens, and apostrophes.
     </p>
-    <input type="text" name="last_name" id="last_name" placeholder="Last Name" >
+    <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
     <p id="lastNameHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; Last name can only contain letters, hyphens, and apostrophes.
     </p>
-    <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" >
+    <input type="date" name="date_of_birth" id="dob" placeholder="Date of Birth" required>
     <p id="dobHelp" class="help-msg" style="font-size:12px;color:#C73D38;background:#EDC9C7;border-radius:6px;padding-left:10px;padding-right:10px;">
        &#9432; Must be at least 18 years old.
     </p>
@@ -218,12 +233,10 @@
     </p>
   </div>
 
-  <div style="overflow:auto;">
-    <div style="float:right;">
-      <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-      <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
-      <button type="submit" id="submitBtn" style="display:none">Create Account</button>
-    </div>
+  <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
+    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+    <button type="submit" id="submitBtn" style="display:none">Create Account</button>
   </div>
 
   <div style="text-align:center;margin-top:20px;">

@@ -576,6 +576,10 @@
 }
 
 @media (max-width: 768px) {
+    .stamp_overlay img {
+        width: 160px;
+    }
+
     .passport-wrapper {
         width: 100%;
         max-width: 100%;

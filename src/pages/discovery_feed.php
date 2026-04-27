@@ -4,7 +4,13 @@
 	include $_SERVER['DOCUMENT_ROOT'] . "/includes/php/head.php";
 	require_once $_SERVER['DOCUMENT_ROOT'] . "/includes/php/functions.php";
 
-	$selectedCountry = $_GET['trip_country'] ?? null;
+	$selectedCountries = [];
+	if (!empty($_GET['trip_countries'])) {
+		$selectedCountries = array_values(array_filter(array_map('trim', explode(',', $_GET['trip_countries']))));
+	} elseif (!empty($_GET['trip_country'])) {
+		$selectedCountries = [$_GET['trip_country']];
+	}
+	$selectedCountry = !empty($selectedCountries) ? implode(', ', $selectedCountries) : null;
 
 	$currentUserId  = $_SESSION['user_id'] ?? null;
 	$preferences    = $currentUserId ? getPreferenceInfoById($currentUserId) : [];
@@ -25,14 +31,16 @@
 		<div class="sidebar-card">
 			<h4 class="sidebar-title">⚙️ Preferences</h4>
 			<button type="button" class="preference sidebar-pref-btn" id="preferenceToggle">Edit Preferences</button>
-			<?php if (!empty($selectedCountry)): ?>
-				<div class="sidebar-pref-active">
+			<?php if (!empty($selectedCountries)): ?>
+				<div class="sidebar-pref-active" id="tripFilterDisplay">
 					<span>Filtering by:</span>
-					<strong id="tripPreferenceAlert"><?= htmlspecialchars($selectedCountry) ?></strong>
+					<?php foreach ($selectedCountries as $c): ?>
+						<strong class="trip-filter-chip" onclick="removeFilterCountry(<?= htmlspecialchars(json_encode($c)) ?>)"><?= htmlspecialchars($c) ?> <span class="chip-remove">×</span></strong>
+					<?php endforeach; ?>
 					<button class="sidebar-reset-btn" id="resetTripPreferenceBtn">✕ Reset</button>
 				</div>
 			<?php else: ?>
-				<p class="sidebar-hint">No trip filter active</p>
+				<p class="sidebar-hint" id="noFilterHint">No trip filter active</p>
 			<?php endif; ?>
 		</div>
 
@@ -120,29 +128,13 @@
 				<div class="pref-feedback" id="matchingFeedback"></div>
 			</div>
 
-			<!-- Interests -->
-			<div class="pref-section">
-				<h3 class="pref-section-title">Interests</h3>
-				<div class="pref-interests-grid" id="prefInterestsGrid">
-					<?php foreach ($allInterests as $interest): ?>
-						<label class="pref-interest-chip <?= in_array($interest['id'], $userInterestIds) ? 'selected' : '' ?>">
-							<input type="checkbox" value="<?= $interest['id'] ?>"
-								<?= in_array($interest['id'], $userInterestIds) ? 'checked' : '' ?>>
-							<?= htmlspecialchars($interest['name']) ?>
-						</label>
-					<?php endforeach; ?>
-				</div>
-				<button class="pref-save-btn" id="saveInterests">Save Interests</button>
-				<div class="pref-feedback" id="interestsFeedback"></div>
-			</div>
-
 			<!-- Trip Filter -->
 			<div class="pref-section">
 				<h3 class="pref-section-title">Trip Filter</h3>
-				<?php if (!empty($selectedCountry)): ?>
-					<p class="pref-active-filter">Active: <strong><?= htmlspecialchars($selectedCountry) ?></strong></p>
+				<?php if (!empty($selectedCountries)): ?>
+					<p class="pref-active-filter">Active: <strong><?= htmlspecialchars(implode(', ', $selectedCountries)) ?></strong></p>
 				<?php endif; ?>
-				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Destination</a>
+				<a href="/pages/destination_search.php" class="preference-link-btn">Select Trip Destination(s)</a>
 				<button type="button" class="pref-reset-btn" id="resetTripPreferenceBtn2">✕ Reset Filter</button>
 			</div>
 		</div>
@@ -170,8 +162,6 @@ let isFastMode = false;
 const preferenceToggle = document.getElementById("preferenceToggle");
 const preferenceOverlay = document.getElementById("preferenceOverlay");
 const closePreferenceOverlay = document.getElementById("closePreferenceOverlay");
-const resetPreferencesBtn = document.getElementById("resetTripPreferenceBtn");
-const tripPreferenceAlert = document.getElementById("tripPreferenceAlert");
 
 document.getElementById("interestsPanel").addEventListener("click", (e) => {
     e.stopPropagation();
@@ -188,19 +178,6 @@ preferenceToggle.addEventListener("click", () => {
 
 closePreferenceOverlay.addEventListener("click", () => {
 	preferenceOverlay.classList.remove("active");
-});
-
-// ── Preference chip toggle (max 5) ───────────────────────────
-document.querySelectorAll(".pref-interest-chip input").forEach(cb => {
-	cb.addEventListener("change", () => {
-		const checked = document.querySelectorAll("#prefInterestsGrid input:checked");
-		if (cb.checked && checked.length > 5) {
-			cb.checked = false;
-			showPrefFeedback(document.getElementById("interestsFeedback"), "Maximum 5 interests.", false);
-			return;
-		}
-		cb.closest(".pref-interest-chip").classList.toggle("selected", cb.checked);
-	});
 });
 
 // ── Per-field saves ───────────────────────────────────────────
@@ -258,20 +235,6 @@ document.getElementById("saveMatchingPrefs").addEventListener("click", () => {
 	});
 });
 
-// ── Save interests ────────────────────────────────────────────
-document.getElementById("saveInterests").addEventListener("click", () => {
-	const checked = [...document.querySelectorAll("#prefInterestsGrid input:checked")].map(cb => cb.value);
-	const feedback = document.getElementById("interestsFeedback");
-	const body = new URLSearchParams({ type: "interests" });
-	checked.forEach(id => body.append("interests[]", id));
-
-	fetch("/actions/update_preferences.php", { method: "POST", body })
-		.then(r => r.json())
-		.then(data => {
-			if (data.success) refreshPassport();
-			else showPrefFeedback(feedback, "Error saving.", false);
-		});
-});
 
 function showPrefFeedback(el, msg, ok) {
 	el.textContent = msg;
@@ -399,19 +362,77 @@ function returnXY() {
 	});
 }
 
-let selectedCountry = <?= json_encode($selectedCountry) ?>;
+let selectedCountries = <?= json_encode($selectedCountries) ?>;
+let _fetchToken = 0;
+
+function _passportUrl() {
+    let url = "/actions/get_next_passport.php";
+    if (selectedCountries.length > 0) url += "?trip_countries=" + selectedCountries.map(encodeURIComponent).join(',');
+    return url;
+}
+
+function _updateFilterUrl() {
+    const url = selectedCountries.length > 0
+        ? "/pages/discovery_feed.php?trip_countries=" + selectedCountries.map(encodeURIComponent).join(',')
+        : "/pages/discovery_feed.php";
+    history.replaceState(null, "", url);
+}
+
+function _updateSidebarFilter() {
+    const display = document.getElementById("tripFilterDisplay");
+    if (selectedCountries.length === 0) {
+        display?.remove();
+        const sidebarCard = document.querySelector(".sidebar-card");
+        if (sidebarCard && !document.getElementById("noFilterHint")) {
+            const p = document.createElement("p");
+            p.className = "sidebar-hint";
+            p.id = "noFilterHint";
+            p.textContent = "No trip filter active";
+            sidebarCard.appendChild(p);
+        }
+    } else if (display) {
+        display.querySelectorAll(".trip-filter-chip").forEach(el => el.remove());
+        const resetBtn = display.querySelector(".sidebar-reset-btn");
+        selectedCountries.forEach(c => display.insertBefore(_createFilterChip(c), resetBtn));
+    }
+}
+
+function _createFilterChip(country) {
+    const el = document.createElement("strong");
+    el.className = "trip-filter-chip";
+    el.innerHTML = country + ' <span class="chip-remove">×</span>';
+    el.title = "Click to remove";
+    el.addEventListener("click", () => removeFilterCountry(country));
+    return el;
+}
+
+let _removeDebounce = null;
+
+function removeFilterCountry(country) {
+    const idx = selectedCountries.indexOf(country);
+    if (idx === -1) return;
+    selectedCountries.splice(idx, 1);
+    _fetchToken++;
+    _passportCache = null;
+    _passportPrefetching = false;
+    _updateFilterUrl();
+    _updateSidebarFilter();
+    clearTimeout(_removeDebounce);
+    _removeDebounce = setTimeout(() => loadNextPassport(), 300);
+}
 
 function resetTripPreference() {
-    selectedCountry = null;
-    if (tripPreferenceAlert) tripPreferenceAlert.closest(".sidebar-pref-active")?.remove();
-    history.replaceState(null, "", "/pages/discovery_feed.php");
+    selectedCountries = [];
+    _fetchToken++;
+    _passportCache = null;
+    _passportPrefetching = false;
+    _updateFilterUrl();
+    _updateSidebarFilter();
     window.closeCover();
 }
 
 document.getElementById("resetTripPreferenceBtn")?.addEventListener("click", resetTripPreference);
-document.getElementById("resetTripPreferenceBtn2")?.addEventListener("click", () => {
-    resetTripPreference();
-});
+document.getElementById("resetTripPreferenceBtn2")?.addEventListener("click", resetTripPreference);
 
 function showNoProfilesOverlay() {
 	const overlay = document.getElementById("noProfileOverlay");
@@ -443,6 +464,7 @@ let _passportPrefetching = false;
 function prefetchNextPassport(currentDisplayedUser) {
 	if (_passportPrefetching) return;
 	_passportPrefetching = true;
+	const token = _fetchToken;
 
 	let url = "/actions/get_next_passport.php";
 	let params = new URLSearchParams();
@@ -462,6 +484,7 @@ function prefetchNextPassport(currentDisplayedUser) {
 	fetch(url)
 		.then(res => res.json())
 		.then(user => {
+			if (token !== _fetchToken) { _passportPrefetching = false; return; }
 			if (user && user.user_id) {
 				_passportCache = user;
 				const urls = [user.profile_picture, ...(user.galleryImages || [])].filter(Boolean);
@@ -475,6 +498,7 @@ function prefetchNextPassport(currentDisplayedUser) {
 }
 
 function loadNextPassport() {
+	const token = _fetchToken;
 	const cached = _passportCache;
 	_passportCache = null;
 
@@ -484,12 +508,10 @@ function loadNextPassport() {
 		return;
 	}
 
-	let url = "/actions/get_next_passport.php";
-	if (selectedCountry) url += "?trip_country=" + encodeURIComponent(selectedCountry);
-
-	fetch(url)
+	fetch(_passportUrl())
 		.then(res => res.json())
 		.then(user => {
+			if (token !== _fetchToken) { loadNextPassport(); return; }
 			displayPassport(user);
 			prefetchNextPassport();
 		});

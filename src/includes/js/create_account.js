@@ -98,6 +98,11 @@ async function validateForm() {
         showHelp('emailHelp');
         emailField.classList.add("invalid");
         valid = false;
+    }
+
+    if (!confirmEmail) {
+        emailConfirmField.classList.add("invalid");
+        valid = false;
     } else if (email !== confirmEmail) {
         showHelp('emailConfirmHelp');
         emailConfirmField.classList.add("invalid");
@@ -127,7 +132,10 @@ async function validateForm() {
     const passwordConfirmField = document.getElementById("passwordConfirm");
     let confirmPassword = passwordConfirmField.value;
 
-    if (password !== confirmPassword) {
+    if (!confirmPassword) {
+        passwordConfirmField.classList.add("invalid");
+        valid = false;
+    } else if (password !== confirmPassword) {
         showHelp('passwordConfirmHelp');
         passwordConfirmField.classList.add("invalid");
         valid = false;

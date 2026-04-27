@@ -34,6 +34,7 @@
     padding: 35px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 16px;
+    overflow: hidden;
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
@@ -58,6 +59,16 @@
     border-radius: 10px;
     font-size: 14px;
     transition: 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.auth-form input[type="date"] {
+    display: block;
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 0;
     width: 100%;
 }
 
