@@ -1,0 +1,61 @@
+<svg width="800" height="500" viewBox="0 0 800 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.035"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+
+  <!-- Paper grain -->
+  <rect width="800" height="500" fill="white" filter="url(#grain)"/>
+
+  <!-- Soft contour / map lines -->
+  <path d="M40 110C110 70 180 80 240 120C300 160 390 165 450 130C530 82 620 78 760 118"
+        stroke="#18314f" stroke-opacity="0.08" stroke-width="2" fill="none"/>
+
+  <path d="M30 160C120 125 190 142 255 182C325 225 395 220 470 182C555 138 650 142 780 180"
+        stroke="#18314f" stroke-opacity="0.07" stroke-width="2" fill="none"/>
+
+  <path d="M20 220C95 195 175 205 250 245C325 285 410 282 490 240C570 198 665 200 785 238"
+        stroke="#18314f" stroke-opacity="0.06" stroke-width="2" fill="none"/>
+
+  <path d="M25 290C115 255 200 270 270 312C340 352 420 345 505 305C590 265 680 270 790 300"
+        stroke="#18314f" stroke-opacity="0.06" stroke-width="2" fill="none"/>
+
+  <path d="M55 360C145 328 220 340 290 380C355 417 430 415 520 375C610 335 695 340 770 370"
+        stroke="#18314f" stroke-opacity="0.05" stroke-width="2" fill="none"/>
+
+  <!-- Travel route lines -->
+  <path d="M130 380C180 320 245 285 320 250C400 210 505 170 620 130"
+        stroke="#f0a315" stroke-opacity="0.18" stroke-width="2.2" stroke-linecap="round"
+        stroke-dasharray="7 10" fill="none"/>
+
+  <path d="M180 95C250 135 320 168 405 210C500 255 595 300 700 345"
+        stroke="#18314f" stroke-opacity="0.16" stroke-width="2" stroke-linecap="round"
+        stroke-dasharray="6 9" fill="none"/>
+
+  <!-- Location dots -->
+  <circle cx="130" cy="380" r="5" fill="#18314f" fill-opacity="0.14"/>
+  <circle cx="320" cy="250" r="5" fill="#18314f" fill-opacity="0.12"/>
+  <circle cx="620" cy="130" r="5" fill="#18314f" fill-opacity="0.14"/>
+
+  <circle cx="180" cy="95" r="4.5" fill="#f0a315" fill-opacity="0.16"/>
+  <circle cx="405" cy="210" r="4.5" fill="#f0a315" fill-opacity="0.14"/>
+  <circle cx="700" cy="345" r="4.5" fill="#f0a315" fill-opacity="0.16"/>
+
+  <!-- Small compass / star accents -->
+  <g opacity="0.08" transform="translate(640 70)">
+    <path d="M0 -16L4 -4L16 0L4 4L0 16L-4 4L-16 0L-4 -4L0 -16Z" fill="#18314f"/>
+  </g>
+
+  <g opacity="0.07" transform="translate(95 85)">
+    <path d="M0 -12L3 -3L12 0L3 3L0 12L-3 3L-12 0L-3 -3L0 -12Z" fill="#f0a315"/>
+  </g>
+
+  <!-- Faint circles for passport-stamp feel -->
+  <circle cx="670" cy="110" r="38" stroke="#18314f" stroke-opacity="0.06" stroke-width="2" stroke-dasharray="3 6"/>
+  <circle cx="120" cy="395" r="28" stroke="#f0a315" stroke-opacity="0.08" stroke-width="2" stroke-dasharray="4 7"/>
+</svg>
