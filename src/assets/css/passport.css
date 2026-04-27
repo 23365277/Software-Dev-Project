@@ -461,9 +461,14 @@
     width: 100px;
     font-size: 0.8rem;
     transition: width 0.3s ease, max-height 0.3s ease;
-    overflow: visible; /* allow desc to show outside if needed */
-    max-height: 80px; /* base height */
-    position: relative; /* for desc absolute positioning if desired */
+    overflow: visible;
+    max-height: 80px;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.stamp:active {
+    background: #fff;
 }
 
 .stamp.has-desc:hover {
