@@ -102,9 +102,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // Mobile tap left/right to navigate
     const passportEl = document.querySelector(".passport");
     if (passportEl) {
+        let _stampTouched = false;
+
+        passportEl.addEventListener("touchstart", e => {
+            _stampTouched = !!e.target.closest(".stamps-container");
+        }, { passive: true });
+
         passportEl.addEventListener("click", (e) => {
             if (window.innerWidth > 768) return;
-            if (!e.target.closest(".passport-left")) return;
+            if (_stampTouched) { _stampTouched = false; return; }
             const x = e.clientX;
             const mid = passportEl.getBoundingClientRect().left + passportEl.offsetWidth / 2;
             moveSlide(x < mid ? -1 : 1);
