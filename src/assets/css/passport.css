@@ -468,7 +468,8 @@
 }
 
 .stamp:active {
-    background: #fff;
+    background: #fff !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .stamp.has-desc:hover {
