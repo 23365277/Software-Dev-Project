@@ -102,19 +102,26 @@ document.addEventListener("DOMContentLoaded", () => {
     // Mobile tap left/right to navigate
     const passportEl = document.querySelector(".passport");
     if (passportEl) {
-        let _stampTouched = false;
+        let _touchStartX = null;
+        let _touchStartY = null;
+        let _touchOnStamp = false;
 
         passportEl.addEventListener("touchstart", e => {
-            _stampTouched = !!e.target.closest(".stamps-container");
+            _touchStartX = e.touches[0].clientX;
+            _touchStartY = e.touches[0].clientY;
+            _touchOnStamp = !!e.target.closest(".stamps-container");
         }, { passive: true });
 
-        passportEl.addEventListener("click", (e) => {
+        passportEl.addEventListener("touchend", e => {
             if (window.innerWidth > 768) return;
-            if (_stampTouched) { _stampTouched = false; return; }
-            const x = e.clientX;
+            if (_touchOnStamp) return;
+            const dx = Math.abs(e.changedTouches[0].clientX - _touchStartX);
+            const dy = Math.abs(e.changedTouches[0].clientY - _touchStartY);
+            if (dx > 10 || dy > 10) return; // was a scroll, not a tap
+            const x = e.changedTouches[0].clientX;
             const mid = passportEl.getBoundingClientRect().left + passportEl.offsetWidth / 2;
             moveSlide(x < mid ? -1 : 1);
-        });
+        }, { passive: true });
     }
 
     window.addEventListener("resize", () => updateCarousel(false));
