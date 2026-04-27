@@ -394,7 +394,7 @@ function replaceGalleryImage($photoId, $file) {
         unlink($oldPath);
     }
 
-    $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+    $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/gallery_images/';
     if (!file_exists($targetDir)) {
         mkdir($targetDir, 0777, true);
     }
@@ -403,7 +403,7 @@ function replaceGalleryImage($photoId, $file) {
     $targetFile = $targetDir . $fileName;
 
     if (move_uploaded_file($file['tmp_name'], $targetFile)) {
-        $newPath = '/assets/images/' . $fileName;
+        $newPath = '/assets/images/gallery_images/' . $fileName;
 
         $stmt = $pdo->prepare("UPDATE photos SET image_url = ? WHERE photo_id = ?");
         $stmt->execute([$newPath, $photoId]);

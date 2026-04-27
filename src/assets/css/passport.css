@@ -236,7 +236,7 @@
     position: absolute;
     inset: 0;                  /* covers the whole box */
     border-radius: 12px;       /* match your box corners */
-    background-image: url("/assets/images/random-shapes.svg");
+    background-image: url("/assets/images/ui/random-shapes.svg");
     background-size: cover;    /* cover entire box */
     background-position: center;
     opacity: 0.05;             /* very subtle */

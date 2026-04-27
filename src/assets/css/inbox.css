@@ -39,7 +39,7 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-    background-image: url("/assets/images/connections_header.svg");
+    background-image: url("/assets/images/ui/connections_header.svg");
     background-repeat: no-repeat;
     background-position: right center;
     background-size: 100%;

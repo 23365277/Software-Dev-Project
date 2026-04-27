@@ -31,19 +31,19 @@
         // Check if file uploaded
         if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === 0) {
         
-            $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
-        
+            $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/profiles/';
+
             if (!file_exists($targetDir)) {
                 mkdir($targetDir, 0777, true);
             }
-        
+
             $fileName = uniqid('', true) . "_" . basename($_FILES["profile_picture"]["name"]);
             $targetFile = $targetDir . $fileName;
-        
+
             // Upload new file
             if (move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFile)) {
-        
-                $newProfilePicture = '/assets/images/' . $fileName;
+
+                $newProfilePicture = '/assets/images/profiles/' . $fileName;
                 
         
                 // 1. Get old image
@@ -83,7 +83,7 @@
 
             if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
 
-                $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+                $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/gallery_images/';
 
                 if (!file_exists($targetDir)) {
                     mkdir($targetDir, 0777, true);
@@ -93,7 +93,7 @@
                 $targetFile = $targetDir . $fileName;
 
                 if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetFile)) {
-                    $galleryImages[] = '/assets/images/' . $fileName;
+                    $galleryImages[] = '/assets/images/gallery_images/' . $fileName;
                 }
             }
         }

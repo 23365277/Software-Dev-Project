@@ -1,0 +1,107 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="paperGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 500) rotate(90) scale(520)">
+      <stop offset="0" stop-color="#F7E8C8" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#F7E8C8" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="frameGrad" x1="260" y1="200" x2="900" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8A5A2B" stop-opacity="0.45"/>
+      <stop offset="0.5" stop-color="#5B3A20" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#9C6A36" stop-opacity="0.42"/>
+    </linearGradient>
+
+    <linearGradient id="meridianGrad" x1="320" y1="240" x2="820" y2="760" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1B3658" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#1B3658" stop-opacity="0.08"/>
+    </linearGradient>
+
+    <filter id="softShadow" x="120" y="120" width="960" height="960" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 0.04"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+
+  <!-- subtle paper haze -->
+  <rect width="1200" height="1200" fill="url(#paperGlow)"/>
+
+  <!-- soft shadow -->
+  <ellipse cx="605" cy="620" rx="315" ry="315" fill="#2B1B10" fill-opacity="0.08" filter="url(#softShadow)"/>
+
+  <!-- stand back ring -->
+  <path d="M258 521C258 338 405 190 588 190C771 190 918 338 918 521" stroke="url(#frameGrad)" stroke-width="18" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- side cradle -->
+  <path d="M307 355C269 406 246 471 246 541C246 719 390 863 568 863" stroke="#6E4727" stroke-opacity="0.28" stroke-width="12" stroke-linecap="round"/>
+  <path d="M869 355C907 406 930 471 930 541C930 719 786 863 608 863" stroke="#6E4727" stroke-opacity="0.28" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- globe -->
+  <circle cx="588" cy="521" r="285" fill="#F4E4BF" fill-opacity="0.10" stroke="#6A4528" stroke-opacity="0.30" stroke-width="8"/>
+  <circle cx="588" cy="521" r="266" stroke="#8F6034" stroke-opacity="0.18" stroke-width="2" stroke-dasharray="3 10"/>
+
+  <!-- latitude lines -->
+  <ellipse cx="588" cy="521" rx="235" ry="78" stroke="#1B3658" stroke-opacity="0.12" stroke-width="3"/>
+  <ellipse cx="588" cy="521" rx="250" ry="130" stroke="#1B3658" stroke-opacity="0.11" stroke-width="3"/>
+  <ellipse cx="588" cy="521" rx="260" ry="185" stroke="#1B3658" stroke-opacity="0.10" stroke-width="3"/>
+
+  <!-- equator -->
+  <ellipse cx="588" cy="521" rx="270" ry="32" stroke="#8A5A2B" stroke-opacity="0.22" stroke-width="4" stroke-dasharray="7 10"/>
+
+  <!-- longitude lines -->
+  <path d="M588 236C533 304 533 738 588 806" stroke="url(#meridianGrad)" stroke-width="3"/>
+  <path d="M588 236C642 304 642 738 588 806" stroke="url(#meridianGrad)" stroke-width="3"/>
+  <path d="M588 236C486 332 486 710 588 806" stroke="#1B3658" stroke-opacity="0.10" stroke-width="3"/>
+  <path d="M588 236C690 332 690 710 588 806" stroke="#1B3658" stroke-opacity="0.10" stroke-width="3"/>
+
+  <!-- faint atlas contour circles -->
+  <circle cx="588" cy="521" r="220" stroke="#8A5A2B" stroke-opacity="0.08" stroke-width="2"/>
+  <circle cx="588" cy="521" r="165" stroke="#8A5A2B" stroke-opacity="0.06" stroke-width="2"/>
+
+  <!-- abstract vintage continents -->
+  <path d="M472 372C446 363 411 375 393 402C379 423 384 447 405 462C429 480 455 477 470 500C481 518 475 543 493 559C516 579 557 570 571 542C584 515 573 487 552 468C533 451 519 439 521 415C523 392 505 378 472 372Z"
+        fill="#8A5A2B" fill-opacity="0.12"/>
+  <path d="M644 409C624 423 620 454 638 474C655 493 684 495 697 514C715 542 706 580 730 600C754 621 792 616 813 594C838 567 836 523 810 495C790 473 760 468 740 450C716 430 672 389 644 409Z"
+        fill="#8A5A2B" fill-opacity="0.11"/>
+  <path d="M580 585C551 594 532 615 534 642C536 674 564 697 591 716C613 732 627 758 655 767C686 778 721 765 736 736C753 704 742 668 716 651C693 636 665 639 645 620C625 602 608 577 580 585Z"
+        fill="#8A5A2B" fill-opacity="0.10"/>
+
+  <!-- route lines -->
+  <path d="M414 645C460 584 530 538 621 492C717 444 793 395 845 335" stroke="#1B3658" stroke-opacity="0.14" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 12"/>
+  <path d="M396 408C473 442 530 492 588 548C648 607 717 650 795 688" stroke="#8A5A2B" stroke-opacity="0.13" stroke-width="4" stroke-linecap="round" stroke-dasharray="7 11"/>
+
+  <!-- route dots -->
+  <circle cx="414" cy="645" r="7" fill="#1B3658" fill-opacity="0.16"/>
+  <circle cx="621" cy="492" r="7" fill="#1B3658" fill-opacity="0.12"/>
+  <circle cx="845" cy="335" r="7" fill="#1B3658" fill-opacity="0.16"/>
+
+  <circle cx="396" cy="408" r="6" fill="#8A5A2B" fill-opacity="0.14"/>
+  <circle cx="588" cy="548" r="6" fill="#8A5A2B" fill-opacity="0.12"/>
+  <circle cx="795" cy="688" r="6" fill="#8A5A2B" fill-opacity="0.14"/>
+
+  <!-- compass star -->
+  <g transform="translate(850 250)" opacity="0.12">
+    <path d="M0 -28L7 -7L28 0L7 7L0 28L-7 7L-28 0L-7 -7L0 -28Z" fill="#6A4528"/>
+    <circle cx="0" cy="0" r="7" fill="#1B3658" fill-opacity="0.35"/>
+  </g>
+
+  <!-- stamp circles -->
+  <circle cx="325" cy="790" r="56" stroke="#8A5A2B" stroke-opacity="0.10" stroke-width="4" stroke-dasharray="5 10"/>
+  <circle cx="325" cy="790" r="38" stroke="#1B3658" stroke-opacity="0.08" stroke-width="3" stroke-dasharray="4 8"/>
+
+  <!-- stand -->
+  <path d="M588 806L588 934" stroke="#6A4528" stroke-opacity="0.28" stroke-width="12" stroke-linecap="round"/>
+  <path d="M530 934H646" stroke="#6A4528" stroke-opacity="0.30" stroke-width="12" stroke-linecap="round"/>
+  <path d="M468 976C499 950 535 938 588 938C641 938 677 950 708 976" stroke="#8A5A2B" stroke-opacity="0.35" stroke-width="18" stroke-linecap="round"/>
+  <rect x="438" y="975" width="300" height="36" rx="18" fill="#5B3A20" fill-opacity="0.18"/>
+  <rect x="462" y="960" width="252" height="18" rx="9" fill="#8A5A2B" fill-opacity="0.16"/>
+
+  <!-- paper grain overlay -->
+  <rect width="1200" height="1200" fill="#000000" filter="url(#grain)"/>
+</svg>

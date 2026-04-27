@@ -74,7 +74,7 @@
 					<button class="btn action-btn like w-100" id="likeBtn">Like</button>
 				</div>
 				<div class="col-auto text-center">
-					<img class="action-stamper img-fluid" src="/assets/images/Stamp.png" alt="Stamp Pic">
+					<img class="action-stamper img-fluid" src="/assets/images/ui/stamp.png" alt="Stamp Pic">
 				</div>
 				<div class="col-4 col-lg-3">
 					<button class="btn action-btn dislike w-100" id="dislikeBtn">Dislike</button>

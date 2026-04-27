@@ -198,13 +198,13 @@ function renderCard(profile, grid = null) {
     card.innerHTML = `
         <div class="mini-passport-wrapper mx-auto" data-trip-country="${(profile.trip_country || '').toLowerCase()}">
             <div class="mini-cover" style="background: ${grad};">
-                <img src="/assets/images/favicon_light.ico" alt="emb">
+                <img src="/assets/images/ui/favicon_light.ico" alt="emb">
             </div>
             <div class="mini-back-cover mx-auto p-3" style="background: ${grad};">
                 <div class="mini-passport-content p-2 p-lg-3">
                     <div class="info">
                         <div class="tpass-header">
-                            <img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
+                            <img id="tpassIcon" src="/assets/images/ui/tpass_icon.png" alt="TPassIcon">
                             <p id="tpass">Travel Passport</p>
                         </div>
                         <div class="user-info">

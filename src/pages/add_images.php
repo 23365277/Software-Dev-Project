@@ -18,7 +18,7 @@
 
             if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === 0) {
 
-                $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/';
+                $targetDir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/gallery_images/';
 
                 if (!file_exists($targetDir)) {
                     mkdir($targetDir, 0777, true);
@@ -28,7 +28,7 @@
                 $targetFile = $targetDir . $fileName;
 
                 if (move_uploaded_file($_FILES[$inputName]['tmp_name'], $targetFile)) {
-                    $galleryImages[] = '/assets/images/' . $fileName;
+                    $galleryImages[] = '/assets/images/gallery_images/' . $fileName;
                 }
             }
         }
@@ -50,9 +50,9 @@
 
 <div class="container-fluid d-flex flex-column min-vh-93">
 
-    <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/scrollimg1.jpg');"></div>
-    <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/scrollimg2.jpg');"></div>
-    <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/scrollimg3.jpg');"></div>
+    <div class="bg-slide bg-slide-1" style="background-image: url('/assets/images/backgrounds/scrollimg1.jpg');"></div>
+    <div class="bg-slide bg-slide-2" style="background-image: url('/assets/images/backgrounds/scrollimg2.jpg');"></div>
+    <div class="bg-slide bg-slide-3" style="background-image: url('/assets/images/backgrounds/scrollimg3.jpg');"></div>
     <div class="bg-overlay"></div>
 
     

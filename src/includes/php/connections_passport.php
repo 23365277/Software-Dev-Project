@@ -35,14 +35,14 @@ $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
     <div class="mini-passport-wrapper mx-auto <?= $cardMode === 'dashboard' ? 'dashboard-passport' : '' ?>" data-trip-country="<?= htmlspecialchars(strtolower($nextTrip['location'] ?? '')) ?>">
         <div class="mini-cover"
             style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
-            <img src="/assets/images/favicon_light.ico" alt="emb">
+            <img src="/assets/images/ui/favicon_light.ico" alt="emb">
         </div>
         <div class="mini-back-cover mx-auto p-3"
             style="background: linear-gradient(145deg, <?= $theme[0] ?>, <?= $theme[1] ?>);">
             <div class="mini-passport-content p-2 p-lg-3">
                 <div class="info">
                     <div class="tpass-header">
-                        <img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
+                        <img id="tpassIcon" src="/assets/images/ui/tpass_icon.png" alt="TPassIcon">
                         <p id="tpass">Travel Passport</p>
                     </div>
                     <div class="user-info">

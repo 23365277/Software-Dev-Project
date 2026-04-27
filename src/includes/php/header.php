@@ -4,7 +4,7 @@
 
 <header id="mainHeader">
     <a href="<?= isset($_SESSION['user_id']) ? '/pages/home.php' : '/pages/login.php' ?>">
-        <img class="logo" src="/assets/images/Roamance v7.png" alt="Roamance Logo">
+        <img class="logo" src="/assets/images/ui/logo.png" alt="Roamance Logo">
     </a>
 
     <button class="hbtn" id="hbtn" aria-label="Open menu">

@@ -92,8 +92,8 @@ if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_me'])) {
 
 	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="icon" type="image/x-icon" href="/assets/images/favicon_dark.ico" media="(prefers-color-scheme: dark)">
-    <link rel="icon" type="image/x-icon" href="/assets/images/favicon_light.ico" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/x-icon" href="/assets/images/ui/favicon_dark.ico" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/x-icon" href="/assets/images/ui/favicon_light.ico" media="(prefers-color-scheme: light)">
 
     <link rel="stylesheet" href="/assets/css/header.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/header.css') ?>">
     <link rel="stylesheet" href="/assets/css/footer.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/footer.css') ?>">

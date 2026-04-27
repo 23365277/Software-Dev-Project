@@ -210,7 +210,7 @@
     padding: 1.5rem 1.25rem;
     box-shadow: 4px 0 20px rgba(0,0,0,0.12);
     overflow-y: auto;
-    background-image: url("/assets/images/random-shapes.svg");
+    background-image: url("/assets/images/ui/random-shapes.svg");
     background-size: cover;
     background-position: center;
     position: relative;

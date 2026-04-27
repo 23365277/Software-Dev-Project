@@ -32,10 +32,10 @@ if (!$user) {
 <div class="passport-wrapper mx-auto">
 	<div class="passport position-relative mx-auto">
 			<div id="approvedStamp" class="stamp_overlay approved">
-				<img src="/assets/images/approved_stamp.svg" alt="Approved Stamp">
+				<img src="/assets/images/ui/approved_stamp.svg" alt="Approved Stamp">
 			</div>
 			<div id="rejectedStamp" class="stamp_overlay rejected">
-				<img src="/assets/images/denied_stamp.svg" alt="Rejected Stamp">
+				<img src="/assets/images/ui/denied_stamp.svg" alt="Rejected Stamp">
 			</div>
 			<div class= "row g-0 g-lg-3 align-items-stretch passport-content">
 				<div class="col-12 col-lg-5">
@@ -70,7 +70,7 @@ if (!$user) {
 								<img src="<?= $profileImage ?>" alt="<?= $firstName . ' ' . $lastName ?>" class="profile-img">
 								<div class="user-info">
 									<div class="tpass-header">
-										<img id="tpassIcon" src="/assets/images/TPassIcon.png" alt="TPassIcon">
+										<img id="tpassIcon" src="/assets/images/ui/tpass_icon.png" alt="TPassIcon">
 										<p id="tpass">Travel Passport</p>
 									</div>
 									<hr>
@@ -149,7 +149,7 @@ if (!$user) {
 			<div class="interests-page">
 				<div class="interests-page-header">
 					<div class="tpass-header" style="border-bottom: #1e3a5f 2px solid; margin-bottom: 1rem; padding-bottom: 0.5rem;">
-						<img src="/assets/images/TPassIcon.png" alt="TPassIcon" style="width:23px;height:23px;">
+						<img src="/assets/images/ui/tpass_icon.png" alt="TPassIcon" style="width:23px;height:23px;">
 						<p style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:450;color:#1e3a5f;margin:0;">Interests</p>
 					</div>
 				</div>
@@ -175,7 +175,7 @@ if (!$user) {
 	</div>
 
 	<div class="cover top-cover">
-		<img src="/assets/images/favicon_light.ico" alt="emb">
+		<img src="/assets/images/ui/favicon_light.ico" alt="emb">
 	</div>
 </div>
 
