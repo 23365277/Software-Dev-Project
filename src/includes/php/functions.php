@@ -774,7 +774,7 @@ function getRecentActivity($limit = 15) {
 }
 
 
-function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountry = null) {
+function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountries = null) {
 
 	$preferences = getPreferenceInfoById($userId);
 
