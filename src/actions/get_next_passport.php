@@ -15,6 +15,6 @@ if (!empty($_GET['trip_countries'])) {
 } elseif (!empty($_GET['trip_country'])) {
     $tripCountries = [normalizeLocation($_GET['trip_country'])];
 }
-$currentDisplayedUser = isset($_GET['displayed_user']) ? $_GET['displayed_user'] : null;
-$user = getNextPassport($pdo, $userId, $tripCountries ?: null, $currentDisplayedUser);
+$excludeUserId = isset($_GET['displayed_user']) ? (int)$_GET['displayed_user'] : null;
+$user = getNextPassport($pdo, $userId, $tripCountries ?: null, $excludeUserId);
 echo json_encode($user);

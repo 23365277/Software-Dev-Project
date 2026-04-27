@@ -774,7 +774,7 @@ function getRecentActivity($limit = 15) {
 }
 
 
-function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountries = null) {
+function getNextPassport(PDO $pdo, $userId, $tripCountries = null, $excludeUserId = null) {
 
 	$preferences = getPreferenceInfoById($userId);
 
@@ -829,6 +829,7 @@ function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountrie
 		) AS score
 	FROM profiles p
 	WHERE p.user_id != :userId
+	AND (:excludeUserId IS NULL OR p.user_id != :excludeUserId)
 	AND p.user_id NOT IN (
 		SELECT l.receiver_id
 		FROM likes l
@@ -856,9 +857,8 @@ function getNextPassport(PDO $pdo, $userId, $currentDisplayedUser, $tripCountrie
 
 	$params = array_merge([
 		':userId' => $userId,
-		':displayedUser' => $currentDisplayedUser,
-		':trip_country' => $tripCountry,
-		':preferred_gender' => $preferences['gender'] ?? null,
+		':excludeUserId' => $excludeUserId,
+		':preferred_gender' => $preferences['pref_gender'] ?? null,
 		':min_age' => $preferences['min_age'] ?? null,
 		':max_age' => $preferences['max_age'] ?? null
 	], $tripCountryParams);

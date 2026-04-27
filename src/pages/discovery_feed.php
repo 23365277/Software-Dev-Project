@@ -330,10 +330,11 @@ function returnXY() {
 let selectedCountries = <?= json_encode($selectedCountries) ?>;
 let _fetchToken = 0;
 
-function _passportUrl() {
-    let url = "/actions/get_next_passport.php";
-    if (selectedCountries.length > 0) url += "?trip_countries=" + selectedCountries.map(encodeURIComponent).join(',');
-    return url;
+function _passportUrl(excludeId = null) {
+    const params = [];
+    if (selectedCountries.length > 0) params.push("trip_countries=" + selectedCountries.map(encodeURIComponent).join(','));
+    if (excludeId) params.push("displayed_user=" + excludeId);
+    return "/actions/get_next_passport.php" + (params.length ? "?" + params.join("&") : "");
 }
 
 function _updateFilterUrl() {
@@ -445,27 +446,12 @@ function formatDate(dateString) {
 let _passportCache = null;
 let _passportPrefetching = false;
 
-function prefetchNextPassport(currentDisplayedUser) {
+function prefetchNextPassport() {
 	if (_passportPrefetching) return;
 	_passportPrefetching = true;
 	const token = _fetchToken;
 
-	let url = "/actions/get_next_passport.php";
-	let params = new URLSearchParams();
-
-	if (selectedCountry) {
-		params.append("trip_country", selectedCountry);
-	}
-
-	if (currentDisplayedUser && currentDisplayedUser.user_id) {
-		params.append("displayed_user", currentDisplayedUser.user_id);
-	}
-
-	if ([...params].length > 0) {
-		url += "?" + params.toString();
-	}
-
-	fetch(url)
+	fetch(_passportUrl(currentProfileId))
 		.then(res => res.json())
 		.then(user => {
 			if (token !== _fetchToken) { _passportPrefetching = false; return; }
@@ -503,7 +489,6 @@ function loadNextPassport() {
 
 function displayPassport(user) {
 	{
-		$currentDisplayedUser = user;
 
 			if (!user || !user.user_id) {
 					showNoProfilesOverlay();
@@ -618,6 +603,6 @@ function displayPassport(user) {
 	}
 }
 
-prefetchNextPassport($currentDisplayedUser);
+prefetchNextPassport();
 </script>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
