@@ -373,6 +373,7 @@ button[onclick^="onEdit"]:hover {
 /* ── Danger Zone ── */
 .danger-zone {
     margin: 2rem auto;
+    margin-top: 3rem;
     max-width: 900px;
     padding: 1.5rem 2rem;
     border: 2px solid #c0392b;
