@@ -10,7 +10,7 @@ $nextTrip = $profile['nextTrip'] ?? getUserTrips($pdo, $profileId);
 
 $passportThemes = [
     ['#25476f', '#17304f'],
-    ['#7b2c2c', '#4a1616'],
+    ['#7b2c2c', '#4a1616'], 
     ['#35ac7a', '#1e6e51'],
     ['#5a3e7b', '#2e1f4a'],
     ['#328998', '#205e6f'],

@@ -10,6 +10,7 @@
     $userId = $_SESSION['user_id'];
     $matches = getMatches($pdo, $userId);
     $likes = getLikes($pdo, $userId);
+    $all = getAllUnseen($userId);
 
     foreach ($matches as &$profile) {
         $trip = getUserTrips($pdo, $profile['user_id']);
@@ -18,6 +19,12 @@
     unset($profile);
 
     foreach ($likes as &$profile) {
+        $trip = getUserTrips($pdo, $profile['user_id']);
+        $profile['trip_country'] = $trip['location'] ?? null;
+    }
+    unset($profile);
+
+    foreach($all as &$profile){
         $trip = getUserTrips($pdo, $profile['user_id']);
         $profile['trip_country'] = $trip['location'] ?? null;
     }
@@ -66,6 +73,7 @@
                 <div class="connections-tabs">
                     <button class="tab-btn active" data-tab="matches">Matches</button>
                     <button class="tab-btn" data-tab="likes">Likes</button>
+                    <button class="tab-btn" data-tab="all">All</button>
                 </div>
             </div>
         </div>
@@ -82,6 +90,13 @@
                 <div id="likes" class="tab-content">
                     <div class="passport-grid">
                         <?php foreach($likes as $profile):
+                            include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
+                        endforeach; ?>
+                    </div>
+                </div>
+                <div id="all" class="tab-content">
+                    <div class="passport-grid">
+                        <?php foreach($all as $profile):
                             include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
                         endforeach; ?>
                     </div>

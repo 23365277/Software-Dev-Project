@@ -137,6 +137,27 @@ function getProfileInfo(){
 	return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+function getAllUnseen($userId){
+	global $pdo;
+
+	$stmt = $pdo -> prepare("SELECT p.*
+							  FROM profiles p
+							  WHERE p.user_id NOT IN(
+								SELECT receiver_id FROM likes WHERE sender_id = :userId
+							  )
+							  AND p.user_id NOT IN(
+								SELECT
+									CASE WHEN user1_id = :userId THEN user2_id ELSE user1_id END
+									FROM matches
+									WHERE user1_id = :userId OR user2_id = :userId
+							  )
+							  AND p.user_id != :userId;");
+
+	$stmt ->execute([":userId" => $userId]);
+	
+	return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function getPreferenceInfo(){
 	global $pdo;
 
