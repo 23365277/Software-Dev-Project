@@ -30,7 +30,7 @@ if (!$user) {
 <link rel="stylesheet" href="/assets/css/passport.css">
 
 <div class="passport-wrapper mx-auto">
-	<div class="passport position-relative mx-auto">
+	<div class="passport position-relative mx-auto" onclick="">
 			<div id="approvedStamp" class="stamp_overlay approved">
 				<img src="/assets/images/ui/approved_stamp.svg" alt="Approved Stamp">
 			</div>
