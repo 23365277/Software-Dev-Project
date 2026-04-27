@@ -94,6 +94,9 @@
                 <div id="matches" class="tab-content active">
                     <div class="passport-grid">
                         <?php foreach($matches as $profile):
+                            $showDecisionBtns = true;
+                            $isMatch = true;
+                            $cardDecision = 'liked';
                             include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
                         endforeach; ?>
                     </div>
@@ -102,6 +105,7 @@
                     <div class="passport-grid">
                         <?php foreach($likes as $profile):
                             $showDecisionBtns = true;
+                            $isMatch = false;
                             $cardDecision = $profile['is_disliked'] ? 'disliked' : 'liked';
                             include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/connections_passport.php';
                         endforeach; ?>
@@ -332,6 +336,22 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("filterTripDest").value = "";
         allFilters = {};
         resetAllGrid();
+    });
+
+    // Unmatch buttons on matches cards
+    document.getElementById("matches").addEventListener("click", e => {
+        const btn = e.target.closest(".action-unmatch-btn");
+        if (!btn) return;
+        const card = btn.closest(".card-container");
+        const receiverId = btn.dataset.receiver;
+        fetch("/actions/unmatch.php", {
+            method: "POST",
+            body: new URLSearchParams({ matched_id: receiverId })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) card.remove();
+        });
     });
 
     // Like/dislike buttons on server-rendered likes cards

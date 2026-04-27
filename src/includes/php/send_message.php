@@ -59,12 +59,12 @@ if(isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
     }
 
 	$target_dir = $_SERVER['DOCUMENT_ROOT'] . '/assets/images/attachments/';
+	if (!is_dir($target_dir)) mkdir($target_dir, 0777, true);
 	$fileName   = str_replace('.', '_', uniqid('msg_', true)) . '_' . str_replace(' ', '_', basename($_FILES['attachment']['name']));
 	$targetFile = $target_dir . $fileName;
 
 	$tmpPath = $_FILES['attachment']['tmp_name'];
-	if(is_uploaded_file($tmpPath) && copy($tmpPath, $targetFile)) {
-		unlink($tmpPath);
+	if (is_uploaded_file($tmpPath) && move_uploaded_file($tmpPath, $targetFile)) {
 		$image_url = '/assets/images/attachments/' . $fileName;
 	}
 }

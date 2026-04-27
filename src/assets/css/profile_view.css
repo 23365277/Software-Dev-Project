@@ -369,3 +369,108 @@ button[onclick^="onEdit"]:hover {
 #ageSlider {
     margin: 6px 10px 10px;
 }
+
+/* ── Danger Zone ── */
+.danger-zone {
+    margin: 2rem auto;
+    max-width: 900px;
+    padding: 1.5rem 2rem;
+    border: 2px solid #c0392b;
+    border-radius: 12px;
+    background: rgba(192, 57, 43, 0.05);
+}
+
+.danger-zone h4 {
+    color: #c0392b;
+    font-family: "Playfair Display", serif;
+    margin-bottom: 0.5rem;
+}
+
+.danger-zone p {
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.delete-account-btn {
+    background: transparent;
+    border: 2px solid #c0392b;
+    color: #c0392b;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.delete-account-btn:hover {
+    background: #c0392b;
+    color: #fff;
+}
+
+.delete-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-modal-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.delete-modal-box h3 {
+    font-family: "Playfair Display", serif;
+    color: #c0392b;
+    margin-bottom: 0.75rem;
+}
+
+.delete-modal-box p {
+    color: #555;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.delete-modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.delete-confirm-btn {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.delete-confirm-btn:hover { background: #96281b; }
+
+.delete-cancel-btn {
+    background: transparent;
+    color: #555;
+    border: 2px solid #ccc;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.delete-cancel-btn:hover {
+    border-color: #999;
+    color: #333;
+}

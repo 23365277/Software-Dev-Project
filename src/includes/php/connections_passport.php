@@ -96,9 +96,12 @@ $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
     <?php
         $showDecisionBtns = $showDecisionBtns ?? false;
         $cardDecision     = $cardDecision ?? null;
+        $isMatch          = $isMatch ?? false;
     ?>
     <div class="gallery-btn-row">
-        <?php if ($showDecisionBtns): ?>
+        <?php if ($isMatch): ?>
+            <button class="action-unmatch-btn" data-receiver="<?= $profileId ?>">💔 Unmatch</button>
+        <?php elseif ($showDecisionBtns): ?>
             <button class="action-dislike-btn <?= $cardDecision === 'disliked' ? 'disliked' : '' ?>"
                 data-receiver="<?= $profileId ?>">✕ Dislike</button>
         <?php endif; ?>

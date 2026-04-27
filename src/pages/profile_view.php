@@ -429,6 +429,23 @@
     </div>
 </div><!-- /.gallery-wrapper -->
 
+<div class="danger-zone">
+    <h4>Danger Zone</h4>
+    <p>Deleting your account is permanent and cannot be undone. All your data, matches, messages and photos will be removed.</p>
+    <button id="deleteAccountBtn" class="delete-account-btn">Delete Account</button>
+</div>
+
+<div id="deleteAccountModal" class="delete-modal-overlay" style="display:none;">
+    <div class="delete-modal-box">
+        <h3>Are you sure?</h3>
+        <p>This will permanently delete your account and all associated data. This cannot be undone.</p>
+        <div class="delete-modal-actions">
+            <button id="confirmDeleteBtn" class="delete-confirm-btn">Yes, delete my account</button>
+            <button id="cancelDeleteBtn" class="delete-cancel-btn">Cancel</button>
+        </div>
+    </div>
+</div>
+
 </div><!-- /.profile-page -->
 
 <script>
@@ -468,6 +485,21 @@ document.addEventListener('keydown', function(e) {
         border-radius:10px;
     ">
 </div>
+<script>
+document.getElementById("deleteAccountBtn").addEventListener("click", () => {
+    document.getElementById("deleteAccountModal").style.display = "flex";
+});
+document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
+    document.getElementById("deleteAccountModal").style.display = "none";
+});
+document.getElementById("confirmDeleteBtn").addEventListener("click", () => {
+    fetch("/actions/delete_account.php", { method: "POST" })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) window.location.href = "/pages/login.php";
+        });
+});
+</script>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/includes/php/footer.php'; ?>
 
     <img id="photo-lightbox-img" style="max-width:90%; max-height:90%; border-radius:10px;">

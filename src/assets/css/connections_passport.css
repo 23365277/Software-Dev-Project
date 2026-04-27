@@ -193,6 +193,24 @@
     gap: 0.5rem;
 }
 
+.action-unmatch-btn {
+    border-radius: 8px;
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    background: transparent;
+    color: #c0392b;
+    border: 2px solid #c0392b;
+}
+
+.action-unmatch-btn:hover {
+    background: #c0392b;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
 .action-like-btn,
 .action-dislike-btn {
     border-radius: 8px;
