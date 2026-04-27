@@ -346,8 +346,8 @@ function saveUserGalleryImage($userId, $imagePath) {
     global $pdo;
 
     $stmt = $pdo->prepare("
-        INSERT INTO photos (user_id, image_url, is_primary)
-        VALUES (?, ?, 0)
+        INSERT INTO photos (user_id, image_url)
+        VALUES (?, ?)
     ");
 
     $stmt->execute([$userId, $imagePath]);

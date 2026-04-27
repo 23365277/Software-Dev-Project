@@ -100,7 +100,7 @@
     }
 
     foreach ($galleryImages as $imagePath) {
-        saveUserGalleryImage($userId, $imagePath, 0);
+        saveUserGalleryImage($viewUserId, $imagePath);
     }
 
         if (isset($_POST['replace_photo_id']) && isset($_FILES['replacement_image'])) {
