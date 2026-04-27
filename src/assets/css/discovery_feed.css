@@ -148,7 +148,7 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     html {
         overflow-x: hidden;
     }
@@ -252,7 +252,7 @@
     transition: background 0.2s;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .interests-panel {
         position: absolute;
         bottom: 0;
@@ -355,10 +355,10 @@ body.passport-page {
     background:
     radial-gradient(circle, rgba(240, 163, 21, 0.563), transparent 70%),
     linear-gradient(#ccdceb, #a3c1d4, #7598d0);
-    background-attachment: fixed;
+    background-attachment: scroll;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .passport-container {
         padding: 0;
     }

@@ -33,7 +33,7 @@ header .logo {
     height: 120px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     header .logo {
         height: 60px;
     }
@@ -323,7 +323,7 @@ header .logo {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .nav-links {
         display: none;
     }

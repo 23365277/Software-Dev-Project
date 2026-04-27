@@ -5,7 +5,7 @@ body {
     background:
         radial-gradient(circle at top right, rgba(240, 163, 21, 0.499), transparent 75%),
         linear-gradient(#ccdceb, #a3c1d4, #7598d0);
-    background-attachment: fixed;
+    background-attachment: scroll;
     font-family: Arial, sans-serif;
     color: #18314f;
 }
@@ -68,7 +68,7 @@ body {
     z-index: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .inbox-page {
         height: calc(100vh - 70px); /* 70px = mobile header spacer */
         padding: 0.5rem 0.5rem 0.5rem;
@@ -137,7 +137,7 @@ body {
     border-color: #1a3a5c;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .sidebar-blocked-btn {
         display: block;
     }
@@ -717,7 +717,7 @@ body {
 }
 
 /* ── Mobile ── */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .inbox-wrap {
         flex-direction: column;
         min-height: unset;

@@ -20,7 +20,7 @@ body {
     background:
         radial-gradient(circle at top right, rgba(240, 163, 21, 0.499), transparent 75%),
         linear-gradient(#ccdceb, #a3c1d4, #7598d0);
-    background-attachment: fixed;
+    background-attachment: scroll;
     overflow-x: hidden;
 }
 
@@ -180,7 +180,7 @@ body {
     cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     #home-messages-panel {
         height: 320px;
     }

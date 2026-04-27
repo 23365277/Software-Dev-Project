@@ -116,7 +116,7 @@ $galleryImages = $photoStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
             <span class="no-gallery-text">No photos yet</span>
         <?php endif; ?>
 
-        <?php if ($showDecisionBtns): ?>
+        <?php if ($showDecisionBtns && !$isMatch): ?>
             <button class="action-like-btn <?= $cardDecision === 'liked' ? 'liked' : '' ?>"
                 data-receiver="<?= $profileId ?>">♥ Like</button>
         <?php endif; ?>

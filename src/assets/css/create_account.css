@@ -164,7 +164,7 @@ textarea.invalid {
 }
 
 /* Mobile */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .auth-form {
         padding: 20px;
     }
