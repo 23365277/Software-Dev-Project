@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (passportEl) {
         passportEl.addEventListener("click", (e) => {
             if (window.innerWidth > 768) return;
-            if (e.target.closest(".stamp")) return;
+            if (e.target.closest(".stamps-container, .passport-right")) return;
             const x = e.clientX;
             const mid = passportEl.getBoundingClientRect().left + passportEl.offsetWidth / 2;
             moveSlide(x < mid ? -1 : 1);

@@ -445,7 +445,12 @@
 
 .stamp:hover {
 	box-shadow: 0 0 0 2px rgba(255,0,0,0.6);
-    	background-color: rgba(255,0,0,0.05);
+    background-color: #fff;
+}
+
+.stamp:active {
+    background-color: #fff !important;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .stamp.has-desc {
