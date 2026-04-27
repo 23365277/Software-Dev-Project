@@ -685,9 +685,14 @@
         z-index: 1;
     }
 
-    /* Arrows hidden on mobile — tap left/right instead */
     .arrow {
-        display: none;
+        display: block;
+        z-index: 10;
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+        background: rgba(0,0,0,0.45);
+        top: 40%;
     }
 
     /* ── Details panel floats on top of background ── */
