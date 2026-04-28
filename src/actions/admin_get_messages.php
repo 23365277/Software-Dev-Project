@@ -33,7 +33,7 @@ if (!$match) {
 
 // Fetch messages
 $msgStmt = $pdo->prepare("
-    SELECT m.sender_id, m.message, m.sent_at,
+    SELECT m.sender_id, m.message, m.sent_at, m.image_url,
            p.first_name, p.last_name
     FROM messages m
     JOIN profiles p ON p.user_id = m.sender_id

@@ -451,11 +451,17 @@ function viewMessages(reporterId, reportedId) {
                 const bg = isReporter ? '#534AB7' : '#fff';
                 const color = isReporter ? '#fff' : '#333';
                 const border = isReporter ? '' : 'border:0.5px solid #ddd;';
+                const textHtml = msg.message
+                    ? `<div>${msg.message.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`
+                    : '';
+                const imgHtml = msg.image_url
+                    ? `<div><img src="${msg.image_url}" style="max-width:200px;border-radius:8px;margin-top:4px;display:block;"></div>`
+                    : '';
                 return `
                     <div class="mb-2 ${align}">
                         <small class="text-muted d-block">${name} · ${time}</small>
                         <span style="display:inline-block;padding:8px 12px;border-radius:12px;background:${bg};color:${color};${border}max-width:75%;word-break:break-word;">
-                            ${msg.message.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+                            ${textHtml}${imgHtml}
                         </span>
                     </div>`;
             }).join('');
