@@ -1,0 +1,35 @@
+{"logtail":{"client_time":"2026-04-28T09:05:27.647684324Z","proc_id":3805481340,"proc_seq":263},"text":"LinkChange: major, rebinding: old: interfaces.State{defaultRoute=eth0 ifs={eth0:[172.19.0.2/16] tailscale0:[100.86.152.96/32 fd7a:115c:a1e0::7c3a:9860/128 llu6]} v4=true v6=false} new: interfaces.State{defaultRoute=eth0 ifs={eth0:[172.19.0.2/16] tailscale0:[100.86.152.96/32 fd7a:115c:a1e0::7c3a:9860/128 llu6]} v4=true v6=false}\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.647828295Z","proc_id":3805481340,"proc_seq":264},"text":"dns: Set: {DefaultResolvers:[] Routes:{} SearchDomains:[] Hosts:7}\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.647850016Z","proc_id":3805481340,"proc_seq":265},"text":"dns: Resolvercfg: {Routes:{} Hosts:7 LocalDomains:[]}\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.647863361Z","proc_id":3805481340,"proc_seq":266},"text":"dns: OScfg: {}\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.64789996Z","proc_id":3805481340,"proc_seq":267},"text":"wgengine: set DNS config again after major link change\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.648148829Z","proc_id":3805481340,"proc_seq":268},"text":"router: portUpdate(port=59213, network=udp6)\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.64819731Z","proc_id":3805481340,"proc_seq":269},"v":1,"text":"magicsock: peermtu: peer MTU status is false\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.648228499Z","proc_id":3805481340,"proc_seq":270},"text":"router: portUpdate(port=60000, network=udp4)\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.6482661Z","proc_id":3805481340,"proc_seq":271},"text":"Rebind; defIf=\"eth0\", ips=[172.19.0.2/16]\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.648323047Z","proc_id":3805481340,"proc_seq":272},"text":"magicsock: 1 active derp conns: derp-8=cr54m0s,wr1m0s\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.666642884Z","proc_id":3805481340,"proc_seq":273},"text":"post-rebind ping of DERP region 8 okay\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:27.899627186Z","proc_id":3805481340,"proc_seq":274},"v":1,"text":"netcheck: report: udp=true v6=false v6os=true mapvarydest=false portmap= v4a=193.1.106.7:60000 derp=8 derpdist=8v4:17ms,14v4:19ms,18v4:41ms\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:40.986110298Z","proc_id":3805481340,"proc_seq":275},"metrics":"I0202I6402I6602I0404I0604I0804I0a04I0e10I1010I1401I6802I3004I3204I6a02","v":1,"text":"control: mapRoutine: backoff: 6 msec\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:40.99337927Z","proc_id":3805481340,"proc_seq":276},"v":1,"text":"control: PollNetMap: read tcp 172.19.0.2:51926->192.200.0.111:443: read: connection reset by peer\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:40.993524002Z","proc_id":3805481340,"proc_seq":277},"v":1,"text":"control: sendStatus: mapRoutine1: loggedIn=true inMapPoll=false\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:40.993577062Z","proc_id":3805481340,"proc_seq":278},"v":1,"text":"control: mapRoutine: loggedIn=true\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:40.993618871Z","proc_id":3805481340,"proc_seq":279},"v":1,"text":"control: PollNetMap: stream=true ep=[193.1.106.7:60000 172.19.0.2:60000]\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:40.993768112Z","proc_id":3805481340,"proc_seq":280},"text":"Received error: PollNetMap: read tcp 172.19.0.2:51926->192.200.0.111:443: read: connection reset by peer\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:40.994391877Z","proc_id":3805481340,"proc_seq":281},"v":2,"text":"control: controlhttp: waited 0.00 seconds, dialing \"controlplane.tailscale.com\" @ 2606:b740:49::111\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.295006478Z","proc_id":3805481340,"proc_seq":282},"v":2,"text":"control: controlhttp: waited 0.30 seconds, dialing \"controlplane.tailscale.com\" @ 192.200.0.111\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.295110133Z","proc_id":3805481340,"proc_seq":283},"text":"control: controlhttp: forcing port 443 dial due to recent noise dial\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.389875641Z","proc_id":3805481340,"proc_seq":284},"v":1,"text":"control: controlhttp: succeeded dialing \"controlplane.tailscale.com\" @ 192.200.0.111 from dial plan\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.428582549Z","proc_id":3805481340,"proc_seq":285},"v":1,"controltime":"2026-04-28T09:05:41.319817777Z"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.428653302Z","proc_id":3805481340,"proc_seq":286},"text":"control: netmap: got new dial plan from control\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.428823112Z","proc_id":3805481340,"proc_seq":287},"v":1,"text":"control: new network map (periodic):\nnetmap: self: [Qgk3F] auth=machine-authorized u=howleykai7@gmail.com [100.86.152.96/32 fd7a:115c:a1e0::7c3a:9860/128]\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.428846065Z","proc_id":3805481340,"proc_seq":288},"v":1,"text":"control: mapRoutine: netmap received: loggedIn=true inMapPoll=true\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.428895268Z","proc_id":3805481340,"proc_seq":289},"v":1,"text":"control: sendStatus: mapRoutine-got-netmap: loggedIn=true inMapPoll=true\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.429200884Z","proc_id":3805481340,"proc_seq":290},"v":1,"text":"magicsock: got updated network map; 6 peers\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.429270485Z","proc_id":3805481340,"proc_seq":291},"v":1,"text":"netmap packet filter: 1 filters\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.429444783Z","proc_id":3805481340,"proc_seq":292},"v":1,"text":"netmap diff:\n- [+Rie8] d:bbf537a241deba68 D8 100.126.51.23 fd7a:115c:a1e0::b93a:3317/128 :        10.5.0.2:41641    10.64.128.84:41641     172.18.80.1:41641\n+ [+Rie8] d:bbf537a241deba68 D8 100.126.51.23 fd7a:115c:a1e0::b93a:3317/128 :    193.1.98.133:41641        10.5.0.2:41641    10.65.192.20:41641     172.18.80.1:41641\n- [K+vo4] d:43bf6df155a8ee66 D8 100.122.40.86 fd7a:115c:a1e0::f93a:2856/128 :  212.129.74.111:60227 [2a01:b340:82:730e:9444:e533:9e39:677a]:41641    10.124.10.59:41641    172.20.112.1:41641 [2a01:b340:82:730e:fc8c:fd62:73d0:1d64]:41641\n+ [K+vo4] d:43bf6df155a8ee66 D8 100.122.40.86 fd7a:115c:a1e0::f93a:2856/128 :    193.1.98.130:41641 [2a01:b340:82:730e:9444:e533:9e39:677a]:41641  212.129.74.111:60265    10.64.128.72:41641    172.20.112.1:41641\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.430166332Z","proc_id":3805481340,"proc_seq":293},"v":1,"text":"magicsock: peermtu: peer MTU status is false\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.430291818Z","proc_id":3805481340,"proc_seq":294},"v":1,"text":"wgengine: Reconfig done\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.430322386Z","proc_id":3805481340,"proc_seq":295},"v":1,"text":"authReconfig: ra=false dns=false 0x00: <nil>\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.430332595Z","proc_id":3805481340,"proc_seq":296},"v":1,"text":"initPeerAPIListener: entered\n"}
+{"logtail":{"client_time":"2026-04-28T09:05:41.430345199Z","proc_id":3805481340,"proc_seq":297},"v":1,"text":"initPeerAPIListener: 2 netmap addresses match existing listeners\n"}
