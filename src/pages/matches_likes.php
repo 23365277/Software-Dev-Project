@@ -233,7 +233,7 @@ function renderCard(profile, grid = null) {
                         <div class="body">
                             <div class="BioDest">
                                 <div class="bio"><p class="heading">TRAVELLER BIO</p><p class="body-text">${profile.bio || 'No bio added yet.'}</p></div>
-                                <div class="dest"><p class="heading">PLANNED TRIPS</p><p class="body-text">${profile.trip_country || 'No trips planned yet.'}</p></div>
+                                <div class="dest"><p class="heading">PLANNED TRIPS</p><p class="body-text">${profile.trip_country ? profile.trip_country + (profile.trip_start_date ? ' • ' + formatDate(profile.trip_start_date) : '') : 'No trips planned yet.'}</p></div>
                             </div>
                         </div>
                     </div>
@@ -572,6 +572,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+}
 
 const nameMap = {
     "Scotland": "United Kingdom", "England": "United Kingdom",

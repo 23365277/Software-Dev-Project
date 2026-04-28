@@ -37,6 +37,9 @@
 
         foreach ($profiles as &$profile) {
             $profile['gallery_images'] = array_slice($photosByUser[$profile['user_id']] ?? [], 0, 6);
+            $trip = getUserTrips($pdo, $profile['user_id']);
+            $profile['trip_country']    = $trip['location']   ?? null;
+            $profile['trip_start_date'] = $trip['start_date'] ?? null;
         }
     }
 
