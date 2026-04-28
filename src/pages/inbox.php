@@ -98,7 +98,7 @@
     if ($selectedMatch) {
         $otherId = (int)$selectedMatch['other_user_id'];
 
-        $photosQ = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ? ORDER BY is_primary DESC, uploaded_at DESC LIMIT 6");
+        $photosQ = $pdo->prepare("SELECT image_url FROM photos WHERE user_id = ? ORDER BY uploaded_at DESC LIMIT 6");
         $photosQ->execute([$otherId]);
         $otherUserPhotos = $photosQ->fetchAll(PDO::FETCH_COLUMN);
 

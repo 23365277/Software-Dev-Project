@@ -716,7 +716,7 @@ body {
     color: #1a3a5c;
 }
 
-/* ── Mobile ── */
+/* ── Mobile ──
 @media (max-width: 640px) {
     .inbox-wrap {
         flex-direction: column;
@@ -753,7 +753,7 @@ body {
         padding: 10px 14px;
         gap: 10px;
     }
-
+    
     .chat-header-info h2 {
         font-size: 14px;
     }
@@ -766,4 +766,4 @@ body {
         font-size: 12px;
         padding: 5px 8px;
     }
-}
+} */

@@ -287,6 +287,7 @@ CREATE TABLE `messages` (
   `received` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_sender` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_receiver` tinyint(1) NOT NULL DEFAULT '0',
+  `image_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sender_id` (`sender_id`),
   KEY `receiver_id` (`receiver_id`),
