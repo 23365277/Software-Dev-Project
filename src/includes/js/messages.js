@@ -311,6 +311,11 @@ const RoamanceMessaging = (() => {
                 .then(r => r.json())
                 .then(messages => {
                     if (!Array.isArray(messages) || !messages.length) return;
+                    if (el.messages.classList.contains('centered-message')) {
+                        el.messages.classList.remove('centered-message');
+                        el.messages.innerHTML = '';
+                        lastRenderedDate = null;
+                    }
                     const area        = el.messages;
                     const isNearBottom = (area.scrollHeight - area.scrollTop - area.clientHeight) < 80;
                     appendMessages(messages, isNearBottom);
